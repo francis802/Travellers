@@ -74,21 +74,21 @@ CREATE TABLE unban_request (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL,
-    banned_user_id INT REFERENCES banned(id)
+    banned_user_id INT REFERENCES banned(id) NOT NULL
 );
 
 CREATE TABLE common_help (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL,
-    user_id INT REFERENCES users(id)
+    user_id INT REFERENCES users(id) NOT NULL
 );
 
 CREATE TABLE faq (
     id SERIAL PRIMARY KEY,
     answer VARCHAR(255) NOT NULL,
     question VARCHAR(255) UNIQUE NOT NULL,
-    last_edited DATE CHECK (last_edited <= now()),
+    last_edited DATE NOT NULL CHECK (last_edited <= now()),
     author_id INT REFERENCES admin(id)
 );
 
@@ -101,37 +101,37 @@ CREATE TABLE report (
 );
 
 CREATE TABLE requests (
-    user1_id INT REFERENCES users(id),
-    user2_id INT REFERENCES users(id),
+    user1_id INT REFERENCES users(id) NOT NULL,
+    user2_id INT REFERENCES users(id) NOT NULL,
     PRIMARY KEY (user1_id, user2_id)
 );
 
 CREATE TABLE follows (
-    user1_id INT REFERENCES users(id),
+    user1_id INT REFERENCES users(id) NOT NULL,
     user2_id INT REFERENCES users(id),
     PRIMARY KEY (user1_id, user2_id)
 );
 
 CREATE TABLE blocks (
-    user1_id INT REFERENCES users(id),
-    user2_id INT REFERENCES users(id),
+    user1_id INT REFERENCES users(id) NOT NULL,
+    user2_id INT REFERENCES users(id) NOT NULL,
     PRIMARY KEY (user1_id, user2_id)
 );
 
 CREATE TABLE like_post (
-    user_id INT REFERENCES users(id),
-    post_id INT REFERENCES post(id),
+    user_id INT REFERENCES users(id) NOT NULL,
+    post_id INT REFERENCES post(id) NOT NULL,
     PRIMARY KEY (user_id, post_id)
 );
 
 CREATE TABLE post (
     id SERIAL PRIMARY KEY,
-    date DATE CHECK (date <= now()),
-    edited BOOLEAN DEFAULT false,
+    date DATE NOT NULL CHECK (date <= now()),
     text VARCHAR(255),
     media VARCHAR(255),
     author_id INT REFERENCES users(id) NOT NULL,
-    group_id INT REFERENCES groups(id)
+    group_id INT REFERENCES groups(id) NOT NULL,
+    edited BOOLEAN DEFAULT false
 );
 
 CREATE TABLE tag (
@@ -140,14 +140,14 @@ CREATE TABLE tag (
 );
 
 CREATE TABLE post_tag (
-    post_id INT REFERENCES post(id),
-    tag_id INT REFERENCES tag(id),
-    PRIMARY KEY (user_id, group_id)
+    post_id INT REFERENCES post(id) NOT NULL,
+    tag_id INT REFERENCES tag(id) NOT NULL,
+    PRIMARY KEY (post_id, tag_id)
 );
 
 CREATE TABLE message (
     id SERIAL PRIMARY KEY,
-    time DATE CHECK (time <= now()),
+    time DATE NOT NULL CHECK (time <= now()),
     content VARCHAR(255) NOT NULL,
     sender_id INT REFERENCES users(id) NOT NULL,
     receiver_id INT REFERENCES users(id) NOT NULL
@@ -156,15 +156,15 @@ CREATE TABLE message (
 CREATE TABLE comments (
     id SERIAL PRIMARY KEY,
     text VARCHAR(255) NOT NULL,
-    date DATE CHECK (date <= now()),
+    date DATE NOT NULL CHECK (date <= now()),
     post_id INT REFERENCES post(id) NOT NULL,
     author_id INT REFERENCES users(id) NOT NULL
 );
 
 CREATE TABLE like_comment (
-    user_id INT REFERENCES users(id),
+    user_id INT REFERENCES users(id) NOT NULL,
     comment_id INT REFERENCES comments(id),
-    PRIMARY KEY (user_id, comment_id)
+    PRIMARY KEY (user_id, comment_id) NOT NULL
 );
 
 CREATE TABLE groups (
@@ -174,7 +174,7 @@ CREATE TABLE groups (
 );
 
 CREATE TABLE subgroup (
-    id SERIAL PRIMARY KEY,
+    subgroup_id INT REFERENCES groups(id) PRIMARY KEY,
     group_id INT REFERENCES groups(id) NOT NULL
 );
 
@@ -198,86 +198,86 @@ CREATE TABLE group_invitation (
 
 CREATE TABLE report_notification (
     id SERIAL PRIMARY KEY,
-    opened BOOLEAN DEFAULT false,
-    time DATE CHECK (time <= now()),
+    time DATE NOT NULL CHECK (time <= now()),
     admin_id INT REFERENCES admin(id) NOT NULL,
     user_id INT REFERENCES users(id) NOT NULL,
-    report_id INT REFERENCES report(id) NOT NULL
+    report_id INT REFERENCES report(id) NOT NULL,
+    opened BOOLEAN DEFAULT false
 );
 
 CREATE TABLE common_help_notification (
     id SERIAL PRIMARY KEY,
-    opened BOOLEAN DEFAULT false,
-    time DATE CHECK (time <= now()),
+    time DATE NOT NULL CHECK (time <= now()),
     admin_id INT REFERENCES admin(id) NOT NULL,
     user_id INT REFERENCES users(id) NOT NULL,
-    common_help_id INT REFERENCES common_help(id) NOT NULL
+    common_help_id INT REFERENCES common_help(id) NOT NULL,
+    opened BOOLEAN DEFAULT false
 );
 
 CREATE TABLE appeal_notification (
     id SERIAL PRIMARY KEY,
-    opened BOOLEAN DEFAULT false,
-    time DATE CHECK (time <= now()),
+    time DATE NOT NULL CHECK (time <= now()),
     admin_id INT REFERENCES admin(id) NOT NULL,
     user_id INT REFERENCES users(id) NOT NULL,
-    unban_request_id INT REFERENCES unban_request(id) NOT NULL
+    unban_request_id INT REFERENCES unban_request(id) NOT NULL,
+    opened BOOLEAN DEFAULT false
 );
 
 CREATE TABLE group_creation_notification (
     id SERIAL PRIMARY KEY,
-    opened BOOLEAN DEFAULT false,
-    time DATE CHECK (time <= now()),
+    time DATE NOT NULL CHECK (time <= now()),
     admin_id INT REFERENCES admin(id) NOT NULL,
     user_id INT REFERENCES users(id) NOT NULL,
-    group_id INT REFERENCES groups(id) NOT NULL
+    group_id INT REFERENCES groups(id) NOT NULL,
+    opened BOOLEAN DEFAULT false
 );
 
 CREATE TABLE follow_notification (
     id SERIAL PRIMARY KEY,
-    opened BOOLEAN DEFAULT false,
-    time DATE CHECK (time <= now()),
+    time DATE NOT NULL CHECK (time <= now()),
     sender_id INT REFERENCES users(id) NOT NULL,
     notified_id INT REFERENCES users(id) NOT NULL,
-    notification_type follow_notification_types NOT NULL
+    notification_type follow_notification_types NOT NULL,
+    opened BOOLEAN DEFAULT false
 );
 
 CREATE TABLE new_message_notification (
     id SERIAL PRIMARY KEY,
-    opened BOOLEAN DEFAULT false,
-    time DATE CHECK (time <= now()),
+    time DATE NOT NULL CHECK (time <= now()),
     sender_id INT REFERENCES users(id) NOT NULL,
     notified_id INT REFERENCES users(id) NOT NULL,
-    message_id INT REFERENCES message(id) NOT NULL
+    message_id INT REFERENCES message(id) NOT NULL,
+    opened BOOLEAN DEFAULT false
 );
 
 CREATE TABLE comment_notification (
     id SERIAL PRIMARY KEY,
-    opened BOOLEAN DEFAULT false,
-    time DATE CHECK (time <= now()),
+    time DATE NOT NULL CHECK (time <= now()),
     sender_id INT REFERENCES users(id) NOT NULL,
     notified_id INT REFERENCES users(id) NOT NULL,
     comment_id INT REFERENCES comments(id) NOT NULL,
-    notification_type comment_notification_types NOT NULL
+    notification_type comment_notification_types NOT NULL,
+    opened BOOLEAN DEFAULT false
 );
 
 CREATE TABLE post_notification (
     id SERIAL PRIMARY KEY,
-    opened BOOLEAN DEFAULT false,
-    time DATE CHECK (time <= now()),
+    time DATE NOT NULL CHECK (time <= now()),
     sender_id INT REFERENCES users(id) NOT NULL,
     notified_id INT REFERENCES users(id) NOT NULL,
     post_id INT REFERENCES post(id) NOT NULL,
-    notification_type post_notification_types NOT NULL
+    notification_type post_notification_types NOT NULL,
+    opened BOOLEAN DEFAULT false
 );
 
 CREATE TABLE group_notification (
     id SERIAL PRIMARY KEY,
-    opened BOOLEAN DEFAULT false,
-    time DATE CHECK (time <= now()),
+    time DATE NOT NULL CHECK (time <= now()),
     sender_id INT REFERENCES users(id) NOT NULL,
     notified_id INT REFERENCES users(id) NOT NULL,
     group_id INT REFERENCES groups(id) NOT NULL,
-    notification_type group_notification_types NOT NULL
+    notification_type group_notification_types NOT NULL,
+    opened BOOLEAN DEFAULT false
 );
 
 -- Indexes
