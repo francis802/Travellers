@@ -128,7 +128,7 @@ CREATE TABLE post (
     id SERIAL PRIMARY KEY,
     date DATE CHECK (date <= now()),
     edited BOOLEAN DEFAULT false,
-    text VARCHAR(255) NOT NULL,
+    text VARCHAR(255),
     media VARCHAR(255),
     author_id INT REFERENCES users(id) NOT NULL,
     group_id INT REFERENCES groups(id)
