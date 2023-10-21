@@ -2,8 +2,8 @@ create schema if not exists lbaw2346;
 
 SET DateStyle TO European;
 
-
 -- Drop existing tables if they exist
+
 DROP TABLE IF EXISTS report_notification CASCADE;
 DROP TABLE IF EXISTS common_help_notification CASCADE;
 DROP TABLE IF EXISTS appeal_notification CASCADE;
@@ -14,12 +14,12 @@ DROP TABLE IF EXISTS comment_notification CASCADE;
 DROP TABLE IF EXISTS post_notification CASCADE;
 DROP TABLE IF EXISTS group_notification CASCADE;
 DROP TABLE IF EXISTS group_invitation CASCADE;
-DROP TABLE IF EXISTS member CASCADE;
+DROP TABLE IF EXISTS members CASCADE;
 DROP TABLE IF EXISTS owner CASCADE;
 DROP TABLE IF EXISTS subgroup CASCADE;
 DROP TABLE IF EXISTS groups CASCADE;
 DROP TABLE IF EXISTS like_comment CASCADE;
-DROP TABLE IF EXISTS comment CASCADE
+DROP TABLE IF EXISTS comments CASCADE
 DROP TABLE IF EXISTS message CASCADE;
 DROP TABLE IF EXISTS post_tag CASCADE;
 DROP TABLE IF EXISTS tag CASCADE;
@@ -42,12 +42,14 @@ DROP TYPE IF EXISTS group_notification_types;
 DROP TYPE IF EXISTS follow_notification_types;
 
 -- Types
+
 CREATE TYPE comment_notification_types AS ENUM('mention_comment', 'liked_comment', 'new_comment', 'reply_comment');
 CREATE TYPE post_notification_types AS ENUM('new_like', 'mention_description');
 CREATE TYPE group_notification_types AS ENUM('group_invite', 'group_join', 'group_leave', 'group_ban', 'group_owner');
 CREATE TYPE follow_notification_types AS ENUM('follow_request', 'follow_accept');
 
 -- Create tables
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) UNIQUE NOT NULL,
@@ -61,13 +63,11 @@ CREATE TABLE users (
 );
 
 CREATE TABLE admin (
-    id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(id)
+    user_id INT PRIMARY KEY REFERENCES users(id)
 );
 
 CREATE TABLE banned (
-    id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(id)
+    user_id INT PRIMARY KEY REFERENCES users(id)
 );
 
 CREATE TABLE unban_request (
@@ -102,22 +102,26 @@ CREATE TABLE report (
 
 CREATE TABLE requests (
     user1_id INT REFERENCES users(id),
-    user2_id INT REFERENCES users(id)
+    user2_id INT REFERENCES users(id),
+    PRIMARY KEY (user1_id, user2_id)
 );
 
 CREATE TABLE follows (
     user1_id INT REFERENCES users(id),
-    user2_id INT REFERENCES users(id)
+    user2_id INT REFERENCES users(id),
+    PRIMARY KEY (user1_id, user2_id)
 );
 
 CREATE TABLE blocks (
     user1_id INT REFERENCES users(id),
-    user2_id INT REFERENCES users(id)
+    user2_id INT REFERENCES users(id),
+    PRIMARY KEY (user1_id, user2_id)
 );
 
 CREATE TABLE like_post (
     user_id INT REFERENCES users(id),
-    post_id INT REFERENCES post(id)
+    post_id INT REFERENCES post(id),
+    PRIMARY KEY (user_id, post_id)
 );
 
 CREATE TABLE post (
@@ -137,7 +141,8 @@ CREATE TABLE tag (
 
 CREATE TABLE post_tag (
     post_id INT REFERENCES post(id),
-    tag_id INT REFERENCES tag(id)
+    tag_id INT REFERENCES tag(id),
+    PRIMARY KEY (user_id, group_id)
 );
 
 CREATE TABLE message (
@@ -148,7 +153,7 @@ CREATE TABLE message (
     receiver_id INT REFERENCES users(id) NOT NULL
 );
 
-CREATE TABLE comment (
+CREATE TABLE comments (
     id SERIAL PRIMARY KEY,
     text VARCHAR(255) NOT NULL,
     date DATE CHECK (date <= now()),
@@ -158,7 +163,8 @@ CREATE TABLE comment (
 
 CREATE TABLE like_comment (
     user_id INT REFERENCES users(id),
-    comment_id INT REFERENCES comment(id)
+    comment_id INT REFERENCES comments(id),
+    PRIMARY KEY (user_id, comment_id)
 );
 
 CREATE TABLE groups (
@@ -173,21 +179,21 @@ CREATE TABLE subgroup (
 );
 
 CREATE TABLE owner (
-    id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(id) NOT NULL,
-    group_id INT REFERENCES groups(id) NOT NULL
+    group_id INT REFERENCES groups(id) NOT NULL,
+    PRIMARY KEY (user_id, group_id)
 );
 
-CREATE TABLE member (
-    id SERIAL PRIMARY KEY,
+CREATE TABLE members (
     user_id INT REFERENCES users(id) NOT NULL,
-    group_id INT REFERENCES groups(id) NOT NULL
+    group_id INT REFERENCES groups(id) NOT NULL,
+    PRIMARY KEY (user_id, group_id)
 );
 
 CREATE TABLE group_invitation (
-    id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(id) NOT NULL,
-    group_id INT REFERENCES groups(id) NOT NULL
+    group_id INT REFERENCES groups(id) NOT NULL,
+    PRIMARY KEY (user_id, group_id)
 );
 
 CREATE TABLE report_notification (
@@ -250,7 +256,7 @@ CREATE TABLE comment_notification (
     time DATE CHECK (time <= now()),
     sender_id INT REFERENCES users(id) NOT NULL,
     notified_id INT REFERENCES users(id) NOT NULL,
-    comment_id INT REFERENCES comment(id) NOT NULL,
+    comment_id INT REFERENCES comments(id) NOT NULL,
     notification_type comment_notification_types NOT NULL
 );
 
@@ -273,3 +279,180 @@ CREATE TABLE group_notification (
     group_id INT REFERENCES groups(id) NOT NULL,
     notification_type group_notification_types NOT NULL
 );
+
+-- Indexes
+
+-- Triggers
+
+-- TRIGGER01
+-- Users may only like a post once (BR05)
+
+CREATE FUNCTION verify_post_likes() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF EXISTS (SELECT * FROM like_post WHERE NEW.user_id = user_id AND NEW.post_id = post_id) THEN
+        RAISE EXCEPTION "Users may only like a post once";
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER verify_post_likes
+    BEFORE INSERT OR UPDATE ON like_post
+    FOR EACH ROW
+    EXECUTE PROCEDURE verify_post_likes();
+
+-- TRIGGER02
+-- Users may only like a comment once (BR06)
+
+CREATE FUNCTION verify_comment_likes() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF EXISTS (SELECT * FROM like_comment WHERE NEW.user_id = user_id AND NEW.comment_id = comment_id) THEN
+        RAISE EXCEPTION "Users may only like a comment once";
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER verify_comment_likes
+    BEFORE INSERT OR UPDATE ON like_comment
+    FOR EACH ROW
+    EXECUTE PROCEDURE verify_comment_likes();
+
+-- TRIGGER03
+-- Users may only post to groups they are members of (BR07)
+
+CREATE FUNCTION verify_group_post() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF NOT EXISTS (SELECT * FROM members WHERE NEW.author_id = user_id AND NEW.group_id = group_id) 
+        AND NEW.group_id IS NOT NULL THEN
+            RAISE EXCEPTION "Users may only post to groups they are members of";
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER verify_group_post
+    BEFORE INSERT OR UPDATE ON post
+    FOR EACH ROW
+    EXECUTE PROCEDURE verify_group_post();
+
+-- TRIGGER04
+-- Users cannot follow themselves (BR08)
+
+CREATE FUNCTION verify_self_follow() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF NEW.user1_id = NEW.user2_id THEN
+        RAISE EXCEPTION "Users cannot follow themselves";
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER verify_self_follow
+    BEFORE INSERT OR UPDATE ON follows
+    FOR EACH ROW
+    EXECUTE PROCEDURE verify_self_follow();
+
+-- TRIGGER05
+-- The owner of a group is automatically a member of that group (BR09)
+
+CREATE FUNCTION group_owner() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO members (user_id, group_id) VALUES (NEW.user_id, NEW.group_id)
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER group_owner
+    AFTER INSERT ON owner
+    FOR EACH ROW
+    EXECUTE PROCEDURE group_owner;
+
+-- TRIGGER06
+--  Users cannot request to follow someone they are already following (BR10)
+
+CREATE FUNCTION verify_follow_request() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF EXISTS 
+        (SELECT * FROM follows WHERE NEW.user1_id = user1_id AND NEW.user2_id = user2_id) THEN
+            RAISE EXCEPTION "Users cannot request to follow someone they are already following";
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER verify_follow_request
+    BEFORE INSERT ON requests
+    FOR EACH ROW
+    EXECUTE PROCEDURE verify_follow_request();
+
+-- TRIGGER07
+--  Users cannot request to follow themselves (BR11)
+
+CREATE FUNCTION verify_self_follow_request() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF NEW.user1_id = NEW.user2_id THEN
+        RAISE EXCEPTION "Users cannot request to follow themselves";
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER verify_self_follow_request
+    BEFORE INSERT OR UPDATE ON requests
+    FOR EACH ROW
+    EXECUTE PROCEDURE verify_self_follow_request();
+
+-- TRIGGER08
+--  Follow requests can only be sent to private profiles (BR12)
+
+CREATE FUNCTION verify_priv_follow_request() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF EXISTS 
+        (SELECT * FROM users WHERE NEW.user2_id = id AND profile_private = false) THEN
+            RAISE EXCEPTION "Follow requests can only be sent to private profiles";
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER verify_follow_request
+    BEFORE INSERT OR UPDATE ON requests
+    FOR EACH ROW
+    EXECUTE PROCEDURE verify_priv_follow_request();
+
+-- TRIGGER09
+--  Users cannot be invited to join a group they are already a part of (BR13)
+
+CREATE FUNCTION verify_group_invite() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF EXISTS 
+        (SELECT * FROM members WHERE NEW.user_id = user_id AND NEW.group_id = group_id) THEN
+            RAISE EXCEPTION "Users cannot be invited to join a group they are already a part of";
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER verify_group_invite
+    BEFORE INSERT ON group_invitation
+    FOR EACH ROW
+    EXECUTE PROCEDURE verify_group_invite();
