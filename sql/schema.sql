@@ -379,7 +379,7 @@ CREATE TRIGGER group_owner
     EXECUTE PROCEDURE group_owner;
 
 -- TRIGGER06
---  Users cannot request to follow someone they are already following (BR10)
+-- Users cannot request to follow someone they are already following (BR10)
 
 CREATE FUNCTION verify_follow_request() RETURNS TRIGGER AS
 $BODY$
@@ -399,7 +399,7 @@ CREATE TRIGGER verify_follow_request
     EXECUTE PROCEDURE verify_follow_request();
 
 -- TRIGGER07
---  Users cannot request to follow themselves (BR11)
+-- Users cannot request to follow themselves (BR11)
 
 CREATE FUNCTION verify_self_follow_request() RETURNS TRIGGER AS
 $BODY$
@@ -418,7 +418,7 @@ CREATE TRIGGER verify_self_follow_request
     EXECUTE PROCEDURE verify_self_follow_request();
 
 -- TRIGGER08
---  Follow requests can only be sent to private profiles (BR12)
+-- Follow requests can only be sent to private profiles (BR12)
 
 CREATE FUNCTION verify_priv_follow_request() RETURNS TRIGGER AS
 $BODY$
@@ -438,7 +438,7 @@ CREATE TRIGGER verify_follow_request
     EXECUTE PROCEDURE verify_priv_follow_request();
 
 -- TRIGGER09
---  Users cannot be invited to join a group they are already a part of (BR13)
+-- Users cannot be invited to join a group they are already a part of (BR13)
 
 CREATE FUNCTION verify_group_invite() RETURNS TRIGGER AS
 $BODY$
