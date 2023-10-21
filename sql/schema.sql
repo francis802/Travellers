@@ -108,7 +108,7 @@ CREATE TABLE requests (
 
 CREATE TABLE follows (
     user1_id INT REFERENCES users(id) NOT NULL,
-    user2_id INT REFERENCES users(id),
+    user2_id INT REFERENCES users(id) NOT NULL,
     PRIMARY KEY (user1_id, user2_id)
 );
 
@@ -163,8 +163,8 @@ CREATE TABLE comments (
 
 CREATE TABLE like_comment (
     user_id INT REFERENCES users(id) NOT NULL,
-    comment_id INT REFERENCES comments(id),
-    PRIMARY KEY (user_id, comment_id) NOT NULL
+    comment_id INT REFERENCES comments(id) NOT NULL,
+    PRIMARY KEY (user_id, comment_id)
 );
 
 CREATE TABLE groups (
