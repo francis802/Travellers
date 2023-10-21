@@ -57,7 +57,7 @@ CREATE TABLE users (
     country VARCHAR(255),
     email VARCHAR(255) UNIQUE,
     password VARCHAR(255),
-    profile_photo VARCHAR(255),
+    profile_photo TEXT,
     profile_private BOOLEAN DEFAULT false,
     is_deleted BOOLEAN DEFAULT false
 );
@@ -73,20 +73,20 @@ CREATE TABLE banned (
 CREATE TABLE unban_request (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    description VARCHAR(255) NOT NULL,
+    description MEDIUMTEXT NOT NULL,
     banned_user_id INT REFERENCES banned(id) NOT NULL
 );
 
 CREATE TABLE common_help (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    description VARCHAR(255) NOT NULL,
+    description MEDIUMTEXT NOT NULL,
     user_id INT REFERENCES users(id) NOT NULL
 );
 
 CREATE TABLE faq (
     id SERIAL PRIMARY KEY,
-    answer VARCHAR(255) NOT NULL,
+    answer MEDIUMTEXT NOT NULL,
     question VARCHAR(255) UNIQUE NOT NULL,
     last_edited DATE NOT NULL CHECK (last_edited <= now()),
     author_id INT REFERENCES admin(id)
@@ -94,7 +94,7 @@ CREATE TABLE faq (
 
 CREATE TABLE report (
     id SERIAL PRIMARY KEY,
-    description VARCHAR(255) NOT NULL,
+    description MEDIUMTEXT NOT NULL,
     evaluater_id INT REFERENCES admin(id) NOT NULL,
     reporter_id INT REFERENCES users(id) NOT NULL,
     infractor_id INT REFERENCES users(id) NOT NULL
@@ -127,8 +127,8 @@ CREATE TABLE like_post (
 CREATE TABLE post (
     id SERIAL PRIMARY KEY,
     date DATE NOT NULL CHECK (date <= now()),
-    text VARCHAR(255),
-    media VARCHAR(255),
+    text MEDIUMTEXT,
+    media MEDIUMTEXT,
     author_id INT REFERENCES users(id) NOT NULL,
     group_id INT REFERENCES groups(id) NOT NULL,
     edited BOOLEAN DEFAULT false
@@ -148,14 +148,14 @@ CREATE TABLE post_tag (
 CREATE TABLE message (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    content VARCHAR(255) NOT NULL,
+    content MEDIUMTEXT NOT NULL,
     sender_id INT REFERENCES users(id) NOT NULL,
     receiver_id INT REFERENCES users(id) NOT NULL
 );
 
 CREATE TABLE comments (
     id SERIAL PRIMARY KEY,
-    text VARCHAR(255) NOT NULL,
+    text MEDIUMTEXT NOT NULL,
     date DATE NOT NULL CHECK (date <= now()),
     post_id INT REFERENCES post(id) NOT NULL,
     author_id INT REFERENCES users(id) NOT NULL
@@ -170,7 +170,7 @@ CREATE TABLE like_comment (
 CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    banner_pic VARCHAR(255)
+    banner_pic MEDIUMTEXT
 );
 
 CREATE TABLE subgroup (
