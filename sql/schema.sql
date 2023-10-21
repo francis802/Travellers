@@ -458,7 +458,7 @@ CREATE TRIGGER verify_group_invite
     EXECUTE PROCEDURE verify_group_invite();
 
 -- TRIGGER10
--- When deleting a group it also deletes its subgroups, posts, and notifications (business rule BR15)
+-- When deleting a group it also deletes its subgroups, posts and notifications (business rule BR15)
 
 CREATE FUNCTION delete_group() RETURNS TRIGGER AS
 $BODY$
@@ -497,7 +497,7 @@ CREATE TRIGGER delete_post
     EXECUTE PROCEDURE delete_post();
 
 -- TRIGGER12
--- When deleting a comment it also deletes its likes, and notifications (business rule BR17)
+-- When deleting a comment it also deletes its likes and notifications (business rule BR17)
 
 CREATE FUNCTION delete_comment() RETURNS TRIGGER AS
 $BODY$
