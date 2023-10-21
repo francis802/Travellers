@@ -456,3 +456,60 @@ CREATE TRIGGER verify_group_invite
     BEFORE INSERT ON group_invitation
     FOR EACH ROW
     EXECUTE PROCEDURE verify_group_invite();
+
+-- TRIGGER10
+-- When deleting a group it also deletes its subgroups, posts, and notifications (business rule BR15)
+
+CREATE FUNCTION delete_group() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    DELETE FROM subgroup WHERE OLD.id = subgroup.group_id;
+    DELETE FROM post WHERE OLD.id = post.group_id;
+    DELETE FROM group_invitation WHERE OLD.id = group_invitation.group_id;
+    DELETE FROM group_notification WHERE OLD.id = group_notification.group_id;
+    RETURN OLD;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER delete_group
+    BEFORE DELETE ON groups
+    FOR EACH ROW
+    EXECUTE PROCEDURE delete_group();
+
+-- TRIGGER11
+-- When deleting a post it also deletes its comments, likes and notifications (business rule BR16)
+
+CREATE FUNCTION delete_post() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    DELETE FROM comments WHERE OLD.id = comments.post_id;
+    DELETE FROM like_post WHERE OLD.id = like_post.post_id;
+    DELETE FROM post_notification WHERE OLD.id = post_notification.post_id;
+    RETURN OLD;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER delete_post
+    BEFORE DELETE ON post
+    FOR EACH ROW
+    EXECUTE PROCEDURE delete_post();
+
+-- TRIGGER12
+-- When deleting a comment it also deletes its likes, and notifications (business rule BR17)
+
+CREATE FUNCTION delete_comment() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    DELETE FROM like_comment WHERE OLD.id = like_comment.comment_id;
+    DELETE FROM comment_notification WHERE OLD.id = comment_notification.comment_id;
+    RETURN OLD;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER delete_comment
+    BEFORE DELETE ON comments
+    FOR EACH ROW
+    EXECUTE PROCEDURE delete_comment();
