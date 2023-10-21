@@ -52,10 +52,10 @@ CREATE TYPE follow_notification_types AS ENUM('follow_request', 'follow_accept')
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(255) UNIQUE NOT NULL,
+    username VARCHAR(255) UNIQUE,
     name VARCHAR(255),
     country VARCHAR(255),
-    email VARCHAR(255) UNIQUE NOT NULL,
+    email VARCHAR(255) UNIQUE,
     password VARCHAR(255),
     profile_photo VARCHAR(255),
     profile_private BOOLEAN DEFAULT false,
