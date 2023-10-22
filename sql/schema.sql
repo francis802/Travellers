@@ -14,12 +14,13 @@ DROP TABLE IF EXISTS comment_notification CASCADE;
 DROP TABLE IF EXISTS post_notification CASCADE;
 DROP TABLE IF EXISTS group_notification CASCADE;
 DROP TABLE IF EXISTS group_invitation CASCADE;
+DROP TABLE IF EXISTS group_creation CASCADE;
 DROP TABLE IF EXISTS members CASCADE;
 DROP TABLE IF EXISTS owner CASCADE;
 DROP TABLE IF EXISTS subgroup CASCADE;
 DROP TABLE IF EXISTS groups CASCADE;
 DROP TABLE IF EXISTS like_comment CASCADE;
-DROP TABLE IF EXISTS comments CASCADE
+DROP TABLE IF EXISTS comments CASCADE;
 DROP TABLE IF EXISTS message CASCADE;
 DROP TABLE IF EXISTS post_tag CASCADE;
 DROP TABLE IF EXISTS tag CASCADE;
@@ -73,29 +74,29 @@ CREATE TABLE banned (
 CREATE TABLE unban_request (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    description MEDIUMTEXT NOT NULL,
-    banned_user_id INT REFERENCES banned(id) NOT NULL
+    description TEXT NOT NULL,
+    banned_user_id INT REFERENCES banned(user_id) NOT NULL
 );
 
 CREATE TABLE common_help (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    description MEDIUMTEXT NOT NULL,
+    description TEXT NOT NULL,
     user_id INT REFERENCES users(id) NOT NULL
 );
 
 CREATE TABLE faq (
     id SERIAL PRIMARY KEY,
-    answer MEDIUMTEXT NOT NULL,
+    answer TEXT NOT NULL,
     question VARCHAR(255) UNIQUE NOT NULL,
     last_edited DATE NOT NULL CHECK (last_edited <= now()),
-    author_id INT REFERENCES admin(id)
+    author_id INT REFERENCES admin(user_id)
 );
 
 CREATE TABLE report (
     id SERIAL PRIMARY KEY,
-    description MEDIUMTEXT NOT NULL,
-    evaluater_id INT REFERENCES admin(id) NOT NULL,
+    description TEXT NOT NULL,
+    evaluater_id INT REFERENCES admin(user_id) NOT NULL,
     reporter_id INT REFERENCES users(id) NOT NULL,
     infractor_id INT REFERENCES users(id) NOT NULL
 );
@@ -118,20 +119,32 @@ CREATE TABLE blocks (
     PRIMARY KEY (user1_id, user2_id)
 );
 
-CREATE TABLE like_post (
-    user_id INT REFERENCES users(id) NOT NULL,
-    post_id INT REFERENCES post(id) NOT NULL,
-    PRIMARY KEY (user_id, post_id)
+CREATE TABLE groups (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    banner_pic TEXT
+);
+
+CREATE TABLE subgroup (
+    subgroup_id INT REFERENCES groups(id) PRIMARY KEY,
+    group_id INT REFERENCES groups(id) NOT NULL
 );
 
 CREATE TABLE post (
     id SERIAL PRIMARY KEY,
     date DATE NOT NULL CHECK (date <= now()),
-    text MEDIUMTEXT,
-    media MEDIUMTEXT,
+    text TEXT,
+    media TEXT,
     author_id INT REFERENCES users(id) NOT NULL,
     group_id INT REFERENCES groups(id) NOT NULL,
     edited BOOLEAN DEFAULT false
+);
+
+CREATE TABLE like_post (
+    user_id INT REFERENCES users(id) NOT NULL,
+    post_id INT REFERENCES post(id) NOT NULL,
+    PRIMARY KEY (user_id, post_id)
 );
 
 CREATE TABLE tag (
@@ -148,14 +161,14 @@ CREATE TABLE post_tag (
 CREATE TABLE message (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    content MEDIUMTEXT NOT NULL,
+    content TEXT NOT NULL,
     sender_id INT REFERENCES users(id) NOT NULL,
     receiver_id INT REFERENCES users(id) NOT NULL
 );
 
 CREATE TABLE comments (
     id SERIAL PRIMARY KEY,
-    text MEDIUMTEXT NOT NULL,
+    text TEXT NOT NULL,
     date DATE NOT NULL CHECK (date <= now()),
     post_id INT REFERENCES post(id) NOT NULL,
     author_id INT REFERENCES users(id) NOT NULL
@@ -165,18 +178,6 @@ CREATE TABLE like_comment (
     user_id INT REFERENCES users(id) NOT NULL,
     comment_id INT REFERENCES comments(id) NOT NULL,
     PRIMARY KEY (user_id, comment_id)
-);
-
-CREATE TABLE groups (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description MEDIUMTEXT NOT NULL,
-    banner_pic MEDIUMTEXT
-);
-
-CREATE TABLE subgroup (
-    subgroup_id INT REFERENCES groups(id) PRIMARY KEY,
-    group_id INT REFERENCES groups(id) NOT NULL
 );
 
 CREATE TABLE owner (
@@ -206,7 +207,7 @@ CREATE TABLE group_creation (
 CREATE TABLE report_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    admin_id INT REFERENCES admin(id) NOT NULL,
+    admin_id INT REFERENCES admin(user_id) NOT NULL,
     user_id INT REFERENCES users(id) NOT NULL,
     report_id INT REFERENCES report(id) NOT NULL,
     opened BOOLEAN DEFAULT false
@@ -215,7 +216,7 @@ CREATE TABLE report_notification (
 CREATE TABLE common_help_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    admin_id INT REFERENCES admin(id) NOT NULL,
+    admin_id INT REFERENCES admin(user_id) NOT NULL,
     user_id INT REFERENCES users(id) NOT NULL,
     common_help_id INT REFERENCES common_help(id) NOT NULL,
     opened BOOLEAN DEFAULT false
@@ -224,7 +225,7 @@ CREATE TABLE common_help_notification (
 CREATE TABLE appeal_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    admin_id INT REFERENCES admin(id) NOT NULL,
+    admin_id INT REFERENCES admin(user_id) NOT NULL,
     user_id INT REFERENCES users(id) NOT NULL,
     unban_request_id INT REFERENCES unban_request(id) NOT NULL,
     opened BOOLEAN DEFAULT false
@@ -233,7 +234,7 @@ CREATE TABLE appeal_notification (
 CREATE TABLE group_creation_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    admin_id INT REFERENCES admin(id) NOT NULL,
+    admin_id INT REFERENCES admin(user_id) NOT NULL,
     user_id INT REFERENCES users(id) NOT NULL,
     group_id INT REFERENCES groups(id) NOT NULL,
     opened BOOLEAN DEFAULT false
@@ -497,7 +498,7 @@ LANGUAGE plpgsql;
 CREATE TRIGGER group_owner
     AFTER INSERT ON owner
     FOR EACH ROW
-    EXECUTE PROCEDURE group_owner;
+    EXECUTE PROCEDURE group_owner();
 
 -- TRIGGER06
 -- Users cannot request to follow someone they are already following (BR10)
