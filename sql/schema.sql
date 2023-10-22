@@ -2,7 +2,7 @@ create schema if not exists lbaw2346;
 
 SET DateStyle TO European;
 
--- Drop existing tables if they exist
+-- Drop existing tables and types if they exist
 
 DROP TABLE IF EXISTS report_notification CASCADE;
 DROP TABLE IF EXISTS common_help_notification CASCADE;
@@ -280,7 +280,121 @@ CREATE TABLE group_notification (
     opened BOOLEAN DEFAULT false
 );
 
--- Indexes
+-- Performance Indexes
+
+CREATE INDEX post_author_id ON post USING hash (author_id);
+
+CREATE INDEX post_group_id ON post USING hash (group_id);
+
+CREATE INDEX post_notified_id ON members USING hash (notified_id);
+
+-- FTS Indexes
+
+-- Add column to users to store computed ts_vectors.
+ALTER TABLE users
+ADD COLUMN tsvectors TSVECTOR;
+-- Create a function to automatically update ts_vectors.
+CREATE FUNCTION users_search_update() RETURNS TRIGGER AS $$
+BEGIN
+IF TG_OP = 'INSERT' THEN
+NEW.tsvectors = (
+setweight(to_tsvector('portuguese', NEW.username), 'A') ||
+setweight(to_tsvector('portuguese', NEW.name), 'B')
+);
+END IF;
+IF TG_OP = 'UPDATE' THEN
+IF (NEW.username <> OLD.username OR NEW.name <> OLD.name) THEN
+NEW.tsvectors = (
+setweight(to_tsvector('portuguese', NEW.username), 'A') ||
+setweight(to_tsvector('portuguese', NEW.name), 'B')
+);
+END IF;
+END IF;
+RETURN NEW;
+END $$
+LANGUAGE plpgsql;
+-- Create a trigger before insert or update on users
+CREATE TRIGGER users_search_update
+BEFORE INSERT OR UPDATE ON users
+FOR EACH ROW
+EXECUTE PROCEDURE users_search_update();
+-- Create a GIN index for ts_vectors.
+CREATE INDEX search_users ON users USING GIN (tsvectors);
+
+-- Add column to post to store computed ts_vectors.
+ALTER TABLE post
+ADD COLUMN tsvectors TSVECTOR;
+-- Create a function to automatically update ts_vectors.
+CREATE FUNCTION post_search_update() RETURNS TRIGGER AS $$
+BEGIN
+IF TG_OP = 'INSERT' THEN
+NEW.tsvectors = to_tsvector('portuguese', NEW.text);
+END IF;
+IF TG_OP = 'UPDATE' THEN
+IF (NEW.text <> OLD.text) THEN
+NEW.tsvectors = to_tsvector('portuguese', NEW.text);
+END IF;
+END IF;
+RETURN NEW;
+END $$
+LANGUAGE plpgsql;
+-- Create a trigger before insert or update on post
+CREATE TRIGGER post_search_update
+BEFORE INSERT OR UPDATE ON post
+FOR EACH ROW
+EXECUTE PROCEDURE post_search_update();
+-- Create a GIN index for ts_vectors.
+CREATE INDEX search_post ON post USING GIN (tsvectors);
+
+-- Add column to post to store computed ts_vectors.
+ALTER TABLE groups
+ADD COLUMN tsvectors TSVECTOR;
+-- Create a function to automatically update ts_vectors.
+CREATE FUNCTION groups_search_update() RETURNS TRIGGER AS $$
+BEGIN
+IF TG_OP = 'INSERT' THEN
+NEW.tsvectors = to_tsvector('portuguese', NEW.name);
+END IF;
+IF TG_OP = 'UPDATE' THEN
+IF (NEW.name <> OLD.name) THEN
+NEW.tsvectors = to_tsvector('portuguese', NEW.name);
+END IF;
+END IF;
+RETURN NEW;
+END $$
+LANGUAGE plpgsql;
+-- Create a trigger before insert or update on groups
+CREATE TRIGGER groups_search_update
+BEFORE INSERT OR UPDATE ON groups
+FOR EACH ROW
+EXECUTE PROCEDURE groups_search_update();
+-- Create a GIN index for ts_vectors.
+CREATE INDEX search_groups ON groups USING GIN (tsvectors);
+
+-- Add column to post to store computed ts_vectors.
+ALTER TABLE tag
+ADD COLUMN tsvectors TSVECTOR;
+-- Create a function to automatically update ts_vectors.
+CREATE FUNCTION tag_search_update() RETURNS TRIGGER AS $$
+BEGIN
+IF TG_OP = 'INSERT' THEN
+NEW.tsvectors = to_tsvector('portuguese', NEW.hashtag);
+END IF;
+IF TG_OP = 'UPDATE' THEN
+IF (NEW.hashtag <> OLD.hashtag) THEN
+NEW.tsvectors = to_tsvector('portuguese', NEW.hashtag);
+END IF;
+END IF;
+RETURN NEW;
+END $$
+LANGUAGE plpgsql;
+-- Create a trigger before insert or update on tag
+CREATE TRIGGER tag_search_update
+BEFORE INSERT OR UPDATE ON tag
+FOR EACH ROW
+EXECUTE PROCEDURE tag_search_update();
+-- Create a GIN index for ts_vectors.
+CREATE INDEX search_tag ON tag USING GIN (tsvectors);
 
 -- Triggers
 
@@ -458,7 +572,7 @@ CREATE TRIGGER verify_group_invite
     EXECUTE PROCEDURE verify_group_invite();
 
 -- TRIGGER10
--- When deleting a group it also deletes its subgroups, posts and notifications (business rule BR15)
+-- When deleting a group it also deletes its subgroups, posts and notifications (BR15)
 
 CREATE FUNCTION delete_group() RETURNS TRIGGER AS
 $BODY$
@@ -478,7 +592,7 @@ CREATE TRIGGER delete_group
     EXECUTE PROCEDURE delete_group();
 
 -- TRIGGER11
--- When deleting a post it also deletes its comments, likes and notifications (business rule BR16)
+-- When deleting a post it also deletes its comments, likes and notifications (BR16)
 
 CREATE FUNCTION delete_post() RETURNS TRIGGER AS
 $BODY$
@@ -497,7 +611,7 @@ CREATE TRIGGER delete_post
     EXECUTE PROCEDURE delete_post();
 
 -- TRIGGER12
--- When deleting a comment it also deletes its likes and notifications (business rule BR17)
+-- When deleting a comment it also deletes its likes and notifications (BR17)
 
 CREATE FUNCTION delete_comment() RETURNS TRIGGER AS
 $BODY$
