@@ -294,7 +294,7 @@ CREATE INDEX post_author_id ON post USING hash (author_id);
 
 CREATE INDEX post_group_id ON post USING hash (group_id);
 
-CREATE INDEX post_notified_id ON members USING hash (notified_id);
+CREATE INDEX post_notified_id ON post_notification USING hash (notified_id);
 
 -- FTS Indexes
 
@@ -413,7 +413,7 @@ CREATE FUNCTION verify_post_likes() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     IF EXISTS (SELECT * FROM like_post WHERE NEW.user_id = user_id AND NEW.post_id = post_id) THEN
-        RAISE EXCEPTION "Users may only like a post once";
+        RAISE EXCEPTION 'Users may only like a post once';
     END IF;
     RETURN NEW;
 END
@@ -432,7 +432,7 @@ CREATE FUNCTION verify_comment_likes() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     IF EXISTS (SELECT * FROM like_comment WHERE NEW.user_id = user_id AND NEW.comment_id = comment_id) THEN
-        RAISE EXCEPTION "Users may only like a comment once";
+        RAISE EXCEPTION 'Users may only like a comment once';
     END IF;
     RETURN NEW;
 END
@@ -452,7 +452,7 @@ $BODY$
 BEGIN
     IF NOT EXISTS (SELECT * FROM members WHERE NEW.author_id = user_id AND NEW.group_id = group_id) 
         AND NEW.group_id IS NOT NULL THEN
-            RAISE EXCEPTION "Users may only post to groups they are members of";
+            RAISE EXCEPTION 'Users may only post to groups they are members of';
     END IF;
     RETURN NEW;
 END
@@ -471,7 +471,7 @@ CREATE FUNCTION verify_self_follow() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     IF NEW.user1_id = NEW.user2_id THEN
-        RAISE EXCEPTION "Users cannot follow themselves";
+        RAISE EXCEPTION 'Users cannot follow themselves';
     END IF;
     RETURN NEW;
 END
@@ -489,7 +489,7 @@ CREATE TRIGGER verify_self_follow
 CREATE FUNCTION group_owner() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    INSERT INTO members (user_id, group_id) VALUES (NEW.user_id, NEW.group_id)
+    INSERT INTO members (user_id, group_id) VALUES (NEW.user_id, NEW.group_id);
     RETURN NEW;
 END
 $BODY$
@@ -508,7 +508,7 @@ $BODY$
 BEGIN
     IF EXISTS 
         (SELECT * FROM follows WHERE NEW.user1_id = user1_id AND NEW.user2_id = user2_id) THEN
-            RAISE EXCEPTION "Users cannot request to follow someone they are already following";
+            RAISE EXCEPTION 'Users cannot request to follow someone they are already following';
     END IF;
     RETURN NEW;
 END
@@ -527,7 +527,7 @@ CREATE FUNCTION verify_self_follow_request() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     IF NEW.user1_id = NEW.user2_id THEN
-        RAISE EXCEPTION "Users cannot request to follow themselves";
+        RAISE EXCEPTION 'Users cannot request to follow themselves';
     END IF;
     RETURN NEW;
 END
@@ -547,14 +547,14 @@ $BODY$
 BEGIN
     IF EXISTS 
         (SELECT * FROM users WHERE NEW.user2_id = id AND profile_private = false) THEN
-            RAISE EXCEPTION "Follow requests can only be sent to private profiles";
+            RAISE EXCEPTION 'Follow requests can only be sent to private profiles';
     END IF;
     RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER verify_follow_request
+CREATE TRIGGER verify_priv_follow_request
     BEFORE INSERT OR UPDATE ON requests
     FOR EACH ROW
     EXECUTE PROCEDURE verify_priv_follow_request();
@@ -567,7 +567,7 @@ $BODY$
 BEGIN
     IF EXISTS 
         (SELECT * FROM members WHERE NEW.user_id = user_id AND NEW.group_id = group_id) THEN
-            RAISE EXCEPTION "Users cannot be invited to join a group they are already a part of";
+            RAISE EXCEPTION 'Users cannot be invited to join a group they are already a part of';
     END IF;
     RETURN NEW;
 END
