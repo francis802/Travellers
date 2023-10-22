@@ -6,7 +6,7 @@ VALUES
     ('jane-doe2346', 'Jane Doe', 'United States', 'jane.doe@gmail.com', 'p@ssw0rd4', 'https://picsum.photos/1000'),
     ('hackerman', 'Hackerman', 'India', 'hacker.man@hack.hk', 'p@ssw0rd5', 'https://picsum.photos/1000');
 
-INSERT INTO admins (user_id)
+INSERT INTO admin (user_id)
 VALUES
     (1),
     (2);
@@ -59,7 +59,7 @@ VALUES
     (3, 5),
     (4, 5);
 
-INSERT like_post (user_id, post_id)
+INSERT INTO like_post (user_id, post_id)
 VALUES
     (1, 1),
     (1, 2),
@@ -189,10 +189,11 @@ VALUES
     (4, 5);
 
 INSERT INTO group_invitation (user_id, group_id)
+VALUES
     (1, 5),
     (1, 6);
 
 INSERT INTO group_creation (user_id, group_id)
+VALUES
     (3, 7),
     (4, 8);
-
