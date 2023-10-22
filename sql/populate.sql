@@ -29,7 +29,7 @@ VALUES
     ('You can create another account by clicking on the "Create Account" button on the top right corner of the page.', 'How can I create another account?', '2021-05-01 12:00:00', 1),
     ('You can change your password by clicking on the "Change Password" button on the top right corner of the page.', 'How can I change my password?', '2021-05-01 12:00:00', 2);
 
-INSERT INTO report (description, evaluater_id, reported_id, infractor_id)
+INSERT INTO report (description, evaluater_id, reporter_id, infractor_id)
 VALUES
     ('This user is spamming', 1, 4, 3),
     ('This user is spamming', 1, 3, 4);
