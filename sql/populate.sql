@@ -190,42 +190,9 @@ VALUES
 
 INSERT INTO group_invitation (user_id, group_id)
     (1, 5),
-    (1, 6),
-    (2, 1),
+    (1, 6);
+
+INSERT INTO group_creation (user_id, group_id)
     (3, 7),
     (4, 8);
 
-INSERT INTO report_notification (time, admin_id, user_id, report_id)
-VALUES
-    ('2021-05-01 12:00:00', 1, 1, 1),
-    ('2021-05-01 12:00:00', 1, 2, 2),
-    ('2021-05-01 12:00:00', 1, 3, 3),
-    ('2021-05-01 12:00:00', 1, 4, 4);
-
-INSERT INTO common_help_notification (time, admin_id, user_id, common_help_id)
-VALUES
-    ('2021-05-01 12:00:00', 1, 1, 1),
-    ('2021-05-01 12:00:00', 1, 2, 2),
-    ('2021-05-01 12:00:00', 1, 3, 3),
-    ('2021-05-01 12:00:00', 1, 4, 4);
-
-INSERT INTO appeal_notification (time, admin_id, user_id, appeal_id)
-VALUES
-    ('2021-05-01 12:00:00', 1, 1, 1),
-    ('2021-05-01 12:00:00', 1, 2, 2),
-    ('2021-05-01 12:00:00', 1, 3, 3),
-    ('2021-05-01 12:00:00', 1, 4, 4);
-
-INSERT INTO group_creation_notification (time, admin_id, user_id, group_id)
-VALUES
-    ('2021-05-01 12:00:00', 1, 1, 1),
-    ('2021-05-01 12:00:00', 1, 2, 2),
-    ('2021-05-01 12:00:00', 1, 3, 3),
-    ('2021-05-01 12:00:00', 1, 4, 4);
-
-INSERT INTO follow_notification (time, sender_id, notified_id, notification_type)
-VALUES
-    ('2021-05-01 12:00:00', 1, 2, 'follow_request'),
-    ('2021-05-01 12:00:00', 1, 3, 'follow_request'),
-    ('2021-05-01 12:00:00', 1, 4, 'follow_request'),
-    ('2021-05-01 12:00:00', 2, 1, 'follow_request');

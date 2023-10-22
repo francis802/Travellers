@@ -170,6 +170,7 @@ CREATE TABLE like_comment (
 CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
+    description MEDIUMTEXT NOT NULL,
     banner_pic MEDIUMTEXT
 );
 
@@ -191,6 +192,12 @@ CREATE TABLE members (
 );
 
 CREATE TABLE group_invitation (
+    user_id INT REFERENCES users(id) NOT NULL,
+    group_id INT REFERENCES groups(id) NOT NULL,
+    PRIMARY KEY (user_id, group_id)
+);
+
+CREATE TABLE group_creation (
     user_id INT REFERENCES users(id) NOT NULL,
     group_id INT REFERENCES groups(id) NOT NULL,
     PRIMARY KEY (user_id, group_id)
