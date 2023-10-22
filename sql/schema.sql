@@ -42,6 +42,23 @@ DROP TYPE IF EXISTS post_notification_types;
 DROP TYPE IF EXISTS group_notification_types;
 DROP TYPE IF EXISTS follow_notification_types;
 
+DROP FUNCTION IF EXISTS users_search_update CASCADE;
+DROP FUNCTION IF EXISTS post_search_update CASCADE;
+DROP FUNCTION IF EXISTS groups_search_update CASCADE;
+DROP FUNCTION IF EXISTS tag_search_update CASCADE;
+DROP FUNCTION IF EXISTS verify_post_likes CASCADE;
+DROP FUNCTION IF EXISTS verify_comment_likes CASCADE;
+DROP FUNCTION IF EXISTS verify_group_post CASCADE;
+DROP FUNCTION IF EXISTS verify_self_follow CASCADE;
+DROP FUNCTION IF EXISTS group_owner CASCADE;
+DROP FUNCTION IF EXISTS verify_follow_request CASCADE;
+DROP FUNCTION IF EXISTS verify_self_follow_request CASCADE;
+DROP FUNCTION IF EXISTS verify_priv_follow_request CASCADE;
+DROP FUNCTION IF EXISTS verify_group_invite CASCADE;
+DROP FUNCTION IF EXISTS delete_group CASCADE;
+DROP FUNCTION IF EXISTS delete_post CASCADE;
+DROP FUNCTION IF EXISTS delete_comment CASCADE;
+
 -- Types
 
 CREATE TYPE comment_notification_types AS ENUM('mention_comment', 'liked_comment', 'new_comment', 'reply_comment');
