@@ -1,10 +1,10 @@
-INSERT INTO users (username, name, country, email, password, profile_photo)
+INSERT INTO users (username, name, country, email, password, profile_photo, profile_private)
 VALUES
-    ('francisco.campos03', 'Francisco Campos', 'Portugal', 'francisco.campos@gmail.com', 'p@ssw0rd1', 'https://picsum.photos/1000'),
-    ('antonio.romao03', 'António Romão', 'Portugal', 'antonio.romao@gmail.com', 'p@ssw0rd2', 'https://picsum.photos/1000'),
-    ('jonh-doe2346', 'Jonh Doe', 'United States', 'jonh.doe@gmail.com', 'p@ssw0rd3', 'https://picsum.photos/1000'),
-    ('jane-doe2346', 'Jane Doe', 'United States', 'jane.doe@gmail.com', 'p@ssw0rd4', 'https://picsum.photos/1000'),
-    ('hackerman', 'Hackerman', 'India', 'hacker.man@hack.hk', 'p@ssw0rd5', 'https://picsum.photos/1000');
+    ('francisco.campos03', 'Francisco Campos', 'Portugal', 'francisco.campos@gmail.com', 'p@ssw0rd1', 'https://picsum.photos/1000', true),
+    ('antonio.romao03', 'António Romão', 'Portugal', 'antonio.romao@gmail.com', 'p@ssw0rd2', 'https://picsum.photos/1000', true),
+    ('jonh-doe2346', 'Jonh Doe', 'United States', 'jonh.doe@gmail.com', 'p@ssw0rd3', 'https://picsum.photos/1000', true),
+    ('jane-doe2346', 'Jane Doe', 'United States', 'jane.doe@gmail.com', 'p@ssw0rd4', 'https://picsum.photos/1000', true),
+    ('hackerman', 'Hackerman', 'India', 'hacker.man@hack.hk', 'p@ssw0rd5', 'https://picsum.photos/1000', true);
 
 INSERT INTO admin (user_id)
 VALUES
@@ -58,6 +58,63 @@ VALUES
     (2, 5),
     (3, 5),
     (4, 5);
+	
+INSERT INTO groups (name, description, banner_pic)
+VALUES
+    ('Portugal', 'Description', 'https://picsum.photos/1000'),
+    ('United States', 'Description', 'https://picsum.photos/1000'),
+    ('India', 'Description', 'https://picsum.photos/1000'),
+    ('Brazil', 'Description', 'https://picsum.photos/1000'),
+    ('Leça da Palmeira', 'Description', 'https://picsum.photos/1000'),
+    ('NYC', 'Description', 'https://picsum.photos/1000'),
+    ('Mumbai', 'Description', 'https://picsum.photos/1000'),
+    ('Rio de Janeiro', 'Description', 'https://picsum.photos/1000'),
+    ('Lisboa', 'Description', 'https://picsum.photos/1000');
+
+INSERT INTO subgroup (subgroup_id, group_id)
+VALUES
+    (5, 1),
+    (9, 1),
+    (6, 2),
+    (7, 3),
+    (8, 4);
+
+INSERT INTO owner (user_id, group_id)
+VALUES
+    (1, 1),
+    (2, 2),
+    (3, 3),
+    (4, 4);
+
+INSERT INTO members (user_id, group_id)
+VALUES
+    (1, 2),
+    (2, 3),
+    (3, 4),
+    (4, 5);
+
+INSERT INTO group_invitation (user_id, group_id)
+VALUES
+    (1, 5),
+    (1, 6);
+
+INSERT INTO group_creation (user_id, group_id)
+VALUES
+    (3, 7),
+    (4, 8);
+
+
+INSERT INTO post (date, text, media, author_id, group_id)
+VALUES
+    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 1, 1),
+    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 1, 2),
+    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 1, 1),
+    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 1, 2),
+    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 2, 3),
+    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 2, 2),
+    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 3, 3),
+    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 3, 3),
+    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 4, 4);
 
 INSERT INTO like_post (user_id, post_id)
 VALUES
@@ -71,18 +128,6 @@ VALUES
     (3, 1),
     (3, 2),
     (4, 1);
-
-INSERT INTO post (date, text, media, author_id, group_id)
-VALUES
-    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 1, 1),
-    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 1, 2),
-    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 1, 3),
-    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 1, 4),
-    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 2, 1),
-    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 2, 2),
-    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 3, 1),
-    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 3, 2),
-    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 4, 1);
 
 INSERT INTO tag (hashtag)
 VALUES
@@ -149,51 +194,3 @@ VALUES
     (3, 1),
     (3, 2),
     (4, 1);
-
-INSERT INTO groups (name, banner_pic)
-VALUES
-    ('Portugal', 'https://picsum.photos/1000'),
-    ('United States', 'https://picsum.photos/1000'),
-    ('India', 'https://picsum.photos/1000'),
-    ('Brazil', 'https://picsum.photos/1000'),
-    ('Leça da Palmeira', 'https://picsum.photos/1000'),
-    ('NYC', 'https://picsum.photos/1000'),
-    ('Mumbai', 'https://picsum.photos/1000'),
-    ('Rio de Janeiro', 'https://picsum.photos/1000'),
-    ('Lisboa', 'https://picsum.photos/1000');
-
-INSERT INTO subgroup (subgroup_id, group_id)
-VALUES
-    (5, 1),
-    (9, 1),
-    (6, 2),
-    (7, 3),
-    (8, 4);
-
-INSERT INTO owner (user_id, group_id)
-VALUES
-    (1, 1),
-    (2, 2),
-    (3, 3),
-    (4, 4);
-
-INSERT INTO members (user_id, group_id)
-VALUES
-    (1, 1),
-    (1, 2),
-    (2, 2),
-    (2, 3),
-    (3, 3),
-    (3, 4),
-    (4, 4),
-    (4, 5);
-
-INSERT INTO group_invitation (user_id, group_id)
-VALUES
-    (1, 5),
-    (1, 6);
-
-INSERT INTO group_creation (user_id, group_id)
-VALUES
-    (3, 7),
-    (4, 8);
