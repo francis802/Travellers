@@ -1,0 +1,151 @@
+openapi: 3.1.0
+
+info:
+  version: '1.0'
+  title: 'LBAW Travellers Web API'
+  description: 'Web Resources Specification (A7) for Travellers'
+
+servers:
+- url: http://lbaw2346.lbaw.fe.up.pt
+  description: Production server
+
+externalDocs:
+  description: Find more info here.
+  url: https://git.fe.up.pt/lbaw/lbaw2324/lbaw2346/-/wikis/eap
+
+tags:
+  - name: 'M01: Authentication'
+  - name: 'M02: User'
+  - name: 'M03: Administer'
+  - name: 'M04: Post'
+  - name: 'M05: Search'
+  - name: 'M06: Groups'
+
+paths:
+
+# AUTHENTICATION #
+
+  /login:
+    get:
+      operationId: R101
+      summary: 'R101: Login Form'
+      description: 'Provide login form. Access: PUB'
+      tags:
+        - 'M01: Authentication'
+      responses:
+        '200':
+          description: 'OK. Show Log-in UI'
+    post:
+      operationId: R102
+      summary: 'R102: Login Action'
+      description: 'Processes the login form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                  format: password
+              required:
+                - username 
+                - password
+      responses:
+        '302':
+          description: 'Redirect after processing the login info.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful login. Redirecting to user feed.'
+                  value: '' # TODO
+                302Error:
+                  description: 'Failed login. Redirecting again to login form.'
+                  value: '/login'
+
+  /logout:
+    post:
+      operationId: R103
+      summary: 'R103: Logout Action'
+      description: 'Logout the current logged-in user. Access: USR, ADM'
+      tags:
+        - 'M01: Authentication'
+      responses:
+        '302':
+          description: 'Redirect after processing logout.'
+          headers:
+            Location:
+              shcema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful logout. Redirecting to login form.'
+                  value: '/login'
+
+  /register:
+    get:
+      operationId: R104
+      summary: 'R104: Register Form'
+      description:  'Provide new user registration form. Access: PUB'
+      tags:
+        - 'M01: Authentication'
+      responses:
+        '200':
+          description: 'OK. Show Sign-Up UI'
+    post:
+      operationId: R105
+      summary: 'R105: Register Action'
+      description: 'Processes the new user registration form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                name:
+                  type: string
+                country:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                confirm_password:
+                  type: string
+                  format: password
+              required:
+                - username 
+                - name
+                - country 
+                - email
+                - password 
+                - confirm_password
+      responses:
+        '302':
+          description: 'Redirect after processing the new user info.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful registration. Redirecting to user feed.'
+                  value: '' # TODO
+                302Failure:
+                  description: 'Failed registration. Redirecting again to register form.'
+                  value: '/register'
