@@ -15,16 +15,17 @@ externalDocs:
 
 tags:
   - name: 'M01: Authentication'
-  - name: 'M02: User'
-  - name: 'M03: Administer'
-  - name: 'M04: Post'
+  - name: 'M02: Users'
+  - name: 'M03: Administration'
+  - name: 'M04: Posts'
   - name: 'M05: Search'
   - name: 'M06: Groups'
 
 paths:
 
-# AUTHENTICATION #
+################### AUTHENTICATION ###################
 
+#### Login ####
   /login:
     get:
       operationId: R101
@@ -71,6 +72,7 @@ paths:
                   description: 'Failed login. Redirecting again to login form.'
                   value: '/login'
 
+#### Logout ####
   /logout:
     post:
       operationId: R103
@@ -90,6 +92,7 @@ paths:
                   description: 'Successful logout. Redirecting to login form.'
                   value: '/login'
 
+#### Register ####
   /register:
     get:
       operationId: R104
@@ -145,7 +148,1065 @@ paths:
               examples:
                 302Success:
                   description: 'Successful registration. Redirecting to user feed.'
-                  value: '' # TODO
+                  value: '' 
                 302Failure:
                   description: 'Failed registration. Redirecting again to register form.'
                   value: '/register'
+
+
+################### POSTS ###################
+
+#### Creation ####
+  /post/create:
+    post:
+      operationId: R201
+      summary: 'R201: Create Post'
+      description: 'Creates a new post. Access: USR'
+      tags:
+        - 'M04: Posts'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                media:
+                  type: string
+                  format: binary
+                group_id:
+                  type: integer
+              required:
+                - group_id
+      responses:
+        '302':
+          description: 'Redirect after processing the new post info.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful post creation. Redirecting to user feed.'
+                302Failure:
+                  description: 'Failed post creation. Redirecting again to post creation form.'
+
+#### Deletion ####
+  /post/delete:
+    post:
+      operationId: R202
+      summary: 'R202: Delete Post'
+      description: 'Deletes a post. Access: OWN, ADM'
+      tags:
+        - 'M04: Posts'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                post_id:
+                  type: integer
+              required:
+                - post_id
+      responses:
+        '200':
+          description: 'OK. Redirecting to user feed.'
+        '403':
+          description: 'Forbidden. Redirecting to user feed.'
+
+
+#### Edition ####
+  /post/edit:
+    post:
+      operationId: R203
+      summary: 'R203: Edit Post'
+      description: 'Edits a post. Access: OWN, ADM'
+      tags:
+        - 'M04: Posts'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                post_id:
+                  type: integer
+                content:
+                  type: string
+                media:
+                  type: string
+                  format: binary
+                group_id:
+                  type: integer
+              required:
+                - post_id
+                - group_id
+      responses:
+        '200':
+          description: 'Edit successfully. Redirecting to user feed.'
+        '403':
+          description: 'Forbidden. Redirecting to user feed.'
+
+
+#### Like ####
+  /post/like:
+    post:
+      operationId: R204
+      summary: 'R204: Like Post'
+      description: 'Likes a post. Access: USR, OWN, ADM'
+      tags:
+        - 'M04: Posts'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                post_id:
+                  type: integer
+              required:
+                - post_id
+      responses:
+        '200':
+          description: 'Like successfully.'
+        '403':
+          description: 'Forbidden.'
+          
+
+#### Unlike ####
+  /post/unlike:
+    post:
+      operationId: R205
+      summary: 'R205: Unlike Post'
+      description: 'Unlikes a post. Access: USR, OWN, ADM'
+      tags:
+        - 'M04: Posts'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                post_id:
+                  type: integer
+              required:
+                - post_id
+      responses:
+        '200':
+          description: 'Unlike successfully.'
+        '403':
+          description: 'Forbidden.'
+
+
+################### SEARCH ###################
+
+#### Search Page ####
+  /home/search:
+    get:
+      operationId: R301
+      summary: 'R301: Search Page'
+      description: 'Provides the search page. Access: USR, ADM'
+      tags:
+        - 'M05: Search'
+      responses:
+        '200':
+          description: 'OK. Show Search UI'
+
+
+
+
+################### GROUPS ###################
+
+#### Group Page ####
+  /group/{id}:
+    get:
+      operationId: R401
+      summary: 'R401: Group Page'
+      description: 'Provides the group page. Access: USR, ADM, OWN, GOWN'
+      tags:
+        - 'M06: Groups'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 'Group ID'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'OK. Show Group UI'
+        '302':
+          description: 'Not Found. Redirecting to user feed.'
+
+
+#### Group Creation ####
+  /group/create:
+    post:
+      operationId: R402
+      summary: 'R402: Group Creation action'
+      description: 'Processes the group creation form submission. Access: USR'
+      tags:
+        - 'M06: Groups'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                image:
+                  type: string
+                  format: binary
+              required:
+                - name
+      responses:
+        '302':
+          description: 'Redirect after processing the group creation info.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful group creation. Redirecting to group'
+                  value: '/group/{id}'
+                302Failure:
+                  description: 'Failed group creation. Redirecting to previous page.'
+
+#### Group Deletion ####
+  /group/delete:
+    post:
+      operationId: R403
+      summary: 'R403: Group Deletion action'
+      description: 'Processes the group deletion form submission. Access: GOWN, ADM'
+      tags:
+        - 'M06: Groups'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                group_id:
+                  type: integer
+              required:
+                - group_id
+      responses:
+        '200':
+          description: 'Deletion complete.'
+        '401':
+          description: 'Unauthorized. Your're not allowed to delete.'
+
+#### Group Edition Page ####
+  /group/{id}/edit:
+    get:
+      operationId: R404
+      summary: 'R404: Group Edit Page'
+      description: 'Provides the group edit page. Access: GOWN, ADM'
+      tags:
+        - 'M06: Groups'
+      parameters:
+        - name: id
+          in: path
+          description: 'Group ID'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'OK. Show Group Edit UI'
+        '302':
+          description: 'Unauthorized. Your're not allowed to edit.'
+
+#### Group Edition ####
+  /group/edit:
+    post:
+      operationId: R405
+      summary: 'R405: Group Edit Action'
+      description: 'Processes the group edit form submission. Access: GOWN, ADM'
+      tags:
+        - 'M06: Groups'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string                
+      responses:
+        '302':
+          description: 'Redirect after processing the group edit info.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful group edit. Redirecting to group.'
+                  value: '/group/{id}'
+                302Failure:
+                  description: 'Failed group edit. Redirecting again to group edit.'
+                  value: '/group/{id}/edit'
+
+#### Group Ownership ####
+  /group/turnIntoOwner:
+    post:
+      operationId: R406
+      summary: 'R406: Give Group Ownership Action'
+      description: 'Processes the group ownership form submission. Access: GOWN, ADM'
+      tags:
+        - 'M06: Groups'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                group_id:
+                  type: integer
+                user_id:
+                  type: integer
+              required:
+                - group_id
+                - user_id
+      responses:
+        '302':
+          description: 'Redirect after processing the group ownership info.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful. Redirecting to group page with new owner.'
+                302Failure:
+                  description: 'Failed. Redirecting again to group page withou changes.'
+
+#### Group Join ####
+  /group/join:
+    post:
+      operationId: R407
+      summary: 'R407: Join Group Action'
+      description: 'Joining group. Access: USR'
+      tags:
+        - 'M06: Groups'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                group_id:
+                  type: integer
+                user_id:
+                  type: integer
+              required:
+                - group_id
+                - user_id
+      responses:
+        '200':
+          description: 'Joining group successfully.'
+        '403':
+          description: 'Forbidden. You cannot join the group.'
+
+#### Group Leave ####
+  /group/leave:
+    post:
+      operationId: R408
+      summary: 'R408: Leave Group Action'
+      description: 'Leaving group. Access: USR'
+      tags:
+        - 'M06: Groups'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                group_id:
+                  type: integer
+                user_id:
+                  type: integer
+              required:
+                - group_id
+                - user_id
+      responses:
+        '200':
+          description: 'Leaving group successfully.'
+        '403':
+          description: 'Forbidden. You cannot leave the group.'
+
+#### Group Remove Member ####
+  /group/removeMember:
+    post:
+      operationId: R409
+      summary: 'R409: Remove Member Action'
+      description: 'Removing member from group. Access: GOWN, ADM'
+      tags:
+        - 'M06: Groups'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                group_id:
+                  type: integer
+                user_id:
+                  type: integer
+              required:
+                - group_id
+                - user_id
+      responses:
+        '200':
+          description: 'Removing member successfully.'
+        '403':
+          description: 'Forbidden. You cannot remove the member.'
+
+
+################### USERS ###################
+
+#### PROFILE ####
+  /user/{id}:
+    get:
+      operationId: R501
+      summary: 'R501: User View Profile'
+      description: 'Provides the user profile page. Access: USR, ADM, OWN'
+      tags:
+        - 'M02: Users'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 'User ID'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'OK. Show User Profile UI'
+        '302':
+          description: 'Redirect if user is not logged in or other user does not exists'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Failure:
+                  description: 'Failure.'
+
+#### Home Page ####
+  /home:
+    get:
+      operationId: R502
+      summary: 'R502: Home Page'
+      description: 'Provides the home page. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+      responses:
+        '200':
+          description: 'OK. Show the individual home page UI'
+        '302':
+          description: 'Redirect after unauthorized request.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                  302Success:
+                    description: 'You need login first. Redirect to login page.'
+                    value: '/login'
+
+#### Edit Profile ####
+  /user/edit:
+    post:
+      operationId: R503
+      summary: 'R503: Edit Profile Action'
+      description: 'Processes the edited profile. Access: USR'
+      tags:
+        - 'M02: Users'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                confirm_password:
+                  type: string
+                  format: password
+                picture:
+                  type: string
+                  format: binary
+                is_public:
+                  type: boolean
+              required:
+                - name
+                - username
+                - email
+                - description
+                - is_public
+      responses:
+        '302':
+          description: 'Redirect after processing the edit profile info.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful edit profile. Redirecting to user profile.'
+                  value: '/user/{id}'
+                302Failure:
+                  description: 'Failed edit profile. Redirecting again to edit profile.'
+                  value: '/user/edit'
+
+#### Edit Profile Page ####
+    get:
+      operationId: R504
+      summary: 'R504: Edit Profile Page'
+      description: 'Provides the edit profile page. Access: OWN, ADM'
+      tags:
+        - 'M02: Users'
+      responses:
+        '200':
+          description: 'OK. Show Edit Profile UI'
+        '401':
+          description: 'Redirect after unauthorized request.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                  401Success:
+                    description: 'Unouthorized. Redirecting to user profile.'
+                    value: '/user/{id}'
+
+#### Profile Deletion ####
+  /user/deleteProfile:
+    post:
+      operationId: R505
+      summary: 'R505: Delete Profile'
+      description: 'Processes the profile deletion in the profile page. Access: OWN, ADM'
+      tags:
+        - 'M02: Users'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id
+      responses:
+        '302':
+          description: 'Redirect after processing the delete profile info.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful delete profile. Redirecting to login page.'
+                  value: '/login'
+                302Failure:
+                  description: 'Failed delete profile. Redirecting again to user profile.'
+                  value: '/user/{id}'
+
+#### User Deletion ####
+  /user/delete:
+    post:
+      operationId: R506
+      summary: 'R506: Delete User'
+      description: 'Processes the user deletion in the admin page. Access: ADM'
+      tags:
+        - 'M02: Users'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id
+      responses:
+        '200':
+          description: 'Deletion complete.'
+        '401':
+          description: 'Unauthorized. Your're not allowed to delete.'
+
+#### Follow ####
+  /user/follow:
+    post:
+      operationId: R507
+      summary: 'R507: Follow user'
+      description: 'Follows an user. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id
+      responses:
+        '200':
+          description: 'Follow successfully.'
+        '403':
+          description: 'Forbidden. You cannot follow the user.'
+
+#### Unfollow ####
+  /user/unfollow:
+    post:
+      operationId: R508
+      summary: 'R508: Unfollow user'
+      description: 'Unfollows an user. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id
+      responses:
+        '200':
+          description: 'Unfollow successfully.'
+        '403':
+          description: 'Forbidden. You cannot unfollow the user.'
+
+#### Remove Follower ####
+  /user/removeFollower:
+    post:
+      operationId: R509
+      summary: 'R509: Remove Follower'
+      description: 'Removes a follower. Access: OWN'
+      tags:
+        - 'M02: Users'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id
+      responses:
+        '200':
+          description: 'Removes follower successfully.'
+        '403':
+          description: 'Forbidden. You cannot remove the follower.'
+
+#### Follow Request ####
+  /user/followRequest:
+    post:
+      operationId: R510
+      summary: 'R510: Send follow request'
+      description: 'Sends follow request notification to an user. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id
+      responses:
+        '200':
+          description: 'Follow request successfully.'
+        '403':
+          description: 'Forbidden. You cannot follow the user.'
+
+#### Accept Follow Request ####
+  /user/acceptFollowRequest:
+    post:
+      operationId: R511
+      summary: 'R511: Accept follow request'
+      description: 'Accepts follow request from an user. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id
+      responses:
+        '200':
+          description: 'Accept follow request successfully.'
+        '403':
+          description: 'Forbidden. You cannot accept the follow request.'
+
+#### Decline Follow Request ####
+  /user/declineFollowRequest:
+    post:
+      operationId: R512
+      summary: 'R512: Decline follow request'
+      description: 'Declines follow request from an user. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id
+      responses:
+        '200':
+          description: 'Decline follow request successfully.'
+        '403':
+          description: 'Forbidden. You cannot decline the follow request.'
+
+#### Cancel Follow Request ####
+  /user/cancelFollowRequest:
+    post:
+      operationId: R513
+      summary: 'R513: Cancel follow request'
+      description: 'Delete the rquetes notification of follow request. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: 'Cancel follow request successfully.'
+        '403':
+          description: 'Forbidden. You cannot cancel the follow request.'
+
+#### Notifications ####
+  /home/notifications:
+    get:
+      operationId: R514
+      summary: 'R514: Notifications Page'
+      description: 'Provides the notifications page. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+      responses:
+        '200':
+          description: 'OK. Show Notifications UI'
+        '302':
+          description: 'Redirect after unauthorized request if user is not logged in.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                  302Success:
+                    description: 'Unouthorized.'
+
+#### Notifications Deletion ####
+  /notification/delete:
+    post:
+      operationId: R515
+      summary: 'R515: Delete Notification'
+      description: 'Processes the notification deletion in the notifications page. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                required:
+                  - id
+      responses:
+        '200':
+          description: 'Deletion complete.'
+        '401':
+          description: 'Unauthorized. Your're not allowed to delete.'
+
+#### Messages ####
+  /messages:
+    get:
+      operationId: R516
+      summary: 'R516: Messages Page'
+      description: 'Provides the messages page. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+      responses:
+        '200':
+          description: 'OK. Show Messages Page'
+        '302':
+          description: 'Redirect after unauthorized request if user is not logged in.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                  302Success:
+                    description: 'Unouthorized.'
+  
+#### Message ####
+  /message/{id}:
+    get:
+      operationId: R517
+      summary: 'R517: Messages with a user'
+      description: 'Provides the messages with another user. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'OK. Show Messages Page with a user'
+        '302':
+          description: 'Redirect after unauthorized request if user is not logged in.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                  302Success:
+                    description: 'Unouthorized.'
+
+#### Message Send ####
+  /message/send:
+    post:
+      operationId: R518
+      summary: 'R518: Send Message'
+      description: 'Sends a message to another user. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object  
+              properties:
+                user_id:
+                  type: integer
+                content:
+                  type: string
+              required:
+                - user_id
+      responses:
+        '302':
+          description: 'Redirect after processing the message sent.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Message sent successfully.'
+                302Failure:
+                  description: 'Failed. No content found.'
+
+######### Help Page #########
+  /about:
+    get:
+      operationId: R519
+      summary: 'R519: Help static page'
+      description: 'Show Help Page. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+      responses:
+        '200':
+          description: 'Show the help page.'
+
+######### About Page #########
+  /about:
+    get:
+      operationId: R520
+      summary: 'R520: About static page'
+      description: 'Show About Page. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+      responses:
+        '200':
+          description: 'Show the about page.'
+
+################### ADMINISTRATION ###################
+
+#### Admin Page ####
+  /admin:
+    get:
+      operationId: R601
+      summary: 'R601: Admin Page'
+      description: 'Show Admin Page. Access: ADM'
+      tags:
+        - 'M05: Administration'
+      responses:
+        '200':
+          description: 'Show the admin page.'
+        '403':
+          description: 'Unauthorized.'
+
+#### User Block ####
+  /admin/user/block:
+    post:
+      operationId: R602
+      summary: 'R602: Block a user action'
+      description: 'Block a user. Access: ADM'
+      tags:
+        - 'M05: Administration'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id
+
+      responses:
+        '200':
+          description: 'User blocked successfully.'
+        '401':
+          description: 'Unauthorized.'
+
+#### User Unblock ####
+  /admin/user/unblock:
+
+    post:
+      operationId: R603
+      summary: 'R503: Unblocking a user action'
+      description: 'Unblock a user. Access: ADM'
+      tags:
+        - 'M05: Administration'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id
+      responses:
+        '200':
+          description: 'Ok. User unblocked.'
+        '401':
+          description: 'Unauthorized. You cannot unblock this user.'
+
+#### Group Accept ####
+  /admin/group/accept:
+    post:
+      operationId: R604
+      summary: 'R604: Accept Group Action'
+      description: 'Accepts a group. Access: ADM'
+      tags:
+        - 'M05: Administration'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                group_id:
+                  type: integer
+              required:
+                - group_id
+      responses:
+        '200':
+          description: 'Accept successfully.'
+        '403':
+          description: 'Forbidden.'
+
+#### Group Decline ####
+  /admin/group/decline:
+    post:
+      operationId: R605
+      summary: 'R605: Decline Group Action'
+      description: 'Declines a group. Access: ADM'
+      tags:
+        - 'M05: Administration'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                group_id:
+                  type: integer
+              required:
+                - group_id
+      responses:
+        '200':
+          description: 'Decline successfully.'
+        '403':
+          description: 'Forbidden.'
