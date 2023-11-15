@@ -23,23 +23,14 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'username',
-        'email',
-        'password',
-        'name',
-        'profile_private',
-        'country'
-    ];
+    protected $fillable = ['username', 'email', 'name', 'profile_private', 'country', 'password'];
 
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>
      */
-    protected $hidden = [
-        'password'
-    ];
+    protected $hidden = ['password'];
 
     /**
      * The attributes that should be cast.
@@ -51,11 +42,5 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    /**
-     * Get the cards for a user.
-     */
-    public function cards(): HasMany
-    {
-        return $this->hasMany(Card::class);
-    }
+    
 }

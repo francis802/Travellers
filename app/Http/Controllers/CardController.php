@@ -23,8 +23,8 @@ class CardController extends Controller
         $this->authorize('show', $card);  
 
         // Use the pages.card template to display the card.
-        return view('pages.card', [
-            'card' => $card
+        return view('pages.profile', [
+            'profile' => $card
         ]);
     }
 
@@ -50,8 +50,8 @@ class CardController extends Controller
             // The current user is authorized to list cards.
 
             // Use the pages.cards template to display all cards.
-            return view('pages.cards', [
-                'cards' => $cards
+            return view('pages.profile', [
+                'profile' => $card
             ]);
         }
     }
