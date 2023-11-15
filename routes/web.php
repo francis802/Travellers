@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -27,6 +28,7 @@ Route::controller(CardController::class)->group(function () {
     Route::get('/cards', 'list')->name('cards');
     Route::get('/cards/{id}', 'show');
 });
+
 
 
 // API
@@ -53,3 +55,6 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
+
+
+Route::get('/profile', [UserController::class, 'show'])->name('show-profile');
