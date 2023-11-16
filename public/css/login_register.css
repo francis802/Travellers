@@ -1,0 +1,116 @@
+#user-presentation{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 3rem;
+}
+
+#user-name{
+    margin: 0;
+}
+
+#user-username{
+    margin: 0;
+    font-size: xx-large;
+}
+
+#profile-buttons-area{
+    margin-left: 8em;
+}
+
+.login-register-form{
+    display: grid;
+    max-width:fit-content;
+}
+
+.login-register{
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    align-items: center;
+}
+
+.logo{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: center;
+}
+
+h1{
+    font-size: xxx-large;
+    margin: 0;
+}
+
+#email, #password, #username, #name, #password-confirm, #country{
+    border-color: cornflowerblue;
+    border-radius: 1em;
+    outline: none;
+}
+
+
+label{
+    font-size: medium;
+    margin-top: 1em;
+}
+  /*
+.button{
+    border-radius: 1em;
+    border-color: cornflowerblue;
+    outline: none;
+    background-color: cornflowerblue;
+    text-decoration: none;
+    border: none;
+    padding: 5%;
+    color: #f3f2f2;
+    font-size: medium;
+    font-weight: 700;
+    width: 70%;
+    box-shadow: 0px 6px 17px 0px rgba(0, 0, 0, 0.15);
+}
+*/
+.button, .link-button{
+   /*
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid cornflowerblue;
+            border-radius: 5px;
+            color: #f3f2f2;
+            background-color: cornflowerblue;
+            transition: background-color 0.3s ease-in-out;
+            font-size: medium;
+    font-weight: 700;
+    box-shadow: 0px 6px 17px 0px rgba(0, 0, 0, 0.15);
+    */
+    border-radius: 1em;
+    border-color: cornflowerblue;
+    outline: none;
+    background-color: cornflowerblue;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    padding: 5%;
+    color: #f3f2f2;
+    font-size: medium;
+    font-weight: 700;
+    width: 70%;
+    box-shadow: 0px 6px 17px 0px rgba(0, 0, 0, 0.15);
+}
+
+.button:hover, .link-button:hover{
+    background-color: #f3f2f2;
+    color: cornflowerblue;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.button{
+    margin-right: 1em;
+}
+
+#buttons-container{
+    display: flex;
+    flex-direction: row;
+    margin-top: 1rem;
+}

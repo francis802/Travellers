@@ -1,0 +1,33 @@
+#side-bar{
+    background-color: #CCCCCC;
+}
+
+a:hover{
+    color:#85bcc7;
+}
+
+.side-bar-link{
+    text-decoration: none;
+    color: black;
+}
+
+.rights-text{
+    color:black;
+    font-size: x-small;
+}
+
+#upper-sidebar, #lower-sidebar{
+    list-style: none;
+}
+
+#lower-sidebar{
+    position: absolute;
+    bottom: 0;
+    margin: 0;
+}
+
+
+
+#upper-sidebar{
+    margin: 0;
+}

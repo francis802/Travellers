@@ -1,10 +1,10 @@
 @extends('layouts.app')
+@include('partials.bar')
+@include('partials.user')
 
-@section('title', 'Profile')
-
-@section('profile')
-    <section id="profile">
-        <h1>Travellers</h1>
+@section('content')
+    <section class="inner-content">
+    @yield('bar')
+    @yield('user')
     </section>
-
 @endsection
