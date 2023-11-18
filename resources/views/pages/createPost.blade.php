@@ -2,13 +2,11 @@
 
 @section('title', 'Home')
 @include('partials.bar')
-
+@include('partials.createPostForm')
 
 @section('content')
     <section class="inner-content">
         @yield('bar')
-        <section id="profile">
-            <p>Travellers</p>
-        </section>
+        @yield('createPostForm')
     </section>
 @endsection
