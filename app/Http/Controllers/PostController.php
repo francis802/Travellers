@@ -36,7 +36,14 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        $author = $post->author()->get();
+        $comments = $post->comments()->get();
+        return view('pages.post', ['date' => $post->date,
+                                    'edited' => $post->edited, 
+                                    'description' => $post->description, 
+                                    'media' => $post->media,
+                                    'author' => $author, 
+                                    'comments' => $comments]);
     }
 
     /**
