@@ -50,6 +50,7 @@ class UserController extends Controller
                                        'old' => ['name' => Auth::user()->name, 
                                                  'username' => Auth::user()->username,
                                                  'email' => Auth::user()->email, 
+                                                 'country' => Auth::user()->country,
                                                  'private' => Auth::user()->profile_private ] ]);
     }
 
@@ -62,6 +63,7 @@ class UserController extends Controller
                 'name' => 'max:255',
                 'username' => 'unique:users,username,'.$user->id.'|max:255',
                 'email' => 'email|unique:users,email,'.$user->id.'|max:255',
+                'country' => 'max:255'
             ]);
 
             if($request->password) {
@@ -75,6 +77,7 @@ class UserController extends Controller
             $user->name = $request->input('name');
             $user->username = $request->input('username');
             $user->email = $request->input('email');
+            $user->country = $request->input('country');
 
             $user->save();
             return redirect('user/'.$user->id);

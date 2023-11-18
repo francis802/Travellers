@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<section id="cont">
 <section class="login-register">
     <section class="logo">
         <img src="../logo.png" width=10% alt="Traveller Logo">
@@ -32,11 +33,13 @@
             <button class="button" type="submit">Login</button>
             <a class="link-button" href="{{ route('register') }}">Register</a>
         </div>
-        @if (session('success'))
+        
+    </form>
+    @if (session('success'))
             <p class="success">
                 {{ session('success') }}
             </p>
         @endif
-    </form>
+</section>
 </section>
 @endsection

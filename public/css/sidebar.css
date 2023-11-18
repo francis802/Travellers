@@ -35,3 +35,10 @@ a:hover{
     display: flex;
 }
 
+.name-link{
+    font-size: inherit;
+}
+
+.name-link:hover{
+    font-size: inherit;
+}
