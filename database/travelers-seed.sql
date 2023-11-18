@@ -658,16 +658,17 @@ CREATE TRIGGER delete_comment
 
 INSERT INTO users (username, name, country, email, password, profile_photo, profile_private)
 VALUES
-    ('francisco.campos03', 'Francisco Campos', 'Portugal', 'francisco.campos@gmail.com', 'p@ssw0rd1', 'https://picsum.photos/1000', true),
-    ('antonio.romao03', 'António Romão', 'Portugal', 'antonio.romao@gmail.com', 'p@ssw0rd2', 'https://picsum.photos/1000', true),
-    ('jonh-doe2346', 'Jonh Doe', 'United States', 'jonh.doe@gmail.com', 'p@ssw0rd3', 'https://picsum.photos/1000', true),
-    ('jane-doe2346', 'Jane Doe', 'United States', 'jane.doe@gmail.com', 'p@ssw0rd4', 'https://picsum.photos/1000', true),
-    ('hackerman', 'Hackerman', 'India', 'hacker.man@hack.hk', 'p@ssw0rd5', 'https://picsum.photos/1000', true);
+    ('francisco.campos03', 'Francisco Campos', 'Portugal', 'francisco.campos@gmail.com', '$2y$10$53jvyZTBMRAkoN/KdkA1s.n.QZ.zTXK6406l5ZmGUSslsEH07WkuS', 'https://picsum.photos/1000', true),
+    ('antonio.romao03', 'António Romão', 'Portugal', 'antonio.romao@gmail.com', '$2y$10$EpgSBve6Nc.Q.PepTjNp8uJUEyZQjnVfmIlLDHR9LGDZC8/VHWPl.', 'https://picsum.photos/1000', true),
+    ('henrique.pinheiro03', 'Henrique Pinheiro', 'Portugal', 'henrique.pinheiro@gmail.com', '$2y$10$/zHdv.sEpPASgf6nXgObI.c.dleL0jqzAEVANmzB.GjFvjvPQ5kYO', 'https://picsum.photos/1000', true),
+    ('jane-doe2346', 'Jane Doe', 'United States', 'jane.doe@gmail.com', '$2y$10$8dw4v6YscmyD6MG4Jf92BeOpi299ULr/Z57FCjhH6GrCWwhPb8Y7a', 'https://picsum.photos/1000', true),
+    ('hackerman', 'Hackerman', 'India', 'hacker.man@hack.hk', '$2y$10$xRQgfBx4DIkNk.Y6R4qOPuACJ8MTOm7I1VTPkF9K5Rh85tMRa7x0.', 'https://picsum.photos/1000', true);
 
 INSERT INTO admin (user_id)
 VALUES
     (1),
-    (2);
+    (2),
+    (3);
 
 INSERT INTO banned (user_id)
 VALUES

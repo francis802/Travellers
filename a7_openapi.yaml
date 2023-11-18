@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.0.0
 
 info:
   version: '1.0'
@@ -407,7 +407,7 @@ paths:
         '200':
           description: 'Deletion complete.'
         '401':
-          description: 'Unauthorized. Your're not allowed to delete.'
+          description: 'Unauthorized. You are not allowed to delete.'
 
 #### Group Edition Page ####
   /group/{id}/edit:
@@ -428,7 +428,7 @@ paths:
         '200':
           description: 'OK. Show Group Edit UI'
         '302':
-          description: 'Unauthorized. Your're not allowed to edit.'
+          description: 'Unauthorized. You are not allowed to edit.'
 
 #### Group Edition ####
   /group/edit:
@@ -769,7 +769,7 @@ paths:
         '200':
           description: 'Deletion complete.'
         '401':
-          description: 'Unauthorized. Your're not allowed to delete.'
+          description: 'Unauthorized. You are not allowed to delete.'
 
 #### Follow ####
   /user/follow:
@@ -985,7 +985,7 @@ paths:
         '200':
           description: 'Deletion complete.'
         '401':
-          description: 'Unauthorized. Your're not allowed to delete.'
+          description: 'Unauthorized. You are not allowed to delete.'
 
 #### Messages ####
   /messages:
@@ -1070,7 +1070,7 @@ paths:
                   description: 'Failed. No content found.'
 
 ######### Help Page #########
-  /about:
+  /help:
     get:
       operationId: R519
       summary: 'R519: Help static page'
