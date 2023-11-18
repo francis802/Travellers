@@ -2,10 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\CardController;
-use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
@@ -44,5 +43,5 @@ Route::post('user/edit', [UserController::class, 'update']);
 Route::get('user/{id}', [UserController::class, 'show'])->name('users');
 
 Route::get('post/create', [PostController::class, 'create']);
-Route::post('post/create', [PostController::class, 'create']);
+Route::post('post/create', [PostController::class, 'store']);
 //Route::view('/user', 'pages.profile')->name('user');
