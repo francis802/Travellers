@@ -39,4 +39,8 @@ Route::controller(RegisterController::class)->group(function () {
 
 Route::get('/home', [HomeController::class, 'show'])->name('home');
 
-Route::view('/user', 'pages.profile')->name('user');
+Route::get('user/edit', [UserController::class, 'edit']);
+Route::post('user/edit', [UserController::class, 'update']);
+Route::get('user/{id}', [UserController::class, 'show'])->name('users');
+
+//Route::view('/user', 'pages.profile')->name('user');

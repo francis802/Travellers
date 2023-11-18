@@ -11,8 +11,7 @@ class Follow extends User{
     public $timestamps  = false;
 
     protected $fillable = [
-        'user1_id',
-        'user2_id'
+        'user1_id', 'user2_id'
     ];
 }
 

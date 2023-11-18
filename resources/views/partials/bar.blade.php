@@ -3,7 +3,7 @@
         <ul id="upper-sidebar">
             @if (Auth::check())
             <li>
-                    <a href="{{url('/user')}}" class="side-bar-link">Profile</a>        
+                <a id="user={{Auth::user()->id}}" href="{{ url('/user/'.Auth::user()->id) }}">{{ Auth::user()->name }}</a>       
             </li>
             @endif
             <li><a href="#" class="side-bar-link">Feed</a></li>

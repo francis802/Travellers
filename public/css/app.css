@@ -5,8 +5,8 @@ html{
 
 body {
     background-color: #f3f2f2;
-    color: #85bcc7;
     margin: auto;
+    display: contents;
   }
 
 #content{
@@ -15,20 +15,37 @@ body {
 }
 
  
-  .inner-content{
+.inner-content{
     display: grid;
-    grid-template-columns: minmax(10vw, 20vw) 1fr; 
+    grid-template-columns: minmax(10vw, 15vw) 1fr; 
     grid-template-rows: 100vh;
-  }
+}
   
   
+.button, .link-button{
+  border-radius: 1em;
+  border-color: cornflowerblue;
+  outline: none;
+  background-color: cornflowerblue;
+  text-decoration: none;
+  text-align: center;
+  border: none;
+  padding: 5%;
+  color: #f3f2f2;
   
-
-  
-    
+  font-weight: 700;
+  box-shadow: 0px 6px 17px 0px rgba(0, 0, 0, 0.15);
+}
   
   /**
    * Override milligram colors
    * Some styles might be missing
    **/
-   body{color:#606c76;font-family:'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;font-size:1.6em;font-weight:300;letter-spacing:.01em;line-height:1.6}
+ body{
+  color:#606c76;
+  font-family:'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  font-size:1.6em;
+  font-weight:300;
+  letter-spacing:.01em;
+  line-height:1.6
+}
