@@ -6,9 +6,10 @@ a:hover{
     color:#85bcc7;
 }
 
-.side-bar-link{
+.side-bar-link, .side-bar-link:visited, .side-bar-link:hover{
     text-decoration: none;
     color: black;
+    font-size: smaller;
 }
 
 .rights-text{
@@ -19,6 +20,10 @@ a:hover{
 #upper-sidebar, #lower-sidebar{
     list-style: none;
 }
+ 
+#upper-sidebar{
+    margin-top: 2em;
+}
 
 #lower-sidebar{
     position: absolute;
@@ -26,8 +31,7 @@ a:hover{
     margin: 0;
 }
 
-
-
-#upper-sidebar{
-    margin: 0;
+#profile-buttons-area{
+    display: flex;
 }
+
