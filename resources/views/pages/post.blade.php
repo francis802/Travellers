@@ -10,15 +10,15 @@
         <article class="post">
             <header class="post-header">
                 <div class="post-author">
-                    <a href="{{ url('/user/'.$post->author->id) }}" class="post-author-link">
-                        <img src="{{ url('storage/'.$post->author->profile_picture) }}" alt="{{ $post->author->name }}" class="post-author-img">
+                    <a href="{{ url('/user/'.$author->id) }}" class="post-author-link">
+                        <img src="{{ url('storage/'.$author->profile_picture) }}" alt="{{ $author->name }}" class="post-author-img">
                         <h4 class="post-author-name">{{ $post->author->name }}</h4>
                     </a>
                 </div>
                 <p class="post-time">{{ $post->created_at }}</p>
             </header>
             <div class="post-body">
-                <img src="{{ url('storage/'.$post->image) }}" alt="{{ $post->description }}" class="post-img">
+                <img src="{{ url('storage/'.$image) }}" alt="{{ $description }}" class="post-img">
                 <p class="post-description">{{ $post->description }}</p>
             </div>
             <footer class="post-footer">
