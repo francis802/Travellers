@@ -64,7 +64,7 @@ class User extends Authenticatable
     }
     
     public function requestFollowing(int $id) {
-        return RequestFollow::where('user2_id', $this->id)
+        return FollowRequest::where('user2_id', $this->id)
                             ->where('user1_id', $id)->exists();
     }
     
