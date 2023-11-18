@@ -14,8 +14,7 @@
             <li><a href="#" class="side-bar-link">Terms of Use and Privacy Policy</a></li>
         </ul>
         <ul id="lower-sidebar">
-            
-            <li><a href="#" class="side-bar-link" id="last-link">Create</a></li>
+            <li><a href="{{ url('/create/post/')}}" class="side-bar-link" id="last-link">Create Post</a></li>
             <li><p class="rights-text">&copy; Travellers. All right reserved</p></li>
         </ul>
     </section>

@@ -43,4 +43,6 @@ Route::get('user/edit', [UserController::class, 'edit']);
 Route::post('user/edit', [UserController::class, 'update']);
 Route::get('user/{id}', [UserController::class, 'show'])->name('users');
 
+Route::get('post/create', [PostController::class, 'create']);
+Route::post('post/create', [PostController::class, 'create']);
 //Route::view('/user', 'pages.profile')->name('user');
