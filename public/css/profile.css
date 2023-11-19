@@ -4,9 +4,6 @@
     margin-left: 1rem;
 }
 
-#profile{
-    padding: 1em;
-}
 
 #profile-picture {
     width: 6em;
@@ -40,7 +37,7 @@
 
 #user-name{
     margin: 0;
-    font-size: xx-large;
+    font-size: x-large;
 }
 
 #user-username{
@@ -72,3 +69,118 @@
 p{
     white-space: nowrap;
 }
+
+/*---------------------------- USER'S POSTS ---------------------------------*/
+
+#user-post-list{
+    list-style: none;
+}
+
+#post-author{
+    text-decoration: none;
+    color: black;
+}
+
+.post-container{
+   
+    font-size: large;
+    background-color: #CCCCCC;
+    margin-bottom: 1em;
+    border-radius: 1em;
+    padding: 1em;
+}
+
+#post-date{
+    margin: 0;
+}
+
+#user-posts{
+    padding-top: 2em;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+#post-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+#user-post-list{
+    margin: 0;
+    color: black;
+}
+
+#post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#post-author {
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+}
+
+/*
+ul.posts-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
+    gap: 10px; 
+}
+
+.post {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden; 
+    width: 100%; 
+    padding-right: 2em;
+}
+
+.post-container {
+    padding: 10px;
+}
+
+#post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#post-author {
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+}
+
+#post-date {
+    color: #777;
+    font-size: 0.9em;
+}
+
+#edit-post {
+    text-decoration: none;
+    color: #333;
+}
+
+#post-content {
+    margin-top: 10px;
+}
+
+.postmedia {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 5px;
+}
+
+#post-interaction {
+    margin-top: 10px;
+}
+*/

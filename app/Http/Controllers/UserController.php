@@ -41,7 +41,8 @@ class UserController extends Controller
         if(!$user) return redirect()->back();
         $followers = $user->getFollowers()->get();
         $following = $user->getFollowing()->get();
-        return view('pages.profile', ['user' => $user, 'followers' => $followers, 'following' => $following]);
+        $posts = $user->ownPosts()->get();
+        return view('pages.profile', ['user' => $user, 'followers' => $followers, 'following' => $following, 'posts' => $posts,]);
     }
 
     public function edit()
