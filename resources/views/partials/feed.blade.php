@@ -1,5 +1,3 @@
-@extends('layouts.app')
-
 @include('partials.topbar')
 
 @section('feed')
@@ -32,9 +30,34 @@
             const selectedButton = document.getElementById(buttonId);
             selectedButton.classList.add('underline');
         }
-    </script>   
+    </script>
+    
+    <section id="fy-posts">
+        <ul id="user-post-list">
+        @if(count($publicPosts) == 0)
+        echo("<p>"dcsdcsdcsdc"</p>")
+        @endif
+            @foreach($publicPosts as $post)
+                <li class="post">
+                    <section class="post-container">
+                        <div id="post-header">
+                            @if($post->id == Auth::user()->id || Auth::user()->isAdmin())
+                                <a id="edit-post" href="">...</a>
+                            @endif
+                        </div>
+                        <div id="post-content">
+                            <p>{{ $post->text }}</p>
+                            
+                        </div>
+                        <div id="post-interaction">
 
-    <!-- timeline content -->
+                        </div>
+                        
+                    </section>
+                </li>
+            @endforeach
+            </ul>
+        </section>
     
 </section>
 
