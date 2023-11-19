@@ -15,6 +15,8 @@
         <link href="{{ url('css/sidebar.css') }}" rel="stylesheet">
         <link href="{{ url('css/login_register.css') }}" rel="stylesheet">
         <link href="{{ url('css/profile.css') }}" rel="stylesheet">
+        <link href="{{ url('css/feed.css') }}" rel="stylesheet">
+        <link href="{{ url('css/topbar.css') }}" rel="stylesheet">
         <link href="{{ url('css/adminpage.css') }}" rel="stylesheet">
 
         <script type="text/javascript">

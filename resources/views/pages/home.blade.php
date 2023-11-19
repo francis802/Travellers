@@ -2,13 +2,12 @@
 
 @section('title', 'Home')
 @include('partials.bar')
-
+@include('partials.feed')
 
 @section('content')
     <section class="inner-content">
         @yield('bar')
-        <section id="profile">
-            <p>Travellers</p>
-        </section>
+        @yield('feed')
     </section>
 @endsection
+

@@ -1,0 +1,50 @@
+#user-bar {
+    background-color: #eee;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#user-bar img {
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.profile-info, .profile-info:visited, .profile-info:hover{
+    text-decoration: none;
+    color: black;
+    font-size: large;
+    display: flex; /* Added flex container for profile info */
+    align-items: center; /* Center items vertically within the flex container */
+}
+
+#user-bar input[type="text"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 200px;
+}
+
+#buttons {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#buttons button {
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    background-color: #eee;
+}
+
+#buttons button:hover {
+    background-color: #ddd;
+}
+
+#buttons button.underline {
+    text-decoration: underline;
+}

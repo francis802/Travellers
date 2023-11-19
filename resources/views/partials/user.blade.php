@@ -1,7 +1,8 @@
-@section('user')
+@include('partials.topbar')
 
+@section('user')
 <section id="profile">
-    
+    @yield('topbar')
         <section id="user-presentation"> 
             <div id="profile-picture">
                 <img src="../man.jpg" alt="Profile Picture">
