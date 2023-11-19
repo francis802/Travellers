@@ -8,7 +8,9 @@
             </div>
         </header>
         <div class="post-body">
-            <img src="{{ url($post->media) }}" alt="{{ $post->text }}" class="post-img">
+            @if ($post->media !== null)
+                <img src="{{ url($post->media) }}" alt="{{ $post->text }}" class="post-img">
+            @endif
             <div class="post-body-text">
                 <p class="post-description">{{ $post->text }}</p>
                 <p id="post-date">{{ $post->date }}</p>

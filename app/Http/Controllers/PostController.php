@@ -33,7 +33,7 @@ class PostController extends Controller
         $post = new Post();
         $post->author_id = Auth::user()->id;
         $post->group_id = 1; // TODO: Change this to the group the user chose to upload the post to
-        $post->text = " ";
+        $post->text = $request->text;
         $post->date = date('Y-m-d H:i');
         $post->save();
         if (!isset($contentFound) && $_FILES["image"]["error"]) {
