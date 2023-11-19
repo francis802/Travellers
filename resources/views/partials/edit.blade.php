@@ -46,6 +46,10 @@
         <label for="password-confirm">Confirm Password</label>
         <input id="password-confirm" type="password" placeholder="Confirm your password" name="password_confirmation" autofocus>
 
+        <p>
+            Private profile? <input type="checkbox" name="private" {{old('private', $old['private']) ? 'checked' : '' }}>
+        </p>
+
             <section class="edit-page-final-buttons">
                 <button class="button" type="submit">Submit</button>
             </section>
