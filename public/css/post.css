@@ -47,13 +47,26 @@ ul.post-comments-list{
 }
 
 div.post-body{
-    width: 90%;
+    width: 100%;
 }
 
 .post-edit img, input.post-delete{
-    width: 40px
+    width: 40px;
+    padding-right: 3px;
 }
 
 a.post-edit{
     text-decoration: none;
+}
+
+#post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+#edit-delete-post{
+    display: flex;
+    flex-direction: row;
 }

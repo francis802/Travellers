@@ -75,18 +75,12 @@ p{
     list-style: none;
 }
 
-#post-author{
-    text-decoration: none;
-    color: black;
-}
-
 .post-container{
    
     font-size: large;
     background-color: #CCCCCC;
     margin-bottom: 1em;
     border-radius: 1em;
-    padding: 1em;
 }
 
 #post-date{
