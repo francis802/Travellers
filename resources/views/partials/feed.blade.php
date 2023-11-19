@@ -31,6 +31,13 @@
             selectedButton.classList.add('underline');
         }
 
+        function searchOnEnter(event) {
+            if (event.key === 'Enter') {
+                const searchValue = document.getElementById('search-input').value;
+                window.location.href = "{{ url('/search/') }}?query=" + encodeURIComponent(searchValue);
+            }
+        }
+
     </script>
     
     <section id="fy-posts">
@@ -39,6 +46,13 @@
             @yield('postsProfile')
         </ul>
     </section>
+
+    <section id="following-posts">
+    <ul id="user-post-list">
+            @include('partials.postsProfile', ['posts' => $publicPosts])
+            @yield('postsProfile')
+        </ul>
+    </sections>
     
 </section>
 
