@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\Auth\LoginController;
@@ -36,13 +37,22 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 
+// Home
 Route::get('/home', [HomeController::class, 'show'])->name('home');
 
+
+// User
 Route::get('user/edit', [UserController::class, 'edit']);
 Route::post('user/edit', [UserController::class, 'update']);
 Route::get('user/{id}', [UserController::class, 'show'])->name('users');
 
+
+// Post
 Route::get('post/create', [PostController::class, 'create']);
 Route::post('post/create', [PostController::class, 'store']);
 Route::get('post/{id}', [PostController::class, 'show'])->name('posts');
-//Route::view('/user', 'pages.profile')->name('user');
+
+
+
+// Admin
+Route::get('admin', [AdminController::class, 'show']);

@@ -30,6 +30,13 @@ h1{
     outline: none;
 }
 
+#cont{
+    display: flex;
+    height: 100vh;
+    align-content: center;
+    justify-content: center;
+}
+
 
 label{
     font-size: medium;
@@ -55,4 +62,9 @@ label{
     display: flex;
     flex-direction: row;
     margin-top: 1rem;
+}
+
+.success{
+    font-size: small;
+    color: cornflowerblue;
 }

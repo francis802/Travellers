@@ -5,14 +5,14 @@
 }
 
 #profile{
-    margin: 3em;
+    padding: 1em;
 }
 
 #profile-picture {
-    width: 5em;
-    height: 5em; 
-    border-radius: 50%; 
-    overflow: hidden; 
+    width: 6em;
+    height: 6em;
+    border-radius: 10%;
+    overflow: hidden;
     margin-right: 2rem;
 }
   
@@ -24,20 +24,29 @@
 }
 
 #user-presentation{
+    padding-bottom: 1em;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-top: 2em;
+    padding-right: 2em;
+    padding-left: 2em;
     border-bottom: 1px solid cornflowerblue;
-    padding: 2em;
 }
 
 #user-name{
     margin: 0;
 }
 
-#user-username{
+#user-name{
     margin: 0;
     font-size: xx-large;
+}
+
+#user-username{
+    font-size: large;
+    font-weight: 100;
+    margin: 0;
 }
 
 #profile-buttons-area{
@@ -45,3 +54,21 @@
     text-align: center;
 }
 
+#edit-profil-form{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#user-infos{
+    display: flex;
+    font-size: medium;
+}
+
+.infos-with-margin{
+    margin-right: 10%;
+}
+
+p{
+    white-space: nowrap;
+}
