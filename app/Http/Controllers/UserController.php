@@ -47,6 +47,7 @@ class UserController extends Controller
 
     public function edit()
     {   
+        $this->authorize('edit', User::class);
         return view('pages.editUser', ['user' => Auth::user(), 
                                        'old' => ['name' => Auth::user()->name, 
                                                  'username' => Auth::user()->username,
@@ -58,6 +59,7 @@ class UserController extends Controller
 
     public function update(Request $request) {
 
+        $this->authorize('update', User::class);
             $user = Auth::user();
 
             $request->validate([
