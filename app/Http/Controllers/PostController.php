@@ -35,8 +35,9 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(int $postId)
     {
+        $post = Post::findOrFail($postId);
         $authorId = $post->author()->get();
         $author = User::findOrFail($authorId);
         $comments = $post->comments()->get();
