@@ -26,7 +26,7 @@ class Post extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['date', 'edited', 'text', 'media'];
+    protected $fillable = ['date', 'text', 'media', 'author_id', ' group_id', 'edited'];
 
     /**
      * The attributes that should be cast.
@@ -38,19 +38,21 @@ class Post extends Model
     ];
 
 
-    /**
-     * Get the author of the post.
-     */
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the items for the card.
-     */
+
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function tags(): HasMany
+    {
+        return $this
+        ->hasMany(PostTag::class)
+        ->withPivotValue('post_tag');
     }
 }
