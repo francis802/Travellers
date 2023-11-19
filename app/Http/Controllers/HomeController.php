@@ -13,7 +13,8 @@ class HomeController extends Controller
     
     public function show()
     {
-        $publicPosts = Post::publicPosts();
-        return view('pages.home', ['publicPosts' => $publicPosts,]);
+        $publicPosts = Post::publicPosts()->get();
+        count($publicPosts);
+        return view('pages.home', ['publicPosts' => $publicPosts]);
     }
 }

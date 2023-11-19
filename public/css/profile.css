@@ -73,6 +73,8 @@ p{
 
 #user-post-list{
     list-style: none;
+    margin: 0;
+    color: black;
 }
 
 .post-container{
@@ -83,39 +85,12 @@ p{
     border-radius: 1em;
 }
 
-#post-date{
-    margin: 0;
-}
-
 #user-posts{
     padding-top: 2em;
     padding-left: 2em;
     padding-right: 2em;
 }
 
-#post-header{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
-}
-
-#user-post-list{
-    margin: 0;
-    color: black;
-}
-
-#post-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-#post-author {
-    font-weight: bold;
-    text-decoration: none;
-    color: #333;
-}
 
 /*
 ul.posts-grid {
