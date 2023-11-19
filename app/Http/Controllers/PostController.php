@@ -30,6 +30,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', [Auth::user(),Post::class]);
         $post = new Post();
         $post->author_id = Auth::user()->id;
         $post->group_id = 1; // TODO: Change this to the group the user chose to upload the post to
@@ -74,6 +75,7 @@ class PostController extends Controller
      */
     public function update(Request $request, int $postId)
     {
+        $this->authorize('update', [Auth::user(),Post::find($postId)]);
         $post = Post::findOrFail($postId);
         $post->group_id = 1; // TODO: Change this to the group the user chose to upload the post to
         $post->text = $request->text;
@@ -103,6 +105,7 @@ class PostController extends Controller
      */
     public function destroy(int $postId)
     {
+        $this->authorize('delete', [Auth::user(),Post::find($postId)]);
         $post = Post::find($postId);
         
         ImageController::delete($post->id);
