@@ -58,4 +58,13 @@ class User extends Authenticatable
                             ->where('user1_id', $id)->exists();
     }
     
+    public function ownPosts() {
+        return $this->hasMany('App\Models\Post', 'author_id')->orderBy('date', 'desc');
+    }
+
+    public function myPosts() {
+        $own = Post::select('*')->where('post.author_id', '=', $this->id);
+         
+        return $own->orderBy('date','desc');
+    }
 }
