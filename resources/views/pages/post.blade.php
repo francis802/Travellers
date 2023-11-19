@@ -11,15 +11,14 @@
             <header class="post-header">
                 <div class="post-author">
                     <a href="{{ url('/user/'.$post->author->id) }}" class="post-author-link">
-                        <img src="{{ url('storage/'.$post->author->profile_picture) }}" alt="{{ $post->author->name }}" class="post-author-img">
                         <h4 class="post-author-name">{{ $post->author->name }}</h4>
                     </a>
                 </div>
-                <p class="post-time">{{ $post->created_at }}</p>
+                <p class="post-time">{{ $post->date }}</p>
             </header>
             <div class="post-body">
-                <img src="{{ url('storage/'.$post->media) }}" alt="{{ $post->description }}" class="post-img">
-                <p class="post-description">{{ $post->description }}</p>
+                <img src="{{ url($post->media) }}" alt="{{ $post->text }}" class="post-img">
+                <p class="post-description">{{ $post->text }}</p>
             </div>
             <footer class="post-footer">
                 <div class="post-footer-details">
@@ -28,14 +27,12 @@
                         <li><a href="#" class="post-footer-link">Comment</a></li>
                         <li><a href="#" class="post-footer-link">Share</a></li>
                     </ul>
-                    <p class="post-footer-location">{{ $post->location }}</p>
                 </div>
                 <ul class="post-comments-list">
                     @foreach ($post->comments as $comment)
                         <li class="post-comment">
                             <div class="post-comment-author">
                                 <a href="{{ url('/user/'.$comment->author->id) }}" class="post-comment-author-link">
-                                    <img src="{{ url('storage/'.$comment->author->profile_picture) }}" alt="{{ $comment->author->name }}" class="post-comment-author-img">
                                     <h4 class="post-comment-author-name">{{ $comment->author->name }}</h4>
                                 </a>
                             </div>
