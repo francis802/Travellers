@@ -19,7 +19,7 @@ class ImageController extends Controller
         }
 
     public static function delete(int $id) {
-        foreach ( glob(public_path().'/images/'.$id.'.*',GLOB_BRACE) as $image){
+        foreach ( glob(public_path().'/images/'.'post-'.$id.'.*',GLOB_BRACE) as $image){
             if (file_exists($image)) unlink($image);
         }
     }

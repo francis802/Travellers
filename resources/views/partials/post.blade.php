@@ -6,6 +6,19 @@
                     {{ $post->author->name }}
                 </a>
             </div>
+            <div id="edit-delete-post">
+                @if ($post->author->id == Auth::user()->id)
+                    <a href="{{ url('/post/'.$post->id.'/edit') }}" class="post-edit">
+                        <img src="../pen.png" alt="Edit Post">
+                    </a>
+                @endif
+                @if ($post->author->id == Auth::user()->id || Auth::user()->isAdmin())
+                    <form method="post" action="{{ url('/post/'.$post->id.'/delete') }}">
+                        @csrf
+                        <input type="image" src="../trash-bin.png" alt="Delete Post" class="post-delete">
+                    </form>
+                @endif
+            </div>
         </header>
         <div class="post-body">
             @if ($post->media !== null)
