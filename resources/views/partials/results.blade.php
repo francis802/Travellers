@@ -5,7 +5,7 @@
 <section id="results">
     @yield('topbar')
     <section id="search-results-header">
-        <h1>Search Results For: "{{ $searchQuery }}"</h1>
+        <h1>Search Results For: "{{ $input }}"</h1>
     </section>
     
     @if($searchResults->count() > 0)
