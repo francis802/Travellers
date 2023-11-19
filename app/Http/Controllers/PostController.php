@@ -104,8 +104,6 @@ class PostController extends Controller
     public function destroy(int $postId)
     {
         $post = Post::find($postId);
-  
-        foreach($post->comments() as $comment) $comment->delete();
         
         ImageController::delete($post->id);
         $post->delete();
