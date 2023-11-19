@@ -12,18 +12,6 @@
     align-items: center;
 }
 
-.logo{
-    display: flex;
-    flex-direction: row;
-    align-items: baseline;
-    justify-content: center;
-}
-
-h1{
-    font-size: xxx-large;
-    margin: 0;
-}
-
 #email, #password, #username, #name, #password-confirm, #country{
     border-color: cornflowerblue;
     border-radius: 1em;
