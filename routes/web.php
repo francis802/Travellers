@@ -50,7 +50,7 @@ Route::get('user/{id}', [UserController::class, 'show'])->name('users');
 // Post
 Route::get('post/create', [PostController::class, 'create']);
 Route::post('post/create', [PostController::class, 'store']);
-Route::get('post/{id}', [PostController::class, 'show'])->name('posts');
+Route::get('post/{id}', [PostController::class, 'show'])->name('post');
 
 
 

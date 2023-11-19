@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class PostController extends Controller
 {
@@ -34,16 +35,12 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(int $postId)
     {
-        $author = $post->author()->get();
-        $comments = $post->comments()->get();
-        return view('pages.post', ['date' => $post->date,
-                                    'edited' => $post->edited, 
-                                    'description' => $post->description, 
-                                    'media' => $post->media,
-                                    'author' => $author, 
-                                    'comments' => $comments]);
+        $post = Post::findOrFail($postId);
+        return view('pages.post', [
+            'post' => $post,
+        ]);
     }
 
     /**

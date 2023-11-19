@@ -9,12 +9,34 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use App\Models\User;
+use App\Models\Comment;
+
 class Post extends Model
 {
     use HasFactory;
 
     // Don't add create and update timestamps in database.
     public $timestamps  = false;
+
+    protected $table = 'post';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = ['date', 'edited', 'text', 'media'];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'date' => 'datetime',
+    ];
+
 
     /**
      * Get the author of the post.
