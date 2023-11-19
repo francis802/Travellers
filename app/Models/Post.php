@@ -50,7 +50,11 @@ class Post extends Model
     }
 
     public static function publicPosts() {
-        return Post::select('*');
+        return Post::select('post.*')
+        ->join('users', 'post.author_id', '=', 'users.id')
+        ->where('users.profile_private', '=', false)
+        ->orderBy('post.date', 'desc');
+        
       }
 
     public function tags(): HasMany
