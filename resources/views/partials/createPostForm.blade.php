@@ -1,10 +1,10 @@
 @section('createPostForm')
 <form action="{{ url('post/create') }}" method="post" enctype="multipart/form-data">
     @csrf
-    <p>Select image to upload:</p>
-    <input type="file" name="fileToUpload" accept="image/png,image/jpeg" id="fileToUpload">
-    <p>Write a description:</p>
-    <input type="text" name="description" id="description">
+    <label>
+        Select Photo: <input type="file" id="image" name="image">
+    </label>
+    <textarea placeholder="Tell the world where have you been..." id="newpost-content" name="content" rows="10" cols="30" maxlength="256" autofocus></textarea>
     <input type="submit" value="Upload Post" name="submit">
 </form>
 @endsection

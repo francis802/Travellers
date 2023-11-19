@@ -26,7 +26,7 @@ class Post extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['date', 'edited', 'text', 'media'];
+    protected $fillable = ['date', 'text', 'media', 'author_id', ' group_id', 'edited'];
 
     /**
      * The attributes that should be cast.

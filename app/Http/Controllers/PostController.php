@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -29,7 +30,21 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $post = new Post();
+        $post->author_id = Auth::user()->id;
+        $post->group_id = 1; // TODO: Change this to the group the user chose to upload the post to
+        $post->text = " ";
+        $post->date = date('Y-m-d H:i');
+        $post->save();
+        if (!isset($contentFound) && $_FILES["image"]["error"]) {
+            $post->media = null;
+        }
+        else {
+            ImageController::create($post->id, $request);
+            $post->media = "images/post-".$post->id.".".pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION);
+        }
+        $post->save();
+        return redirect('post/'.$post->id)->with('success', 'Post successfully created');
     }
 
     /**
