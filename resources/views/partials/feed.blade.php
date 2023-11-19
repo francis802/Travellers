@@ -13,7 +13,7 @@
                 <h2 id="user-username">&#64;{{ Auth::user()->username }}</h2>
             @endif
         </a>
-        <input type="text" placeholder="Search here...">
+        <input id="search-input" type="text" placeholder="Search for users..." onkeydown="searchOnEnter(event)"> 
     </section>
 
     <section id="buttons">
@@ -30,6 +30,7 @@
             const selectedButton = document.getElementById(buttonId);
             selectedButton.classList.add('underline');
         }
+
     </script>
     
     <section id="fy-posts">
@@ -51,6 +52,13 @@
                         </div>
                         <div id="post-interaction">
 
+        function searchOnEnter(event) {
+            if (event.key === 'Enter') {
+                const searchValue = document.getElementById('search-input').value;
+                window.location.href = "{{ url('/search/') }}?query=" + encodeURIComponent(searchValue);
+            }
+        }
+    </script>   
                         </div>
                         
                     </section>
