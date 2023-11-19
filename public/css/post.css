@@ -1,0 +1,51 @@
+article.post{
+    margin-left: 5%;
+}
+
+a.post-author-name, a.post-comment-author-name{
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.post-container{
+   
+    font-size: large;
+    background-color: #CCCCCC;
+    margin-bottom: 1em;
+    border-radius: 1em;
+    padding: 1em;
+}
+
+#post-date{
+    margin: 0;
+}
+
+.post-body-text{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+ul.post-footer-links{
+    padding-left: 0px;
+}
+
+ul.post-footer-links img{
+    cursor: pointer;
+    width:40px;
+    padding-right: 10px;
+}
+
+img.post-img{
+    width: 100%;
+}
+
+ul.post-comments-list{
+    list-style: none;
+    padding-inline-start: 0%;
+}
+
+div.post-body{
+    width: 90%;
+}
