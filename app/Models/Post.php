@@ -38,17 +38,12 @@ class Post extends Model
     ];
 
 
-    /**
-     * Get the author of the post.
-     */
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the items for the card.
-     */
+
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
@@ -57,4 +52,11 @@ class Post extends Model
     public static function publicPosts() {
         return Post::select('*');
       }
+
+    public function tags(): HasMany
+    {
+        return $this
+        ->hasMany(PostTag::class)
+        ->withPivotValue('post_tag');
+    }
 }

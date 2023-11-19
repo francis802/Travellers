@@ -160,7 +160,7 @@ CREATE TABLE post (
 
 CREATE TABLE like_post (
     user_id INT REFERENCES users(id) NOT NULL,
-    post_id INT REFERENCES post(id) NOT NULL,
+    post_id INT REFERENCES post(id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, post_id)
 );
 
@@ -170,7 +170,7 @@ CREATE TABLE tag (
 );
 
 CREATE TABLE post_tag (
-    post_id INT REFERENCES post(id) NOT NULL,
+    post_id INT REFERENCES post(id) ON DELETE CASCADE,
     tag_id INT REFERENCES tag(id) NOT NULL,
     PRIMARY KEY (post_id, tag_id)
 );
@@ -187,13 +187,13 @@ CREATE TABLE comments (
     id SERIAL PRIMARY KEY,
     text TEXT NOT NULL,
     date DATE NOT NULL CHECK (date <= now()),
-    post_id INT REFERENCES post(id) NOT NULL,
+    post_id INT REFERENCES post(id) ON DELETE CASCADE,
     author_id INT REFERENCES users(id) NOT NULL
 );
 
 CREATE TABLE like_comment (
     user_id INT REFERENCES users(id) NOT NULL,
-    comment_id INT REFERENCES comments(id) NOT NULL,
+    comment_id INT REFERENCES comments(id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, comment_id)
 );
 

@@ -49,3 +49,11 @@ ul.post-comments-list{
 div.post-body{
     width: 90%;
 }
+
+.post-edit img, input.post-delete{
+    width: 40px
+}
+
+a.post-edit{
+    text-decoration: none;
+}

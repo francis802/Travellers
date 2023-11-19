@@ -51,6 +51,9 @@ Route::get('user/{id}', [UserController::class, 'show'])->name('users');
 Route::get('post/create', [PostController::class, 'create']);
 Route::post('post/create', [PostController::class, 'store']);
 Route::get('post/{id}', [PostController::class, 'show'])->name('post');
+Route::get('post/{id}/edit', [PostController::class, 'edit']);
+Route::post('post/{id}/edit', [PostController::class, 'update']);
+Route::post('post/{id}/delete', [PostController::class, 'destroy']);
 
 
 
