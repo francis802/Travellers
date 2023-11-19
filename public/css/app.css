@@ -1,23 +1,19 @@
 html{
   min-height: 100%;
-  display: grid;
+  
 }
 
-body {
-    background-color: #f3f2f2;
-    margin: auto;
-    display: contents;
-  }
+
 
 #content{
   height: 100vh;
-  display: contents;
+
 }
 
  
 .inner-content{
     display: grid;
-    grid-template-columns: minmax(10vw, 15vw) 1fr; 
+    grid-template-columns: minmax(15vw, 20vw) 1fr; 
     grid-template-rows: 100vh;
 }
   
@@ -36,12 +32,10 @@ body {
   font-weight: 700;
   box-shadow: 0px 6px 17px 0px rgba(0, 0, 0, 0.15);
 }
-  
-  /**
-   * Override milligram colors
-   * Some styles might be missing
-   **/
+
  body{
+  background-color: #f3f2f2;
+  margin: auto;
   color:#606c76;
   font-family:'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   font-size:1.6em;
