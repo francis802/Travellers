@@ -38,20 +38,8 @@ class PostController extends Controller
     public function show(int $postId)
     {
         $post = Post::findOrFail($postId);
-        $authorId = $post->author()->get();
-        $author = User::findOrFail($authorId);
-        $comments = $post->comments()->get();
         return view('pages.post', [
-            'date' => $post->date,
-            'edited' => $post->edited,
-            'description' => $post->description,
-            'media' => $post->media,
-            'author' => [
-                'name' => $author->name,
-                'username' => $author->username,
-                'profile_pic' => $author->profile_pic
-            ],
-            'comments' => $comments
+            'post' => $post,
         ]);
     }
 
