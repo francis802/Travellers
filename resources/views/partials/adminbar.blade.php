@@ -1,4 +1,4 @@
-@section('bar')
+@section('adminbar')
     <section id="side-bar">
         <ul id="upper-sidebar">
             @if (Auth::check())
@@ -8,10 +8,8 @@
             @endif
             <li><a href="{{ url('/home/')}}" class="side-bar-link">Feed</a></li>
             <li><a href="#" class="side-bar-link">Notifications</a></li>
-            <li><a href="#" class="side-bar-link">Help</a></li>
-            <li><a href="#" class="side-bar-link">About Us</a></li>
-            <li><a href="#" class="side-bar-link">Main Features</a></li>
-            <li><a href="#" class="side-bar-link">Terms of Use and Privacy Policy</a></li>
+            <li><a href="#" class="side-bar-link">Users</a></li>
+            <li><a href="#" class="side-bar-link">Groups</a></li>
         </ul>
         <ul id="lower-sidebar">
             @if(Auth::check() && Auth::user()->isAdmin())
