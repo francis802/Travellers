@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
@@ -55,7 +56,8 @@ Route::get('post/{id}/edit', [PostController::class, 'edit']);
 Route::post('post/{id}/edit', [PostController::class, 'update']);
 Route::post('post/{id}/delete', [PostController::class, 'destroy']);
 
-
+// Search
+Route::get('/search', [SearchController::class, 'show'])->name('search');
 
 // Admin
 Route::get('admin', [AdminController::class, 'show']);
