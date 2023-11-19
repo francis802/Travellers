@@ -32,27 +32,10 @@
             @if((Auth::check() && Auth::user()->id == $user->id) || (!$user->profile_private) || (Auth::check() && Auth::user()->follows($user->id) || Auth::user()->isAdmin()))
                 @if(count($posts) > 0)
                     <ul id="user-post-list">
-                        @foreach($posts as $post)
-                            <li class="post">
-                                <section class="post-container">
-                                    <div id="post-header">
-                                        <a  id="post-author" href="{{ url('/user/'.$user->id) }}">{{ $user->name }}</a>
-                                        @if($post->id == Auth::user()->id || Auth::user()->isAdmin())
-                                            <a id="edit-post" href="">...</a>
-                                        @endif
-                                    </div>
-                                    <div id="post-content">
-                                        <p>{{ $post->text }}</p>
-                                        
-                                    </div>
-                                    <div id="post-interaction">
-
-                                    </div>
-                                    
-                                </section>
-                            </li>
-                        @endforeach
-                        </ul>
+                        @include('partials.postsProfile', ['posts' => $posts])
+                        @yield('postsProfile')
+                    
+                    </ul>
                 @else
                     <p>This user has no posts.</p>
                 @endif
