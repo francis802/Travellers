@@ -163,7 +163,7 @@ paths:
     get:
       operationId: R201
       summary: 'R201: View Post page'
-      description: 'Show the Post page, Access: USR, ADM, OWN
+      description: 'Show the Post page, Access: USR, ADM, OWN'
       tags:
         - 'M04: Posts'
 
@@ -227,7 +227,7 @@ paths:
                   description: 'Failed post creation. Redirecting again to post creation form.'
                   value: '/post/create'
       
-      get:
+    get:
       operationId: R203
       summary: 'R203: Create Post Page.'
       description: 'Shows the create post page. Access: USR'
@@ -278,7 +278,7 @@ paths:
   /api/post/{id}/delete:
     delete:
       operationId: R205
-     summary: 'R205: Delete Post'
+      summary: 'R205: Delete Post'
       description: 'Deletes a Post. Access: USR, ADM'
       tags:
         - 'M04: Posts'
@@ -297,7 +297,7 @@ paths:
 
 #### Edition ####
   /post/{id}/edit:
-     get:
+    get:
       operationId: R206
       summary: 'R206: Edit Post Page.'
       description: 'Shows the edit post page of the post. Access: OWN, ADM'
@@ -417,8 +417,7 @@ paths:
           description: 'OK. Show Search UI'
 
 #### Search User ####
-/api/user:
-
+  /api/user:
     get:
       operationId: R202
       summary: 'R202 : Search users'
@@ -463,7 +462,7 @@ paths:
           description: 'OK. Show Group UI'
         '302':
           description: 'Not Found. Redirecting to user homepage.'
-          value:'/home'
+          value: '/home'
 
 
 #### Group Creation ####
@@ -526,7 +525,7 @@ paths:
       responses:
         '200':
           description: 'Deletion complete. Redirect to user homepage.'
-          value:'/home'
+          value: '/home'
         '401':
           description: 'Unauthorized. You are not allowed to delete.'
 
@@ -1232,7 +1231,7 @@ paths:
       summary: 'R601: Admin Page'
       description: 'Show Admin Page. Access: ADM'
       tags:
-        - 'M05: Administration'
+        - 'M03: Administration'
       responses:
         '200':
           description: 'Show the admin page.'
@@ -1246,7 +1245,7 @@ paths:
       summary: 'R602: Block a user action'
       description: 'Block a user. Access: ADM'
       tags:
-        - 'M05: Administration'
+        - 'M03: Administration'
       requestBody:
         required: true
         content:
@@ -1273,7 +1272,7 @@ paths:
       summary: 'R503: Unblocking a user action'
       description: 'Unblock a user. Access: ADM'
       tags:
-        - 'M05: Administration'
+        - 'M03: Administration'
       requestBody:
         required: true
         content:
@@ -1298,7 +1297,7 @@ paths:
       summary: 'R604: Accept Group Action'
       description: 'Accepts a group. Access: ADM'
       tags:
-        - 'M05: Administration'
+        - 'M03: Administration'
       requestBody:
         required: true
         content:
@@ -1323,7 +1322,7 @@ paths:
       summary: 'R605: Decline Group Action'
       description: 'Declines a group. Access: ADM'
       tags:
-        - 'M05: Administration'
+        - 'M03: Administration'
       requestBody:
         required: true
         content:
