@@ -11,7 +11,6 @@
                     <h3 id="user-name">{{$user->name }}</h3>
                     <h4 id="user-username">&#64;{{$user->username }} | {{$user->country }}</h4>
                     <section id="user-infos">
-                        <p class="infos-with-margin">{{ count($posts) }} Groups</p>
                         <p class="infos-with-margin">{{ count($followers) }} Followers</p>
                         <p>{{ count($following) }} Following</p>
                     </section>
