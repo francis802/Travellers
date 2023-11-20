@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 use Illuminate\View\View;
@@ -41,9 +42,11 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password)
             
         ]);
-
         $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);
+        DB::table('members')->insert(
+            ['user_id' => Auth::user()->id, 'group_id' => 1] //This is just for the vertical prototype, will change on the final version
+        );
         $request->session()->regenerate();
         return redirect()->route('home')
             ->withSuccess('You have successfully registered & logged in!');

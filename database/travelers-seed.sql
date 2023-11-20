@@ -748,8 +748,11 @@ INSERT INTO members (user_id, group_id)
 VALUES
     (1, 2),
     (2, 3),
+    (2, 1),
+    (3, 1),
     (3, 4),
-    (4, 5);
+    (4, 5),
+    (4, 1);
 
 INSERT INTO group_invitation (user_id, group_id)
 VALUES
