@@ -50,7 +50,7 @@ div.post-body{
     width: 100%;
 }
 
-.post-edit img, input.post-delete{
+.post-edit img, input.post-delete, .post-delete img{
     width: 40px;
     padding-right: 3px;
 }
@@ -98,3 +98,8 @@ a.post-edit{
     padding: 1em;
 }
 
+.post-body a{
+    text-decoration: none;
+    padding: 0%;
+    color: black;
+}

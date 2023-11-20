@@ -56,6 +56,9 @@ Route::get('post/{id}/edit', [PostController::class, 'edit']);
 Route::post('post/{id}/edit', [PostController::class, 'update']);
 Route::post('post/{id}/delete', [PostController::class, 'destroy']);
 
+// API
+Route::delete('api/post/{id}/delete', [PostController::class, 'api_destroy']);
+
 // Search
 Route::get('/search', [SearchController::class, 'show'])->name('search');
 
