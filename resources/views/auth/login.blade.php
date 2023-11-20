@@ -18,9 +18,6 @@
         <input id="password" type="password" name="password" required>
         
 
-        <label>
-            <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
-        </label>
         <div id="buttons-container">
             <button class="button" type="submit">Login</button>
             <a class="link-button" href="{{ route('register') }}">Register</a>
