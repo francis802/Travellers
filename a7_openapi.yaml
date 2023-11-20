@@ -20,6 +20,7 @@ tags:
   - name: 'M04: Posts'
   - name: 'M05: Search'
   - name: 'M06: Groups'
+  - name: 'M07: API'
 
 paths:
 
@@ -49,13 +50,14 @@ paths:
             schema:
               type: object
               properties:
-                username:
+                email:
                   type: string
+                  format: email
                 password:
                   type: string
                   format: password
               required:
-                - username 
+                - email 
                 - password
       responses:
         '302':
@@ -66,8 +68,8 @@ paths:
                 type: string
               examples:
                 302Success:
-                  description: 'Successful login. Redirecting to user feed.'
-                  value: '' # TODO
+                  description: 'Successful login. Redirecting to user homepage.'
+                  value: '/home'
                 302Error:
                   description: 'Failed login. Redirecting again to login form.'
                   value: '/login'
@@ -147,20 +149,50 @@ paths:
                 type: string
               examples:
                 302Success:
-                  description: 'Successful registration. Redirecting to user feed.'
-                  value: '' 
+                  description: 'Successful registration. Redirecting to user homepage.'
+                  value: '/home' 
                 302Failure:
                   description: 'Failed registration. Redirecting again to register form.'
                   value: '/register'
 
 
 ################### POSTS ###################
+#### Post Page ####
+
+  /post/{id}:
+    get:
+      operationId: R201
+      summary: 'R201: View Post page'
+      description: 'Show the Post page, Access: USR, ADM, OWN
+      tags:
+        - 'M04: Posts'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '200':
+          description: 'OK. Show the post page'
+        '302':
+          description: 'Redirect if user is not logged in or post doesnt exists'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Failure:
+                  description: 'Failure'
+
 
 #### Creation ####
   /post/create:
     post:
-      operationId: R201
-      summary: 'R201: Create Post'
+      operationId: R202
+      summary: 'R202: Create Post action'
       description: 'Creates a new post. Access: USR'
       tags:
         - 'M04: Posts'
@@ -190,14 +222,16 @@ paths:
               examples:
                 302Success:
                   description: 'Successful post creation. Redirecting to user feed.'
+                  value: '/post/{id}'
                 302Failure:
                   description: 'Failed post creation. Redirecting again to post creation form.'
+                  value: '/post/create'
 
 #### Deletion ####
   /post/delete:
     post:
-      operationId: R202
-      summary: 'R202: Delete Post'
+      operationId: R203
+      summary: 'R203: Delete Post'
       description: 'Deletes a post. Access: OWN, ADM'
       tags:
         - 'M04: Posts'
@@ -208,22 +242,64 @@ paths:
             schema:
               type: object
               properties:
-                post_id:
+                id:
                   type: integer
               required:
-                - post_id
+                - id
       responses:
         '200':
-          description: 'OK. Redirecting to user feed.'
+          description: 'OK. Redirecting to user homepage.'
+          value: '/home'
         '403':
-          description: 'Forbidden. Redirecting to user feed.'
+          description: 'Forbidden. Redirecting to user homepage.'
+          value: '/home'
 
+  /api/post/{id}/delete:
+    delete:
+      operationId: R204
+      summary: 'R204 : Delete Post'
+      description: 'Deletes a Post. Access: USR, ADM'
+      tags:
+        - 'M04: Posts'
+      parameters:
+        - in: query
+          name: id
+          description: 'Post Delete'
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Success. Returns an ID of the user with that username'
+        '403':
+          description: 'Forbiden. You need to be logged in first'
 
 #### Edition ####
   /post/edit:
+     get:
+      operationId: R205
+      summary: 'R205: Edit Post Page.'
+      description: 'Shows the edit post page of the post. Access: OWN, ADM'
+      tags:
+        - 'M04: Posts'
+
+      responses:
+        '200':
+          description: 'Ok. You can now edit. Show edit post UI.'
+        '401':
+          description: 'Unauthorized. You cannot edit this post.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                401Success:
+                  description: 'Unauthorized. Redirect to post page.'
+                  value: '/post/{id}'
+
     post:
-      operationId: R203
-      summary: 'R203: Edit Post'
+      operationId: R206
+      summary: 'R206: Edit Post'
       description: 'Edits a post. Access: OWN, ADM'
       tags:
         - 'M04: Posts'
@@ -234,7 +310,7 @@ paths:
             schema:
               type: object
               properties:
-                post_id:
+                id:
                   type: integer
                 content:
                   type: string
@@ -244,7 +320,7 @@ paths:
                 group_id:
                   type: integer
               required:
-                - post_id
+                - id
                 - group_id
       responses:
         '200':
@@ -256,8 +332,8 @@ paths:
 #### Like ####
   /post/like:
     post:
-      operationId: R204
-      summary: 'R204: Like Post'
+      operationId: R207
+      summary: 'R207: Like Post'
       description: 'Likes a post. Access: USR, OWN, ADM'
       tags:
         - 'M04: Posts'
@@ -268,10 +344,10 @@ paths:
             schema:
               type: object
               properties:
-                post_id:
+                id:
                   type: integer
               required:
-                - post_id
+                - id
       responses:
         '200':
           description: 'Like successfully.'
@@ -282,8 +358,8 @@ paths:
 #### Unlike ####
   /post/unlike:
     post:
-      operationId: R205
-      summary: 'R205: Unlike Post'
+      operationId: R208
+      summary: 'R208: Unlike Post'
       description: 'Unlikes a post. Access: USR, OWN, ADM'
       tags:
         - 'M04: Posts'
@@ -294,10 +370,10 @@ paths:
             schema:
               type: object
               properties:
-                post_id:
+                id:
                   type: integer
               required:
-                - post_id
+                - id
       responses:
         '200':
           description: 'Unlike successfully.'
@@ -319,7 +395,29 @@ paths:
         '200':
           description: 'OK. Show Search UI'
 
+#### Search User ####
+/api/user:
 
+    get:
+      operationId: R202
+      summary: 'R202 : Search users'
+      description: 'Search users. Access: USR, ADM'
+      tags:
+        - 'M05: Search'
+
+      parameters:
+        - in: query
+          name: search
+          description: 'Search content (full text search)'
+          schema:
+            type: string
+          required: true
+
+      responses:
+        '200':
+          description: 'Success. Returns HTML containing a list of users '
+        '403':
+          description: 'Forbiden. You need to be logged in first'
 
 
 ################### GROUPS ###################
@@ -343,7 +441,8 @@ paths:
         '200':
           description: 'OK. Show Group UI'
         '302':
-          description: 'Not Found. Redirecting to user feed.'
+          description: 'Not Found. Redirecting to user homepage.'
+          value:'/home'
 
 
 #### Group Creation ####
@@ -405,7 +504,8 @@ paths:
                 - group_id
       responses:
         '200':
-          description: 'Deletion complete.'
+          description: 'Deletion complete. Redirect to user homepage.'
+          value:'/home'
         '401':
           description: 'Unauthorized. You are not allowed to delete.'
 
@@ -428,7 +528,8 @@ paths:
         '200':
           description: 'OK. Show Group Edit UI'
         '302':
-          description: 'Unauthorized. You are not allowed to edit.'
+          description: 'Unauthorized. You are not allowed to edit. Redirect to group page.'
+          value: '/group/{id}'
 
 #### Group Edition ####
   /group/edit:
@@ -469,7 +570,7 @@ paths:
     post:
       operationId: R406
       summary: 'R406: Give Group Ownership Action'
-      description: 'Processes the group ownership form submission. Access: GOWN, ADM'
+      description: 'Processes the group ownership. Access: GOWN, ADM'
       tags:
         - 'M06: Groups'
       requestBody:
@@ -496,8 +597,10 @@ paths:
               examples:
                 302Success:
                   description: 'Successful. Redirecting to group page with new owner.'
+                  value: '/group/{id}'
                 302Failure:
                   description: 'Failed. Redirecting again to group page withou changes.'
+                  value: '/group/{id}'
 
 #### Group Join ####
   /group/join:
@@ -664,17 +767,17 @@ paths:
                 confirm_password:
                   type: string
                   format: password
-                picture:
+                profile_photo:
                   type: string
                   format: binary
-                is_public:
+                profile_private:
                   type: boolean
               required:
                 - name
                 - username
                 - email
                 - description
-                - is_public
+                - profile_private
       responses:
         '302':
           description: 'Redirect after processing the edit profile info.'
@@ -715,8 +818,8 @@ paths:
   /user/deleteProfile:
     post:
       operationId: R505
-      summary: 'R505: Delete Profile'
-      description: 'Processes the profile deletion in the profile page. Access: OWN, ADM'
+      summary: 'R505: Delete an User'
+      description: 'Processes the user deletion in the profile page. Access: OWN, ADM'
       tags:
         - 'M02: Users'
 
@@ -786,10 +889,10 @@ paths:
             schema:
               type: object
               properties:
-                user_id:
+                id:
                   type: integer
               required:
-                - user_id
+                - id
       responses:
         '200':
           description: 'Follow successfully.'
@@ -811,10 +914,10 @@ paths:
             schema:
               type: object
               properties:
-                user_id:
+                id:
                   type: integer
               required:
-                - user_id
+                - id
       responses:
         '200':
           description: 'Unfollow successfully.'
@@ -836,10 +939,10 @@ paths:
             schema:
               type: object
               properties:
-                user_id:
+                id:
                   type: integer
               required:
-                - user_id
+                - id
       responses:
         '200':
           description: 'Removes follower successfully.'
@@ -861,10 +964,10 @@ paths:
             schema:
               type: object
               properties:
-                user_id:
+                id:
                   type: integer
               required:
-                - user_id
+                - id
       responses:
         '200':
           description: 'Follow request successfully.'
@@ -886,10 +989,10 @@ paths:
             schema:
               type: object
               properties:
-                user_id:
+                id:
                   type: integer
               required:
-                - user_id
+                - id
       responses:
         '200':
           description: 'Accept follow request successfully.'
@@ -911,10 +1014,10 @@ paths:
             schema:
               type: object
               properties:
-                user_id:
+                id:
                   type: integer
               required:
-                - user_id
+                - id
       responses:
         '200':
           description: 'Decline follow request successfully.'
@@ -935,6 +1038,11 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              properties:
+                id:
+                  type: integer
+              required:
+                - id    
       responses:
         '200':
           description: 'Cancel follow request successfully.'
@@ -1056,6 +1164,7 @@ paths:
                   type: string
               required:
                 - user_id
+                - content
       responses:
         '302':
           description: 'Redirect after processing the message sent.'
@@ -1210,3 +1319,28 @@ paths:
           description: 'Decline successfully.'
         '403':
           description: 'Forbidden.'
+
+################### API ###################
+
+#### User Verify #####
+  /api/userVerify:
+    get:
+      operationId: R701
+      summary: 'R701 : Verify username'
+      description: 'Verify if username exists. Access: USR, ADM'
+      tags:
+        - 'M07: API'
+      parameters:
+        - in: query
+          name: username
+          description: 'Username verify'
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Success. Returns an ID of the user with that username'
+        '403':
+          description: 'Forbiden. You need to be logged in first'
+
+
