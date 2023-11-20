@@ -417,9 +417,8 @@ paths:
           description: 'OK. Show Search UI'
 
 #### Search User ####
-/api/user:
-
-  get:
+  /api/user:
+    get:
       operationId: R202
       summary: 'R202 : Search users'
       description: 'Search users. Access: USR, ADM'
