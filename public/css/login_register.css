@@ -52,7 +52,7 @@ label{
     margin-top: 1rem;
 }
 
-.success{
+.success, .error{
     font-size: small;
     color: cornflowerblue;
 }
