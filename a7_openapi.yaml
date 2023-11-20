@@ -226,12 +226,33 @@ paths:
                 302Failure:
                   description: 'Failed post creation. Redirecting again to post creation form.'
                   value: '/post/create'
+      
+      get:
+      operationId: R203
+      summary: 'R203: Create Post Page.'
+      description: 'Shows the create post page. Access: USR'
+      tags:
+        - 'M04: Posts'
+
+      responses:
+        '200':
+          description: 'Ok. You can now create. Show create post UI.'
+        '401':
+          description: 'Unauthorized.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                401Success:
+                  description: 'Unauthorized. Redirect to home page.'
+          
 
 #### Deletion ####
   /post/delete:
     post:
-      operationId: R203
-      summary: 'R203: Delete Post'
+      operationId: R204
+      summary: 'R204: Delete Post'
       description: 'Deletes a post. Access: OWN, ADM'
       tags:
         - 'M04: Posts'
@@ -256,8 +277,8 @@ paths:
 
   /api/post/{id}/delete:
     delete:
-      operationId: R204
-      summary: 'R204 : Delete Post'
+      operationId: R205
+     summary: 'R205: Delete Post'
       description: 'Deletes a Post. Access: USR, ADM'
       tags:
         - 'M04: Posts'
@@ -275,10 +296,10 @@ paths:
           description: 'Forbiden. You need to be logged in first'
 
 #### Edition ####
-  /post/edit:
+  /post/{id}/edit:
      get:
-      operationId: R205
-      summary: 'R205: Edit Post Page.'
+      operationId: R206
+      summary: 'R206: Edit Post Page.'
       description: 'Shows the edit post page of the post. Access: OWN, ADM'
       tags:
         - 'M04: Posts'
@@ -298,8 +319,8 @@ paths:
                   value: '/post/{id}'
 
     post:
-      operationId: R206
-      summary: 'R206: Edit Post'
+      operationId: R207
+      summary: 'R207: Edit Post'
       description: 'Edits a post. Access: OWN, ADM'
       tags:
         - 'M04: Posts'
@@ -332,8 +353,8 @@ paths:
 #### Like ####
   /post/like:
     post:
-      operationId: R207
-      summary: 'R207: Like Post'
+      operationId: R208
+      summary: 'R208: Like Post'
       description: 'Likes a post. Access: USR, OWN, ADM'
       tags:
         - 'M04: Posts'
@@ -358,8 +379,8 @@ paths:
 #### Unlike ####
   /post/unlike:
     post:
-      operationId: R208
-      summary: 'R208: Unlike Post'
+      operationId: R209
+      summary: 'R209: Unlike Post'
       description: 'Unlikes a post. Access: USR, OWN, ADM'
       tags:
         - 'M04: Posts'
