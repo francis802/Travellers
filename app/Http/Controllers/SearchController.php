@@ -19,5 +19,6 @@ class SearchController extends Controller
 
         return view('pages.search', compact('input', 'searchResults'))->render();
     }
+
     
 }

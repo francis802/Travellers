@@ -95,4 +95,13 @@ class UserController extends Controller
     {
         //
     }
+
+    public function userVerify(Request $request) {
+        if (!Auth::check()) return null;
+        $input = $request->get('search');
+        $user = User::where('username', $input)
+                      ->get()
+                      ->last();
+        return $user->id ?? -1;
+    }
 }

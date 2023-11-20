@@ -59,5 +59,9 @@ Route::post('post/{id}/delete', [PostController::class, 'destroy']);
 // Search
 Route::get('/search', [SearchController::class, 'show'])->name('search');
 
+// API
+Route::get('api/user', [SearchController::class, 'show']);
+Route::get('api/userVerify', [UserController::class, 'userVerify']);
+
 // Admin
 Route::get('admin', [AdminController::class, 'show']);
