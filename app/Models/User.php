@@ -35,11 +35,11 @@ class User extends Authenticatable
         return count($this->hasOne('App\Models\Admin', 'user_id')->get());
     }
 
-    public function getFollowers() {
+    public function getFollowing() {
         return $this->belongsToMany(User::class, 'follows', 'user1_id', 'user2_id')->orderBy('name', 'asc');
     }
 
-    public function getFollowing() {
+    public function getFollowers() {
         return $this->belongsToMany(User::class, 'follows', 'user2_id', 'user1_id')->orderBy('name', 'asc');
     }
 
