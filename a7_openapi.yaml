@@ -1231,7 +1231,7 @@ paths:
       summary: 'R601: Admin Page'
       description: 'Show Admin Page. Access: ADM'
       tags:
-        - 'M05: Administration'
+        - 'M03: Administration'
       responses:
         '200':
           description: 'Show the admin page.'
@@ -1245,7 +1245,7 @@ paths:
       summary: 'R602: Block a user action'
       description: 'Block a user. Access: ADM'
       tags:
-        - 'M05: Administration'
+        - 'M03: Administration'
       requestBody:
         required: true
         content:
@@ -1272,7 +1272,7 @@ paths:
       summary: 'R503: Unblocking a user action'
       description: 'Unblock a user. Access: ADM'
       tags:
-        - 'M05: Administration'
+        - 'M03: Administration'
       requestBody:
         required: true
         content:
@@ -1297,7 +1297,7 @@ paths:
       summary: 'R604: Accept Group Action'
       description: 'Accepts a group. Access: ADM'
       tags:
-        - 'M05: Administration'
+        - 'M03: Administration'
       requestBody:
         required: true
         content:
@@ -1322,7 +1322,7 @@ paths:
       summary: 'R605: Decline Group Action'
       description: 'Declines a group. Access: ADM'
       tags:
-        - 'M05: Administration'
+        - 'M03: Administration'
       requestBody:
         required: true
         content:
