@@ -44,6 +44,10 @@
             }
         }
 
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('following-posts').style.display = 'none';
+        });
+
     </script>
     
     <section id="fy-posts">

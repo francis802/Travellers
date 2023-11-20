@@ -767,15 +767,15 @@ VALUES
 
 INSERT INTO post (date, text, media, author_id, group_id)
 VALUES
-    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 1, 1),
-    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 1, 2),
-    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 1, 1),
-    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 1, 2),
-    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 2, 3),
-    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 2, 2),
-    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 3, 3),
-    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 3, 3),
-    ('2021-05-01 12:00:00', 'This is a post', 'https://picsum.photos/1000', 4, 4);
+    ('2023-05-01 09:00:00', 'Pyramids of Giza', 'images/post-1.jpg', 1, 1),
+    ('2019-08-21 12:00:00', 'Invicta', 'images/post-2.jpg', 1, 2),
+    ('2018-04-07 14:00:00', 'Gladiators!', 'images/post-3.jpg', 1, 1),
+    ('2012-06-09 07:30:00', 'Cup of tea', 'images/post-4.jpg', 1, 2),
+    ('2021-05-01 15:00:00', 'Tokyo', 'images/post-5.jpg', 2, 3),
+    ('2022-07-01 10:00:00', 'Lisboa', 'images/post-6.jpg', 2, 2),
+    ('2021-05-01 12:00:00', 'This is a post', 'images/post-1.jpg', 3, 3),
+    ('2021-05-01 12:00:00', 'This is a post', 'images/post-1.jpg', 3, 3),
+    ('2021-05-01 12:00:00', 'This is a post', 'images/post-1.jpg', 4, 4);
 
 INSERT INTO like_post (user_id, post_id)
 VALUES
