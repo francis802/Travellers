@@ -1,10 +1,10 @@
 INSERT INTO users (username, name, country, email, password, profile_photo, profile_private)
 VALUES
-    ('francisco.campos03', 'Francisco Campos', 'Portugal', 'francisco.campos@gmail.com', '$2y$10$53jvyZTBMRAkoN/KdkA1s.n.QZ.zTXK6406l5ZmGUSslsEH07WkuS', 'https://picsum.photos/1000', true),
-    ('antonio.romao03', 'António Romão', 'Portugal', 'antonio.romao@gmail.com', '$2y$10$EpgSBve6Nc.Q.PepTjNp8uJUEyZQjnVfmIlLDHR9LGDZC8/VHWPl.', 'https://picsum.photos/1000', true),
+    ('francisco.campos03', 'Francisco Campos', 'Portugal', 'francisco.campos@gmail.com', '$2y$10$53jvyZTBMRAkoN/KdkA1s.n.QZ.zTXK6406l5ZmGUSslsEH07WkuS', 'https://picsum.photos/1000', false),
+    ('antonio.romao03', 'António Romão', 'Portugal', 'antonio.romao@gmail.com', '$2y$10$EpgSBve6Nc.Q.PepTjNp8uJUEyZQjnVfmIlLDHR9LGDZC8/VHWPl.', 'https://picsum.photos/1000', false),
     ('henrique.pinheiro03', 'Henrique Pinheiro', 'Portugal', 'henrique.pinheiro@gmail.com', '$2y$10$/zHdv.sEpPASgf6nXgObI.c.dleL0jqzAEVANmzB.GjFvjvPQ5kYO', 'https://picsum.photos/1000', true),
     ('jane-doe2346', 'Jane Doe', 'United States', 'jane.doe@gmail.com', '$2y$10$8dw4v6YscmyD6MG4Jf92BeOpi299ULr/Z57FCjhH6GrCWwhPb8Y7a', 'https://picsum.photos/1000', true),
-    ('hackerman', 'Hackerman', 'India', 'hacker.man@hack.hk', '$2y$10$xRQgfBx4DIkNk.Y6R4qOPuACJ8MTOm7I1VTPkF9K5Rh85tMRa7x0.', 'https://picsum.photos/1000', true);
+    ('hackerman', 'Hackerman', 'India', 'hacker.man@hack.hk', '$2y$10$xRQgfBx4DIkNk.Y6R4qOPuACJ8MTOm7I1VTPkF9K5Rh85tMRa7x0.', 'https://picsum.photos/1000', false);
 
 INSERT INTO admin (user_id)
 VALUES
@@ -37,9 +37,8 @@ VALUES
 
 INSERT INTO requests (user1_id, user2_id)
 VALUES
-    (1, 2),
-    (1, 3),
     (1, 4),
+    (1, 3),
     (2, 3),
     (2, 4),
     (3, 4);
@@ -91,8 +90,11 @@ INSERT INTO members (user_id, group_id)
 VALUES
     (1, 2),
     (2, 3),
+    (2, 1),
+    (3, 1),
     (3, 4),
-    (4, 5);
+    (4, 5),
+    (4, 1);
 
 INSERT INTO group_invitation (user_id, group_id)
 VALUES
