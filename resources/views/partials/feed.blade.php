@@ -17,18 +17,24 @@
     </section>
 
     <section id="buttons">
-        <button id="forYouButton" class="underline" onclick="toggleButton('forYouButton')">For You</button>
-        <button id="followingButton" onclick="toggleButton('followingButton')">Following</button>
+        <button id="forYouButton" class="underline" onclick="toggleButton('forYouButton', 'fy-posts')">For You</button>
+        <button id="followingButton" onclick="toggleButton('followingButton', 'following-posts')">Following</button>
     </section>
 
     <script>
-        function toggleButton(buttonId) {
+        
+        function toggleButton(buttonId, sectionId) {
             const buttons = document.querySelectorAll('#buttons button');
             buttons.forEach(button => {
                 button.classList.remove('underline');
             });
             const selectedButton = document.getElementById(buttonId);
             selectedButton.classList.add('underline');
+
+            document.getElementById('fy-posts').style.display = 'none';
+            document.getElementById('following-posts').style.display = 'none';
+
+            document.getElementById(sectionId).style.display = 'block';
         }
 
         function searchOnEnter(event) {
@@ -49,10 +55,10 @@
 
     <section id="following-posts">
     <ul id="user-post-list">
-            @include('partials.postsProfile', ['posts' => $publicPosts])
-            @yield('postsProfile')
+            @include('partials.postsFeed', ['posts' => $followingPosts])
+            @yield('postsFeed')
         </ul>
-    </sections>
+    </section>
     
 </section>
 

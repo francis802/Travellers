@@ -67,4 +67,13 @@ class User extends Authenticatable
          
         return $own->orderBy('date','desc');
     }
+    
+    public function followingPosts() {
+        return Post::select('post.*')
+            ->join('follows', 'follows.user2_id', '=', 'post.author_id')
+            ->where('follows.user1_id', '=', $this->id)
+            ->whereNotIn('post.author_id', [$this->id])
+            ->orderBy('post.date', 'desc');
+    }
+
 }
