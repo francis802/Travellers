@@ -98,15 +98,3 @@ a.post-edit{
     padding: 1em;
 }
 
-/*------------------------ POST VIEW -----------------------------*/
-
-#post{
-    display: grid;
-    align-content: center;
-    padding: 1em;
-    align-items: center;
-    margin:0;
-}
-
-
-/*------------------------ POST VIEW -----------------------------*/
