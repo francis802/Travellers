@@ -114,10 +114,10 @@ VALUES
     ('2018-04-07 14:00:00', 'Gladiators!', 'images/post-3.jpg', 1, 1),
     ('2012-06-09 07:30:00', 'Cup of tea', 'images/post-4.jpg', 1, 2),
     ('2021-05-01 15:00:00', 'Tokyo', 'images/post-5.jpg', 2, 3),
-    ('2022-07-01 10:00:00', 'Lisboa', 'images/post-6.jpg', 2, 2),
-    ('2021-05-01 12:00:00', 'This is a post', 'images/post-1.jpg', 3, 3),
-    ('2021-05-01 12:00:00', 'This is a post', 'images/post-1.jpg', 3, 3),
-    ('2021-05-01 12:00:00', 'This is a post', 'images/post-1.jpg', 4, 4);
+    ('2023-08-01 10:00:00', 'Lisboa', 'images/post-6.jpg', 2, 2),
+    ('2017-11-24 12:02:50', 'Freedom!!!', 'images/post-7.jpg', 3, 3),
+    ('2015-03-31 16:12:11', 'hola', 'images/post-8.jpg', 3, 3),
+    ('2020-05-06 12:04:34', 'WOW', 'images/post-9.jpg', 4, 4);
 
 INSERT INTO like_post (user_id, post_id)
 VALUES
