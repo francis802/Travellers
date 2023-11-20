@@ -70,3 +70,43 @@ a.post-edit{
     display: flex;
     flex-direction: row;
 }
+
+
+
+/*------------------------ POST CREATE -----------------------------*/
+
+.create-post-form{
+    display: grid;
+    max-width:fit-content;
+}
+
+.create-post{
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    align-items: center;
+}
+
+
+#post-choose-photo, #post-text{
+    margin-bottom: 1em;
+}
+
+#post-text{  
+    border-color: cornflowerblue;
+    border-radius: 1em;
+    padding: 1em;
+}
+
+/*------------------------ POST VIEW -----------------------------*/
+
+#post{
+    display: grid;
+    align-content: center;
+    padding: 1em;
+    align-items: center;
+    margin:0;
+}
+
+
+/*------------------------ POST VIEW -----------------------------*/

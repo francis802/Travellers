@@ -1,5 +1,5 @@
 @section('post')
-    <article class="post">
+    <article id="post">
         <header id="post-header">
             <div id="post-author">
                 <a href="{{ url('/user/'.$post->author->id) }}" class="post-author-name">
