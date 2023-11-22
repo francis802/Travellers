@@ -146,7 +146,7 @@ CREATE TABLE groups (
     country_id INT REFERENCES country(id) NOT NULL,
     description TEXT NOT NULL,
     banner_pic TEXT,
-    approved BOOLEAN DEFAULT false,
+    approved BOOLEAN DEFAULT NULL,
     subgroup_id INT REFERENCES groups(id)
 );
 
