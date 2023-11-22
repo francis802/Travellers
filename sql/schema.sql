@@ -628,7 +628,25 @@ FOR EACH ROW
 EXECUTE FUNCTION like_comment_notification();
 
 -- TRIGGER NOTIFICATION 11
--- mention_comment_notification can't be done because there is no way to know who mentioned the user
+CREATE FUNCTION mention_comment_notification() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+    mentioned_user_id INT;
+BEGIN
+    FOR mentioned_user_id IN SELECT id FROM users WHERE POSITION(username IN NEW.text) > 0
+    LOOP
+        INSERT INTO comment_notification (time, notified_id, comment_id, notification_type)
+        VALUES (CURRENT_DATE, mentioned_user_id, NEW.id, 'mention_comment');
+    END LOOP;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER mention_trigger
+AFTER INSERT ON comments
+FOR EACH ROW
+EXECUTE FUNCTION check_mentions();
 
 -- TRIGGER NOTIFICATION 12
 -- reply_comment_notification can't be done because there is no way to know who replied to the user
@@ -649,7 +667,19 @@ FOR EACH ROW
 EXECUTE FUNCTION new_like_notification();
 
 -- TRIGGER NOTIFICATION 14
--- mention_description_notification can't be done because there is no way to know who mentioned the user
+CREATE OR REPLACE FUNCTION mention_description_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO post_notification (time, notified_id, post_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.author_id, NEW.id, 'mention_description');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER mention_description_notification
+AFTER INSERT ON post
+FOR EACH ROW
+EXECUTE FUNCTION mention_description_notification();
 
 -- TRIGGER NOTIFICATION 15
 CREATE OR REPLACE FUNCTION group_creation_notification() RETURNS TRIGGER AS
