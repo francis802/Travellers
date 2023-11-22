@@ -147,7 +147,7 @@ CREATE TABLE groups (
     description TEXT NOT NULL,
     banner_pic TEXT,
     approved BOOLEAN DEFAULT NULL,
-    subgroup_id INT REFERENCES groups(id)
+    subgroup_id INT REFERENCES groups(id) ON DELETE CASCADE
 );
 
 CREATE TABLE post (
@@ -245,7 +245,7 @@ CREATE TABLE group_creation_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES admin(user_id) NOT NULL,
-    group_id INT REFERENCES groups(id) NOT NULL,
+    group_id INT REFERENCES groups(id) ON DELETE CASCADE,
     opened BOOLEAN DEFAULT false
 );
 
@@ -269,7 +269,7 @@ CREATE TABLE comment_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES users(id) NOT NULL,
-    comment_id INT REFERENCES comments(id) NOT NULL,
+    comment_id INT REFERENCES comments(id) ON DELETE CASCADE,
     notification_type comment_notification_types NOT NULL,
     opened BOOLEAN DEFAULT false
 );
@@ -278,7 +278,7 @@ CREATE TABLE post_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES users(id) NOT NULL,
-    post_id INT REFERENCES post(id) NOT NULL,
+    post_id INT REFERENCES post(id) ON DELETE CASCADE,
     notification_type post_notification_types NOT NULL,
     opened BOOLEAN DEFAULT false
 );
@@ -287,7 +287,7 @@ CREATE TABLE group_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES users(id) NOT NULL,
-    group_id INT REFERENCES groups(id) NOT NULL,
+    group_id INT REFERENCES groups(id) ON DELETE CASCADE,
     notification_type group_notification_types NOT NULL,
     opened BOOLEAN DEFAULT false
 );
@@ -410,43 +410,6 @@ CREATE INDEX search_tag ON tag USING GIN (tsvectors);
 
 -- Triggers
 
--- TRIGGER01
--- Users may only like a post once (BR05)
-
-CREATE FUNCTION verify_post_likes() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    IF EXISTS (SELECT * FROM like_post WHERE NEW.user_id = user_id AND NEW.post_id = post_id) THEN
-        RAISE EXCEPTION 'Users may only like a post once';
-    END IF;
-    RETURN NEW;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER verify_post_likes
-    BEFORE INSERT OR UPDATE ON like_post
-    FOR EACH ROW
-    EXECUTE PROCEDURE verify_post_likes();
-
--- TRIGGER02
--- Users may only like a comment once (BR06)
-
-CREATE FUNCTION verify_comment_likes() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    IF EXISTS (SELECT * FROM like_comment WHERE NEW.user_id = user_id AND NEW.comment_id = comment_id) THEN
-        RAISE EXCEPTION 'Users may only like a comment once';
-    END IF;
-    RETURN NEW;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER verify_comment_likes
-    BEFORE INSERT OR UPDATE ON like_comment
-    FOR EACH ROW
-    EXECUTE PROCEDURE verify_comment_likes();
 
 -- TRIGGER03
 -- Users may only post to groups they are members of (BR07)
@@ -468,25 +431,6 @@ CREATE TRIGGER verify_group_post
     FOR EACH ROW
     EXECUTE PROCEDURE verify_group_post();
 
--- TRIGGER04
--- Users cannot follow themselves (BR08)
-
-CREATE FUNCTION verify_self_follow() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    IF NEW.user1_id = NEW.user2_id THEN
-        RAISE EXCEPTION 'Users cannot follow themselves';
-    END IF;
-    RETURN NEW;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER verify_self_follow
-    BEFORE INSERT OR UPDATE ON follows
-    FOR EACH ROW
-    EXECUTE PROCEDURE verify_self_follow();
-
 -- TRIGGER05
 -- The owner of a group is automatically a member of that group (BR09)
 
@@ -504,44 +448,6 @@ CREATE TRIGGER group_owner
     FOR EACH ROW
     EXECUTE PROCEDURE group_owner();
 
--- TRIGGER06
--- Users cannot request to follow someone they are already following (BR10)
-
-CREATE FUNCTION verify_follow_request() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    IF EXISTS 
-        (SELECT * FROM follows WHERE NEW.user1_id = user1_id AND NEW.user2_id = user2_id) THEN
-            RAISE EXCEPTION 'Users cannot request to follow someone they are already following';
-    END IF;
-    RETURN NEW;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER verify_follow_request
-    BEFORE INSERT ON requests
-    FOR EACH ROW
-    EXECUTE PROCEDURE verify_follow_request();
-
--- TRIGGER07
--- Users cannot request to follow themselves (BR11)
-
-CREATE FUNCTION verify_self_follow_request() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    IF NEW.user1_id = NEW.user2_id THEN
-        RAISE EXCEPTION 'Users cannot request to follow themselves';
-    END IF;
-    RETURN NEW;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER verify_self_follow_request
-    BEFORE INSERT OR UPDATE ON requests
-    FOR EACH ROW
-    EXECUTE PROCEDURE verify_self_follow_request();
 
 -- TRIGGER08
 -- Follow requests can only be sent to private profiles (BR12)
@@ -583,59 +489,3 @@ CREATE TRIGGER verify_group_invite
     FOR EACH ROW
     EXECUTE PROCEDURE verify_group_invite();
 
--- TRIGGER10
--- When deleting a group it also deletes its subgroups, posts and notifications (BR15)
-
-CREATE FUNCTION delete_group() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    DELETE FROM subgroup WHERE OLD.id = subgroup.group_id;
-    DELETE FROM post WHERE OLD.id = post.group_id;
-    DELETE FROM group_invitation WHERE OLD.id = group_invitation.group_id;
-    DELETE FROM group_notification WHERE OLD.id = group_notification.group_id;
-    RETURN OLD;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER delete_group
-    BEFORE DELETE ON groups
-    FOR EACH ROW
-    EXECUTE PROCEDURE delete_group();
-
--- TRIGGER11
--- When deleting a post it also deletes its comments, likes and notifications (BR16)
-
-CREATE FUNCTION delete_post() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    DELETE FROM comments WHERE OLD.id = comments.post_id;
-    DELETE FROM like_post WHERE OLD.id = like_post.post_id;
-    DELETE FROM post_notification WHERE OLD.id = post_notification.post_id;
-    RETURN OLD;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER delete_post
-    BEFORE DELETE ON post
-    FOR EACH ROW
-    EXECUTE PROCEDURE delete_post();
-
--- TRIGGER12
--- When deleting a comment it also deletes its likes and notifications (BR17)
-
-CREATE FUNCTION delete_comment() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    DELETE FROM like_comment WHERE OLD.id = like_comment.comment_id;
-    DELETE FROM comment_notification WHERE OLD.id = comment_notification.comment_id;
-    RETURN OLD;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER delete_comment
-    BEFORE DELETE ON comments
-    FOR EACH ROW
-    EXECUTE PROCEDURE delete_comment();
