@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS comment_notification CASCADE;
 DROP TABLE IF EXISTS post_notification CASCADE;
 DROP TABLE IF EXISTS group_notification CASCADE;
 DROP TABLE IF EXISTS group_invitation CASCADE;
+DROP TABLE IF EXISTS banned_member CASCADE;
 DROP TABLE IF EXISTS members CASCADE;
 DROP TABLE IF EXISTS owner CASCADE;
 DROP TABLE IF EXISTS groups CASCADE;
@@ -52,7 +53,7 @@ DROP FUNCTION IF EXISTS verify_group_invite CASCADE;
 
 -- Types
 
-CREATE TYPE comment_notification_types AS ENUM('mention_comment', 'liked_comment', 'new_comment', 'reply_comment');
+CREATE TYPE comment_notification_types AS ENUM('mention_comment', 'liked_comment', 'new_comment');
 CREATE TYPE post_notification_types AS ENUM('new_like', 'mention_description');
 CREATE TYPE group_notification_types AS ENUM('group_invite', 'group_join', 'group_leave', 'group_ban', 'group_owner');
 CREATE TYPE follow_notification_types AS ENUM('follow_request', 'follow_accept');
@@ -204,6 +205,12 @@ CREATE TABLE owner (
 );
 
 CREATE TABLE members (
+    user_id INT REFERENCES users(id) NOT NULL,
+    group_id INT REFERENCES groups(id) NOT NULL,
+    PRIMARY KEY (user_id, group_id)
+);
+
+CREATE TABLE banned_member (
     user_id INT REFERENCES users(id) NOT NULL,
     group_id INT REFERENCES groups(id) NOT NULL,
     PRIMARY KEY (user_id, group_id)
@@ -490,7 +497,7 @@ CREATE TRIGGER verify_group_invite
 ------------------------------------- NEW TRIGGERS -------------------------------------
 
 -- TRIGGER NOTIFICATION 1
-CREATE OR REPLACE FUNCTION follow_request_notification() RETURNS TRIGGER AS
+CREATE FUNCTION follow_request_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO follow_notification (time, notified_id, notification_type)
@@ -505,7 +512,7 @@ FOR EACH ROW
 EXECUTE FUNCTION follow_request_notification();
 
 -- TRIGGER NOTIFICATION 2
-CREATE OR REPLACE FUNCTION follow_accept_notification() RETURNS TRIGGER AS
+CREATE FUNCTION follow_accept_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO follow_notification (time, notified_id, notification_type)
@@ -520,7 +527,7 @@ FOR EACH ROW
 EXECUTE FUNCTION follow_accept_notification();
 
 -- TRIGGER NOTIFICATION 3
-CREATE OR REPLACE FUNCTION group_invite_notification() RETURNS TRIGGER AS
+CREATE FUNCTION group_invite_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO group_notification (time, notified_id, group_id, notification_type)
@@ -535,7 +542,7 @@ FOR EACH ROW
 EXECUTE FUNCTION group_invite_notification();
 
 -- TRIGGER NOTIFICATION 4
-CREATE OR REPLACE FUNCTION group_join_notification() RETURNS TRIGGER AS
+CREATE FUNCTION group_join_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO group_notification (time, notified_id, group_id, notification_type)
@@ -550,7 +557,7 @@ FOR EACH ROW
 EXECUTE FUNCTION group_join_notification();
 
 -- TRIGGER NOTIFICATION 5 (Should we notify the user who left or the owner?)
-CREATE OR REPLACE FUNCTION group_leave_notification() RETURNS TRIGGER AS
+CREATE FUNCTION group_leave_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO group_notification (time, notified_id, group_id, notification_type)
@@ -565,10 +572,22 @@ FOR EACH ROW
 EXECUTE FUNCTION group_leave_notification();
 
 -- TRIGGER NOTIFICATION 6
--- group_ban_notification can't be done because there is no way to know who banned the user
+CREATE FUNCTION group_ban_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO group_notification (time, notified_id, group_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_ban');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER group_ban_notification
+AFTER INSERT ON banned_member
+FOR EACH ROW
+EXECUTE FUNCTION group_ban_notification();
 
 -- TRIGGER NOTIFICATION 7
-CREATE OR REPLACE FUNCTION group_owner_notification() RETURNS TRIGGER AS
+CREATE FUNCTION group_owner_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO group_notification (time, notified_id, group_id, notification_type)
@@ -583,7 +602,7 @@ FOR EACH ROW
 EXECUTE FUNCTION group_owner_notification();
 
 -- TRIGGER NOTIFICATION 8
-CREATE OR REPLACE FUNCTION new_message_notification() RETURNS TRIGGER AS
+CREATE FUNCTION new_message_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO new_message_notification (time, notified_id, message_id)
@@ -598,7 +617,7 @@ FOR EACH ROW
 EXECUTE FUNCTION new_message_notification();
 
 -- TRIGGER NOTIFICATION 9
-CREATE OR REPLACE FUNCTION new_comment_notification() RETURNS TRIGGER AS
+CREATE FUNCTION new_comment_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO comment_notification (time, notified_id, comment_id, notification_type)
@@ -613,7 +632,7 @@ FOR EACH ROW
 EXECUTE FUNCTION new_comment_notification();
 
 -- TRIGGER NOTIFICATION 10
-CREATE OR REPLACE FUNCTION like_comment_notification() RETURNS TRIGGER AS
+CREATE FUNCTION like_comment_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO comment_notification (time, notified_id, comment_id, notification_type)
@@ -649,10 +668,7 @@ FOR EACH ROW
 EXECUTE FUNCTION check_mentions();
 
 -- TRIGGER NOTIFICATION 12
--- reply_comment_notification can't be done because there is no way to know who replied to the user
-
--- TRIGGER NOTIFICATION 13
-CREATE OR REPLACE FUNCTION new_like_notification() RETURNS TRIGGER AS
+CREATE FUNCTION new_like_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO post_notification (time, notified_id, post_id, notification_type)
@@ -666,8 +682,8 @@ AFTER INSERT ON like_post
 FOR EACH ROW
 EXECUTE FUNCTION new_like_notification();
 
--- TRIGGER NOTIFICATION 14
-CREATE OR REPLACE FUNCTION mention_description_notification() RETURNS TRIGGER AS
+-- TRIGGER NOTIFICATION 13
+CREATE FUNCTION mention_description_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO post_notification (time, notified_id, post_id, notification_type)
@@ -681,8 +697,8 @@ AFTER INSERT ON post
 FOR EACH ROW
 EXECUTE FUNCTION mention_description_notification();
 
--- TRIGGER NOTIFICATION 15
-CREATE OR REPLACE FUNCTION group_creation_notification() RETURNS TRIGGER AS
+-- TRIGGER NOTIFICATION 14
+CREATE FUNCTION group_creation_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO group_creation_notification (time, notified_id, group_id)
@@ -696,8 +712,8 @@ AFTER INSERT ON groups
 FOR EACH ROW
 EXECUTE FUNCTION group_creation_notification();
 
--- TRIGGER NOTIFICATION 16
-CREATE OR REPLACE FUNCTION common_help_notification() RETURNS TRIGGER AS
+-- TRIGGER NOTIFICATION 15
+CREATE FUNCTION common_help_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO common_help_notification (time, notified_id, common_help_id)
@@ -711,8 +727,8 @@ AFTER INSERT ON common_help
 FOR EACH ROW
 EXECUTE FUNCTION common_help_notification();
 
--- TRIGGER NOTIFICATION 17
-CREATE OR REPLACE FUNCTION appeal_notification() RETURNS TRIGGER AS
+-- TRIGGER NOTIFICATION 16
+CREATE FUNCTION appeal_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO appeal_notification (time, notified_id, unban_request_id)
@@ -726,8 +742,8 @@ AFTER INSERT ON unban_request
 FOR EACH ROW
 EXECUTE FUNCTION appeal_notification();
 
--- TRIGGER NOTIFICATION 18
-CREATE OR REPLACE FUNCTION report_notification() RETURNS TRIGGER AS
+-- TRIGGER NOTIFICATION 17
+CREATE FUNCTION report_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO report_notification (time, notified_id, report_id)
