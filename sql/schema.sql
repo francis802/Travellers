@@ -50,6 +50,24 @@ DROP FUNCTION IF EXISTS verify_group_post CASCADE;
 DROP FUNCTION IF EXISTS group_owner CASCADE;
 DROP FUNCTION IF EXISTS verify_priv_follow_request CASCADE;
 DROP FUNCTION IF EXISTS verify_group_invite CASCADE;
+DROP FUNCTION IF EXISTS follow_request_notification CASCADE;
+DROP FUNCTION IF EXISTS follow_accept_notification CASCADE;
+DROP FUNCTION IF EXISTS group_invite_notification CASCADE;
+DROP FUNCTION IF EXISTS group_join_notification CASCADE;
+DROP FUNCTION IF EXISTS group_leave_notification CASCADE;
+DROP FUNCTION IF EXISTS group_ban_notification CASCADE;
+DROP FUNCTION IF EXISTS group_owner_notification CASCADE;
+DROP FUNCTION IF EXISTS new_message_notification CASCADE;
+DROP FUNCTION IF EXISTS new_comment_notification CASCADE;
+DROP FUNCTION IF EXISTS like_comment_notification CASCADE;
+DROP FUNCTION IF EXISTS mention_comment_notification CASCADE;
+DROP FUNCTION IF EXISTS like_post_notification CASCADE;
+DROP FUNCTION IF EXISTS mention_description_notification CASCADE;
+DROP FUNCTION IF EXISTS group_creation_notification CASCADE;
+DROP FUNCTION IF EXISTS common_help_notification CASCADE;
+DROP FUNCTION IF EXISTS appeal_notification CASCADE;
+DROP FUNCTION IF EXISTS report_notification CASCADE;
+
 
 -- Types
 
@@ -668,7 +686,7 @@ FOR EACH ROW
 EXECUTE FUNCTION check_mentions();
 
 -- TRIGGER NOTIFICATION 12
-CREATE FUNCTION new_like_notification() RETURNS TRIGGER AS
+CREATE FUNCTION like_post_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO post_notification (time, notified_id, post_id, notification_type)
@@ -677,10 +695,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER new_like_notification
+CREATE TRIGGER like_post_notification
 AFTER INSERT ON like_post
 FOR EACH ROW
-EXECUTE FUNCTION new_like_notification();
+EXECUTE FUNCTION like_post_notification();
 
 -- TRIGGER NOTIFICATION 13
 CREATE FUNCTION mention_description_notification() RETURNS TRIGGER AS
