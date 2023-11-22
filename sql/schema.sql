@@ -487,3 +487,226 @@ CREATE TRIGGER verify_group_invite
     FOR EACH ROW
     EXECUTE PROCEDURE verify_group_invite();
 
+------------------------------------- NEW TRIGGERS -------------------------------------
+
+-- TRIGGER NOTIFICATION 1
+CREATE OR REPLACE FUNCTION follow_request_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO follow_notification (time, notified_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user2_id, 'follow_request');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER follow_request_notification
+AFTER INSERT ON requests
+FOR EACH ROW
+EXECUTE FUNCTION follow_request_notification();
+
+-- TRIGGER NOTIFICATION 2
+CREATE OR REPLACE FUNCTION follow_accept_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO follow_notification (time, notified_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user1_id, 'follow_accept');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER follow_accept_notification
+AFTER INSERT ON follows
+FOR EACH ROW
+EXECUTE FUNCTION follow_accept_notification();
+
+-- TRIGGER NOTIFICATION 3
+CREATE OR REPLACE FUNCTION group_invite_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO group_notification (time, notified_id, group_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_invite');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER group_invite_notification
+AFTER INSERT ON group_invitation
+FOR EACH ROW
+EXECUTE FUNCTION group_invite_notification();
+
+-- TRIGGER NOTIFICATION 4
+CREATE OR REPLACE FUNCTION group_join_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO group_notification (time, notified_id, group_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_join');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER group_join_notification
+AFTER INSERT ON members
+FOR EACH ROW
+EXECUTE FUNCTION group_join_notification();
+
+-- TRIGGER NOTIFICATION 5 (Should we notify the user who left or the owner?)
+CREATE OR REPLACE FUNCTION group_leave_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO group_notification (time, notified_id, group_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_leave');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER group_leave_notification
+AFTER DELETE ON members
+FOR EACH ROW
+EXECUTE FUNCTION group_leave_notification();
+
+-- TRIGGER NOTIFICATION 6
+-- group_ban_notification can't be done because there is no way to know who banned the user
+
+-- TRIGGER NOTIFICATION 7
+CREATE OR REPLACE FUNCTION group_owner_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO group_notification (time, notified_id, group_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_owner');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER group_owner_notification
+AFTER INSERT ON owner
+FOR EACH ROW
+EXECUTE FUNCTION group_owner_notification();
+
+-- TRIGGER NOTIFICATION 8
+CREATE OR REPLACE FUNCTION new_message_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO new_message_notification (time, notified_id, message_id)
+    VALUES (CURRENT_DATE, NEW.receiver_id, NEW.id);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER new_message_notification
+AFTER INSERT ON message
+FOR EACH ROW
+EXECUTE FUNCTION new_message_notification();
+
+-- TRIGGER NOTIFICATION 9
+CREATE OR REPLACE FUNCTION new_comment_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO comment_notification (time, notified_id, comment_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.author_id, NEW.id, 'new_comment');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER new_comment_notification
+AFTER INSERT ON comments
+FOR EACH ROW
+EXECUTE FUNCTION new_comment_notification();
+
+-- TRIGGER NOTIFICATION 10
+CREATE OR REPLACE FUNCTION like_comment_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO comment_notification (time, notified_id, comment_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user_id, NEW.comment_id, 'liked_comment');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER like_comment_notification
+AFTER INSERT ON like_comment
+FOR EACH ROW
+EXECUTE FUNCTION like_comment_notification();
+
+-- TRIGGER NOTIFICATION 11
+-- mention_comment_notification can't be done because there is no way to know who mentioned the user
+
+-- TRIGGER NOTIFICATION 12
+-- reply_comment_notification can't be done because there is no way to know who replied to the user
+
+-- TRIGGER NOTIFICATION 13
+CREATE OR REPLACE FUNCTION new_like_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO post_notification (time, notified_id, post_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user_id, NEW.post_id, 'new_like');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER new_like_notification
+AFTER INSERT ON like_post
+FOR EACH ROW
+EXECUTE FUNCTION new_like_notification();
+
+-- TRIGGER NOTIFICATION 14
+-- mention_description_notification can't be done because there is no way to know who mentioned the user
+
+-- TRIGGER NOTIFICATION 15
+CREATE OR REPLACE FUNCTION group_creation_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO group_creation_notification (time, notified_id, group_id)
+    VALUES (CURRENT_DATE, NEW.user_id, NEW.id);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER group_creation_notification
+AFTER INSERT ON groups
+FOR EACH ROW
+EXECUTE FUNCTION group_creation_notification();
+
+-- TRIGGER NOTIFICATION 16
+CREATE OR REPLACE FUNCTION common_help_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO common_help_notification (time, notified_id, common_help_id)
+    VALUES (CURRENT_DATE, NEW.user_id, NEW.id);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER common_help_notification
+AFTER INSERT ON common_help
+FOR EACH ROW
+EXECUTE FUNCTION common_help_notification();
+
+-- TRIGGER NOTIFICATION 17
+CREATE OR REPLACE FUNCTION appeal_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO appeal_notification (time, notified_id, unban_request_id)
+    VALUES (CURRENT_DATE, NEW.evaluater_id, NEW.id);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER appeal_notification
+AFTER INSERT ON unban_request
+FOR EACH ROW
+EXECUTE FUNCTION appeal_notification();
+
+-- TRIGGER NOTIFICATION 18
+CREATE OR REPLACE FUNCTION report_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO report_notification (time, notified_id, report_id)
+    VALUES (CURRENT_DATE, NEW.evaluater_id, NEW.id);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER report_notification
+AFTER INSERT ON report
+FOR EACH ROW
+EXECUTE FUNCTION report_notification();
