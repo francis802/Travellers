@@ -82,13 +82,16 @@ CREATE TABLE admin (
 );
 
 CREATE TABLE banned (
-    user_id INT PRIMARY KEY REFERENCES users(id)
+    user_id INT PRIMARY KEY REFERENCES users(id),
+    ban_date DATE NOT NULL CHECK (ban_date <= now())
 );
 
 CREATE TABLE unban_request (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
+    date DATE NOT NULL CHECK (date <= now()),
+    accept_appeal BOOLEAN DEFAULT NULL,
     banned_user_id INT REFERENCES banned(user_id) NOT NULL
 );
 
@@ -96,6 +99,7 @@ CREATE TABLE common_help (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
+    date DATE NOT NULL CHECK (date <= now()),
     user_id INT REFERENCES users(id) NOT NULL
 );
 
@@ -112,7 +116,9 @@ CREATE TABLE report (
     description TEXT NOT NULL,
     evaluater_id INT REFERENCES admin(user_id) NOT NULL,
     reporter_id INT REFERENCES users(id) NOT NULL,
-    infractor_id INT REFERENCES users(id) NOT NULL
+    infractor_id INT REFERENCES users(id) NOT NULL,
+    date DATE NOT NULL CHECK (date <= now()),
+    ban_infractor BOOLEAN DEFAULT NULL
 );
 
 CREATE TABLE requests (
