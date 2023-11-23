@@ -521,8 +521,9 @@ BEGIN
     INSERT INTO follow_notification (time, notified_id, notification_type)
     VALUES (CURRENT_DATE, NEW.user2_id, 'follow_request');
     RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+END
+$BODY$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER follow_request_notification
 AFTER INSERT ON requests
@@ -536,8 +537,9 @@ BEGIN
     INSERT INTO follow_notification (time, notified_id, notification_type)
     VALUES (CURRENT_DATE, NEW.user1_id, 'follow_accept');
     RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+END
+$BODY$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER follow_accept_notification
 AFTER INSERT ON follows
@@ -551,8 +553,9 @@ BEGIN
     INSERT INTO group_notification (time, notified_id, group_id, notification_type)
     VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_invite');
     RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+END
+$BODY$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER group_invite_notification
 AFTER INSERT ON group_invitation
@@ -566,8 +569,9 @@ BEGIN
     INSERT INTO group_notification (time, notified_id, group_id, notification_type)
     VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_join');
     RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+END
+$BODY$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER group_join_notification
 AFTER INSERT ON members
@@ -581,8 +585,9 @@ BEGIN
     INSERT INTO group_notification (time, notified_id, group_id, notification_type)
     VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_leave');
     RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+END
+$BODY$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER group_leave_notification
 AFTER DELETE ON members
@@ -596,8 +601,9 @@ BEGIN
     INSERT INTO group_notification (time, notified_id, group_id, notification_type)
     VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_ban');
     RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+END
+$BODY$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER group_ban_notification
 AFTER INSERT ON banned_member
@@ -611,8 +617,9 @@ BEGIN
     INSERT INTO group_notification (time, notified_id, group_id, notification_type)
     VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_owner');
     RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+END
+$BODY$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER group_owner_notification
 AFTER INSERT ON owner
@@ -626,8 +633,9 @@ BEGIN
     INSERT INTO new_message_notification (time, notified_id, message_id)
     VALUES (CURRENT_DATE, NEW.receiver_id, NEW.id);
     RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+END
+$BODY$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER new_message_notification
 AFTER INSERT ON message
@@ -641,8 +649,9 @@ BEGIN
     INSERT INTO comment_notification (time, notified_id, comment_id, notification_type)
     VALUES (CURRENT_DATE, NEW.author_id, NEW.id, 'new_comment');
     RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+END
+$BODY$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER new_comment_notification
 AFTER INSERT ON comments
@@ -656,8 +665,9 @@ BEGIN
     INSERT INTO comment_notification (time, notified_id, comment_id, notification_type)
     VALUES (CURRENT_DATE, NEW.user_id, NEW.comment_id, 'liked_comment');
     RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+END
+$BODY$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER like_comment_notification
 AFTER INSERT ON like_comment
@@ -677,8 +687,9 @@ BEGIN
     END LOOP;
 
     RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+END
+$BODY$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER mention_trigger
 AFTER INSERT ON comments
@@ -692,8 +703,9 @@ BEGIN
     INSERT INTO post_notification (time, notified_id, post_id, notification_type)
     VALUES (CURRENT_DATE, NEW.user_id, NEW.post_id, 'new_like');
     RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+END
+$BODY$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER like_post_notification
 AFTER INSERT ON like_post
@@ -707,8 +719,9 @@ BEGIN
     INSERT INTO post_notification (time, notified_id, post_id, notification_type)
     VALUES (CURRENT_DATE, NEW.author_id, NEW.id, 'mention_description');
     RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+END
+$BODY$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER mention_description_notification
 AFTER INSERT ON post
@@ -722,8 +735,9 @@ BEGIN
     INSERT INTO group_creation_notification (time, notified_id, group_id)
     VALUES (CURRENT_DATE, NEW.user_id, NEW.id);
     RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+END
+$BODY$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER group_creation_notification
 AFTER INSERT ON groups
@@ -737,8 +751,9 @@ BEGIN
     INSERT INTO common_help_notification (time, notified_id, common_help_id)
     VALUES (CURRENT_DATE, NEW.user_id, NEW.id);
     RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+END
+$BODY$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER common_help_notification
 AFTER INSERT ON common_help
@@ -752,8 +767,9 @@ BEGIN
     INSERT INTO appeal_notification (time, notified_id, unban_request_id)
     VALUES (CURRENT_DATE, NEW.evaluater_id, NEW.id);
     RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+END
+$BODY$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER appeal_notification
 AFTER INSERT ON unban_request
@@ -767,8 +783,9 @@ BEGIN
     INSERT INTO report_notification (time, notified_id, report_id)
     VALUES (CURRENT_DATE, NEW.evaluater_id, NEW.id);
     RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+END
+$BODY$
+LANGUAGE plpgsql;
 
 CREATE TRIGGER report_notification
 AFTER INSERT ON report
