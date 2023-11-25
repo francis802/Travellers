@@ -679,9 +679,8 @@ CREATE FUNCTION mention_comment_notification() RETURNS TRIGGER AS
 $BODY$
 DECLARE
     mentioned_user_id INT;
-    username_pattern TEXT := '@[a-zA-Z0-9_]+';
 BEGIN
-    FOR mentioned_user_id IN SELECT id FROM users WHERE regexp_matches(NEW.text, username_pattern) IS NOT NULL
+    FOR mentioned_user_id IN SELECT id FROM users WHERE POSITION(username IN NEW.text)>0 AND POSITION(username IN ('@' || username)) = 2
     LOOP
         INSERT INTO comment_notification (time, notified_id, comment_id, notification_type)
         VALUES (CURRENT_DATE, mentioned_user_id, NEW.id, 'mention_comment');
@@ -718,9 +717,8 @@ CREATE FUNCTION mention_description_notification() RETURNS TRIGGER AS
 $BODY$
 DECLARE
     mentioned_user_id INT;
-    username_pattern TEXT := '@[a-zA-Z0-9_]+';
 BEGIN
-    FOR mentioned_user_id IN SELECT id FROM users WHERE regexp_matches(NEW.text, username_pattern) IS NOT NULL
+    FOR mentioned_user_id IN SELECT id FROM users WHERE POSITION(username IN NEW.text)>0 AND POSITION(username IN ('@' || username)) = 2
     LOOP
         INSERT INTO post_notification (time, notified_id, post_id, notification_type)
         VALUES (CURRENT_DATE, mentioned_user_id, NEW.id, 'mention_description');
