@@ -81,7 +81,7 @@ CREATE TYPE follow_notification_types AS ENUM('follow_request', 'follow_accept')
 CREATE TABLE country (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    city_id INT REFERENCES country(id)
+    city_id INT REFERENCES country(id) ON DELETE CASCADE
 );
 
 CREATE TABLE users (
@@ -160,7 +160,7 @@ CREATE TABLE blocks (
 
 CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
-    country_id INT REFERENCES country(id) NOT NULL,
+    country_id INT REFERENCES country(id) ON DELETE CASCADE,
     description TEXT NOT NULL,
     banner_pic TEXT,
     approved BOOLEAN DEFAULT NULL,
@@ -388,11 +388,11 @@ ADD COLUMN tsvectors TSVECTOR;
 CREATE FUNCTION groups_search_update() RETURNS TRIGGER AS $$
 BEGIN
 IF TG_OP = 'INSERT' THEN
-NEW.tsvectors = to_tsvector('portuguese', NEW.name);
+NEW.tsvectors = to_tsvector('portuguese', (SELECT name FROM country WHERE NEW.country_id = country.id));
 END IF;
 IF TG_OP = 'UPDATE' THEN
-IF (NEW.name <> OLD.name) THEN
-NEW.tsvectors = to_tsvector('portuguese', NEW.name);
+IF ((SELECT name FROM country WHERE NEW.country_id = country.id) <> (SELECT name FROM country WHERE OLD.country_id = country.id)) THEN
+NEW.tsvectors = to_tsvector('portuguese', (SELECT name FROM country WHERE NEW.country_id = country.id));
 END IF;
 END IF;
 RETURN NEW;
@@ -680,7 +680,7 @@ $BODY$
 DECLARE
     mentioned_user_id INT;
 BEGIN
-    FOR mentioned_user_id IN SELECT id FROM users WHERE POSITION(username IN NEW.text) > 0
+    FOR mentioned_user_id IN SELECT id FROM users WHERE POSITION(username IN NEW.text)>0 AND POSITION(username IN ('@' || username)) = 2
     LOOP
         INSERT INTO comment_notification (time, notified_id, comment_id, notification_type)
         VALUES (CURRENT_DATE, mentioned_user_id, NEW.id, 'mention_comment');
@@ -691,10 +691,10 @@ END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER mention_trigger
+CREATE TRIGGER mention_comment_notification
 AFTER INSERT ON comments
 FOR EACH ROW
-EXECUTE FUNCTION check_mentions();
+EXECUTE FUNCTION mention_comment_notification();
 
 -- TRIGGER NOTIFICATION 12
 CREATE FUNCTION like_post_notification() RETURNS TRIGGER AS
@@ -715,9 +715,15 @@ EXECUTE FUNCTION like_post_notification();
 -- TRIGGER NOTIFICATION 13
 CREATE FUNCTION mention_description_notification() RETURNS TRIGGER AS
 $BODY$
+DECLARE
+    mentioned_user_id INT;
 BEGIN
-    INSERT INTO post_notification (time, notified_id, post_id, notification_type)
-    VALUES (CURRENT_DATE, NEW.author_id, NEW.id, 'mention_description');
+    FOR mentioned_user_id IN SELECT id FROM users WHERE POSITION(username IN NEW.text)>0 AND POSITION(username IN ('@' || username)) = 2
+    LOOP
+        INSERT INTO post_notification (time, notified_id, post_id, notification_type)
+        VALUES (CURRENT_DATE, mentioned_user_id, NEW.id, 'mention_description');
+    END LOOP;
+
     RETURN NEW;
 END
 $BODY$
@@ -733,7 +739,7 @@ CREATE FUNCTION group_creation_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO group_creation_notification (time, notified_id, group_id)
-    VALUES (CURRENT_DATE, NEW.user_id, NEW.id);
+    VALUES (CURRENT_DATE, (SELECT user_id FROM admin ORDER BY random() LIMIT 1), NEW.id);
     RETURN NEW;
 END
 $BODY$
@@ -749,7 +755,7 @@ CREATE FUNCTION common_help_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO common_help_notification (time, notified_id, common_help_id)
-    VALUES (CURRENT_DATE, NEW.user_id, NEW.id);
+    VALUES (CURRENT_DATE, (SELECT user_id FROM admin ORDER BY random() LIMIT 1), NEW.id);
     RETURN NEW;
 END
 $BODY$
@@ -765,7 +771,7 @@ CREATE FUNCTION appeal_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO appeal_notification (time, notified_id, unban_request_id)
-    VALUES (CURRENT_DATE, NEW.evaluater_id, NEW.id);
+    VALUES (CURRENT_DATE, (SELECT user_id FROM admin ORDER BY random() LIMIT 1), NEW.id);
     RETURN NEW;
 END
 $BODY$
@@ -781,7 +787,7 @@ CREATE FUNCTION report_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO report_notification (time, notified_id, report_id)
-    VALUES (CURRENT_DATE, NEW.evaluater_id, NEW.id);
+    VALUES (CURRENT_DATE, (SELECT user_id FROM admin ORDER BY random() LIMIT 1), NEW.id);
     RETURN NEW;
 END
 $BODY$
