@@ -87,15 +87,15 @@ VALUES
     (2),
     (3);
 
-INSERT INTO banned (user_id)
+INSERT INTO banned (user_id, ban_date)
 VALUES
-    (5),
-    (11);
+    (5, CURRENT_DATE),
+    (11, CURRENT_DATE);
 
 INSERT INTO unban_request (title, description, date, banned_user_id)
 VALUES
     ('Please unban me', 'I only tried to hack you because of FSI I swear', CURRENT_DATE, 5),
-    ('Be careful...', "I will try again to wipe out your website", CURRENT_DATE, 11);
+    ('Be careful...', 'I will try again to wipe out your website', CURRENT_DATE, 11);
 
 INSERT INTO common_help (title, description, date, user_id)
 VALUES
@@ -107,8 +107,8 @@ VALUES
 
 INSERT INTO faq (answer, question, last_edited, author_id)
 VALUES
-    ("You can join has many groups as you like! And dont worry, you won't need a VISA", 'Can I join multiple groups?', '2021-05-01 12:00:00', 1),
-    ('You can change your password by clicking on the "Change Password" button on the top right corner of the page.', 'How can I change my password?', '2021-05-01 12:00:00', 2),
+    ('You can join has many groups as you like! And dont worry, you wont need a VISA', 'Can I join multiple groups?', '2021-05-01 12:00:00', 1),
+    ('You can change your password by clicking on the "Change Password" button on the top right corner of the page.', 'How can I change my password?', '2021-05-01 12:00:00', 2);
     
 
 INSERT INTO report (description, evaluater_id, reporter_id, infractor_id, date)
@@ -173,7 +173,7 @@ VALUES
     (29, 'Esta é a terra invicta <3. Francesinha, dragão, e bifana é o que vos damos!', 'https://picsum.photos/1000', 1),
     (30, 'This is the land of the lion. We love lion', 'https://picsum.photos/1000', 1),
     (31, 'Capital Nobre de Portugal, verdadeiramente fantástica!', 'https://picsum.photos/1000', 1),
-    (32, "The city never sleeps, and so don't I", 'https://picsum.photos/1000', 2),
+    (32, 'The city never sleeps, and so dont I', 'https://picsum.photos/1000', 2),
     (33, 'One of the most ICONIC indian cities!', 'https://picsum.photos/1000', 3),
     (34, 'Incredible parties, weather, and ', 'https://picsum.photos/1000', 4);
 
