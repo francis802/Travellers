@@ -81,7 +81,7 @@ CREATE TYPE follow_notification_types AS ENUM('follow_request', 'follow_accept')
 CREATE TABLE country (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    city_id INT REFERENCES country(id)
+    city_id INT REFERENCES country(id) ON DELETE CASCADE
 );
 
 CREATE TABLE users (
@@ -160,7 +160,7 @@ CREATE TABLE blocks (
 
 CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
-    country_id INT REFERENCES country(id) NOT NULL,
+    country_id INT REFERENCES country(id) ON DELETE CASCADE,
     description TEXT NOT NULL,
     banner_pic TEXT,
     approved BOOLEAN DEFAULT NULL,
@@ -679,8 +679,9 @@ CREATE FUNCTION mention_comment_notification() RETURNS TRIGGER AS
 $BODY$
 DECLARE
     mentioned_user_id INT;
+    username_pattern TEXT := '@[a-zA-Z0-9_]+';
 BEGIN
-    FOR mentioned_user_id IN SELECT id FROM users WHERE POSITION(username IN NEW.text) > 0
+    FOR mentioned_user_id IN SELECT id FROM users WHERE regexp_matches(NEW.text, username_pattern) IS NOT NULL
     LOOP
         INSERT INTO comment_notification (time, notified_id, comment_id, notification_type)
         VALUES (CURRENT_DATE, mentioned_user_id, NEW.id, 'mention_comment');
@@ -691,10 +692,10 @@ END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER mention_trigger
+CREATE TRIGGER mention_comment_notification
 AFTER INSERT ON comments
 FOR EACH ROW
-EXECUTE FUNCTION check_mentions();
+EXECUTE FUNCTION mention_comment_notification();
 
 -- TRIGGER NOTIFICATION 12
 CREATE FUNCTION like_post_notification() RETURNS TRIGGER AS
@@ -715,9 +716,16 @@ EXECUTE FUNCTION like_post_notification();
 -- TRIGGER NOTIFICATION 13
 CREATE FUNCTION mention_description_notification() RETURNS TRIGGER AS
 $BODY$
+DECLARE
+    mentioned_user_id INT;
+    username_pattern TEXT := '@[a-zA-Z0-9_]+';
 BEGIN
-    INSERT INTO post_notification (time, notified_id, post_id, notification_type)
-    VALUES (CURRENT_DATE, NEW.author_id, NEW.id, 'mention_description');
+    FOR mentioned_user_id IN SELECT id FROM users WHERE regexp_matches(NEW.text, username_pattern) IS NOT NULL
+    LOOP
+        INSERT INTO post_notification (time, notified_id, post_id, notification_type)
+        VALUES (CURRENT_DATE, mentioned_user_id, NEW.id, 'mention_description');
+    END LOOP;
+
     RETURN NEW;
 END
 $BODY$
