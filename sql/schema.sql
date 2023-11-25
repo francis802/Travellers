@@ -388,11 +388,11 @@ ADD COLUMN tsvectors TSVECTOR;
 CREATE FUNCTION groups_search_update() RETURNS TRIGGER AS $$
 BEGIN
 IF TG_OP = 'INSERT' THEN
-NEW.tsvectors = to_tsvector('portuguese', NEW.name);
+NEW.tsvectors = to_tsvector('portuguese', (SELECT name FROM country WHERE NEW.country_id = country.id));
 END IF;
 IF TG_OP = 'UPDATE' THEN
-IF (NEW.name <> OLD.name) THEN
-NEW.tsvectors = to_tsvector('portuguese', NEW.name);
+IF ((SELECT name FROM country WHERE NEW.country_id = country.id) <> (SELECT name FROM country WHERE OLD.country_id = country.id)) THEN
+NEW.tsvectors = to_tsvector('portuguese', (SELECT name FROM country WHERE NEW.country_id = country.id));
 END IF;
 END IF;
 RETURN NEW;
@@ -741,7 +741,7 @@ CREATE FUNCTION group_creation_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO group_creation_notification (time, notified_id, group_id)
-    VALUES (CURRENT_DATE, NEW.user_id, NEW.id);
+    VALUES (CURRENT_DATE, (SELECT user_id FROM admin ORDER BY random() LIMIT 1), NEW.id);
     RETURN NEW;
 END
 $BODY$
@@ -757,7 +757,7 @@ CREATE FUNCTION common_help_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO common_help_notification (time, notified_id, common_help_id)
-    VALUES (CURRENT_DATE, NEW.user_id, NEW.id);
+    VALUES (CURRENT_DATE, (SELECT user_id FROM admin ORDER BY random() LIMIT 1), NEW.id);
     RETURN NEW;
 END
 $BODY$
@@ -773,7 +773,7 @@ CREATE FUNCTION appeal_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO appeal_notification (time, notified_id, unban_request_id)
-    VALUES (CURRENT_DATE, NEW.evaluater_id, NEW.id);
+    VALUES (CURRENT_DATE, (SELECT user_id FROM admin ORDER BY random() LIMIT 1), NEW.id);
     RETURN NEW;
 END
 $BODY$
@@ -789,7 +789,7 @@ CREATE FUNCTION report_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO report_notification (time, notified_id, report_id)
-    VALUES (CURRENT_DATE, NEW.evaluater_id, NEW.id);
+    VALUES (CURRENT_DATE, (SELECT user_id FROM admin ORDER BY random() LIMIT 1), NEW.id);
     RETURN NEW;
 END
 $BODY$
