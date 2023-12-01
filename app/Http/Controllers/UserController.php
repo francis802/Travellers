@@ -42,7 +42,8 @@ class UserController extends Controller
         $followers = $user->getFollowers()->get();
         $following = $user->getFollowing()->get();
         $posts = $user->ownPosts()->get();
-        return view('pages.profile', ['user' => $user, 'followers' => $followers, 'following' => $following, 'posts' => $posts,]);
+        $groups = $user->myGroups()->get();
+        return view('pages.profile', ['user' => $user, 'followers' => $followers, 'following' => $following, 'posts' => $posts, 'groups' => $groups]);
     }
 
     public function edit()
@@ -103,5 +104,12 @@ class UserController extends Controller
                       ->get()
                       ->last();
         return $user->id ?? -1;
+    }
+
+    public function listGroups(int $id)
+    {
+        $user = User::find($id);
+        $groups = $user->myGroups()->get();
+        return view('pages.listGroups', ['groups' => $groups]);
     }
 }

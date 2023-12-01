@@ -5,12 +5,15 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 200px;
+    
     height: 100vh;
     background-color: #f2f2f2;
     box-sizing: border-box;
     overflow-y: auto;
     */
+    width: 10em;
+    position: fixed;
+    height: 100%;
 }
 
 a:hover{
@@ -53,3 +56,5 @@ a:hover{
 .name-link:hover{
     font-size: inherit;
 }
+
+

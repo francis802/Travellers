@@ -1,5 +1,5 @@
 @section('bar')
-    <section id="side-bar">
+    <nav id="side-bar">
         <ul id="upper-sidebar">
             @if (Auth::check())
             <li>
@@ -20,5 +20,5 @@
             <li><a href="{{ url('/post/create/')}}" class="side-bar-link" id="last-link">Create Post</a></li>
             <li><p class="rights-text">&copy; Travellers. All right reserved</p></li>
         </ul>
-    </section>
+</nav>
 @endsection

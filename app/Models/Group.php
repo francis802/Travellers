@@ -4,23 +4,37 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\Member;
+use App\Models\GroupOwner;
+use App\Models\Post;
 
 class Group extends Model
 {
     use HasFactory;
 
-    // Don't add create and update timestamps in database.
+
     public $timestamps  = false;
 
     protected $table = 'groups';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = ['name', 'description', 'banner_pic'];
+    protected $fillable = ['description', 'banner_pic', 'country_id'];
 
+    
+    public function owners() {
+        return $this->hasMany('App\Models\GroupOwner');
+    }
 
+    public function members() {
+        return $this->hasMany('App\Models\Member');
+    }
+
+    public function posts(){
+        return $this->hasMany('App\Models\Post'); 
+    }
+
+    public function subgroups(){
+        return Group::select('groups.*')->where('groups.subgroup_id', '=', $this->id);
+    }
+
+    
 }

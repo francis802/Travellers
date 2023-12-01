@@ -6,26 +6,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 
-class Member extends Model
+class GroupOwner extends Model
 {
     use HasFactory;
 
-
     public $timestamps  = false;
 
-    protected $table = 'members';
-
+    protected $table = 'owner';
 
     protected $fillable = ['user_id', 'group_id'];
 
-    
-    public function user() {
+    public function owner() {
         return User::find($this->user_id);
     }
 
     public function group() {
         return Group::find($this->group_id);
     }
-
-
 }
