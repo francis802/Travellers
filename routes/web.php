@@ -8,7 +8,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\RegisterController;   
+use App\Http\Controllers\GroupController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +46,7 @@ Route::get('/home', [HomeController::class, 'show'])->name('home');
 
 // User
 Route::get('user/edit', [UserController::class, 'edit']);
+Route::get('user/{id}/groups', [UserController::class, 'listGroups']);
 Route::post('user/edit', [UserController::class, 'update']);
 Route::get('user/{id}', [UserController::class, 'show'])->name('users');
 
@@ -68,3 +71,7 @@ Route::get('api/userVerify', [UserController::class, 'userVerify']);
 
 // Admin
 Route::get('admin', [AdminController::class, 'show']);
+
+
+// Group
+Route::get('group/{id}', [GroupController::class, 'show']);

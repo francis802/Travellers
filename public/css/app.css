@@ -3,18 +3,14 @@ html{
   
 }
 
-
-
 #content{
   height: 100vh;
-
+  display: flex;
 }
 
  
 .inner-content{
-    display: grid;
-    grid-template-columns: minmax(15vw, 20vw) 1fr; 
-    grid-template-rows: 100vh;
+    display: flex;
 }
   
   

@@ -19,6 +19,12 @@
     display: block; 
 }
 
+#profile{
+    flex: 1;
+    overflow-y: auto;
+    margin-left: 10em;
+}
+
 #user-presentation{
     padding-bottom: 1em;
     display: flex;
@@ -152,3 +158,5 @@ ul.posts-grid {
     margin-top: 10px;
 }
 */
+
+

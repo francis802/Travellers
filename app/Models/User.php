@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use App\Models\Follow;
 use App\Models\FollowRequest;
+use App\Models\Group;
+
 
 class User extends Authenticatable
 {
@@ -74,6 +76,19 @@ class User extends Authenticatable
             ->where('follows.user1_id', '=', $this->id)
             ->whereNotIn('post.author_id', [$this->id])
             ->orderBy('post.date', 'desc');
+    }
+
+
+    public function myGroups() {
+        return Group::fromRaw('groups,members')
+                ->where('members.user_id', $this->id)
+                ->whereColumn('groups.id', 'members.group_id');
+    }
+
+    public function ownedGroups() {
+        return Group::select('groups.*')
+                ->join('owner', 'owner.group_id', '=', 'groups.id')
+                ->where('owner.user_id', $this->id);
     }
 
 }
