@@ -14,10 +14,9 @@ DROP TABLE IF EXISTS comment_notification CASCADE;
 DROP TABLE IF EXISTS post_notification CASCADE;
 DROP TABLE IF EXISTS group_notification CASCADE;
 DROP TABLE IF EXISTS group_invitation CASCADE;
-DROP TABLE IF EXISTS group_creation CASCADE;
+DROP TABLE IF EXISTS banned_member CASCADE;
 DROP TABLE IF EXISTS members CASCADE;
 DROP TABLE IF EXISTS owner CASCADE;
-DROP TABLE IF EXISTS subgroup CASCADE;
 DROP TABLE IF EXISTS groups CASCADE;
 DROP TABLE IF EXISTS like_comment CASCADE;
 DROP TABLE IF EXISTS comments CASCADE;
@@ -36,6 +35,7 @@ DROP TABLE IF EXISTS unban_request CASCADE;
 DROP TABLE IF EXISTS banned CASCADE;
 DROP TABLE IF EXISTS admin CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS country CASCADE;
 
 DROP TYPE IF EXISTS comment_notification_types;
 DROP TYPE IF EXISTS post_notification_types;
@@ -46,33 +46,49 @@ DROP FUNCTION IF EXISTS users_search_update CASCADE;
 DROP FUNCTION IF EXISTS post_search_update CASCADE;
 DROP FUNCTION IF EXISTS groups_search_update CASCADE;
 DROP FUNCTION IF EXISTS tag_search_update CASCADE;
-DROP FUNCTION IF EXISTS verify_post_likes CASCADE;
-DROP FUNCTION IF EXISTS verify_comment_likes CASCADE;
 DROP FUNCTION IF EXISTS verify_group_post CASCADE;
-DROP FUNCTION IF EXISTS verify_self_follow CASCADE;
 DROP FUNCTION IF EXISTS group_owner CASCADE;
-DROP FUNCTION IF EXISTS verify_follow_request CASCADE;
-DROP FUNCTION IF EXISTS verify_self_follow_request CASCADE;
 DROP FUNCTION IF EXISTS verify_priv_follow_request CASCADE;
 DROP FUNCTION IF EXISTS verify_group_invite CASCADE;
-DROP FUNCTION IF EXISTS delete_group CASCADE;
-DROP FUNCTION IF EXISTS delete_post CASCADE;
-DROP FUNCTION IF EXISTS delete_comment CASCADE;
+DROP FUNCTION IF EXISTS follow_request_notification CASCADE;
+DROP FUNCTION IF EXISTS follow_accept_notification CASCADE;
+DROP FUNCTION IF EXISTS group_invite_notification CASCADE;
+DROP FUNCTION IF EXISTS group_join_notification CASCADE;
+DROP FUNCTION IF EXISTS group_leave_notification CASCADE;
+DROP FUNCTION IF EXISTS group_ban_notification CASCADE;
+DROP FUNCTION IF EXISTS group_owner_notification CASCADE;
+DROP FUNCTION IF EXISTS new_message_notification CASCADE;
+DROP FUNCTION IF EXISTS new_comment_notification CASCADE;
+DROP FUNCTION IF EXISTS like_comment_notification CASCADE;
+DROP FUNCTION IF EXISTS mention_comment_notification CASCADE;
+DROP FUNCTION IF EXISTS like_post_notification CASCADE;
+DROP FUNCTION IF EXISTS mention_description_notification CASCADE;
+DROP FUNCTION IF EXISTS group_creation_notification CASCADE;
+DROP FUNCTION IF EXISTS common_help_notification CASCADE;
+DROP FUNCTION IF EXISTS appeal_notification CASCADE;
+DROP FUNCTION IF EXISTS report_notification CASCADE;
+
 
 -- Types
 
-CREATE TYPE comment_notification_types AS ENUM('mention_comment', 'liked_comment', 'new_comment', 'reply_comment');
+CREATE TYPE comment_notification_types AS ENUM('mention_comment', 'liked_comment', 'new_comment');
 CREATE TYPE post_notification_types AS ENUM('new_like', 'mention_description');
 CREATE TYPE group_notification_types AS ENUM('group_invite', 'group_join', 'group_leave', 'group_ban', 'group_owner');
 CREATE TYPE follow_notification_types AS ENUM('follow_request', 'follow_accept');
 
 -- Create tables
 
+CREATE TABLE country (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    city_id INT REFERENCES country(id) ON DELETE CASCADE
+);
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) UNIQUE,
     name VARCHAR(255),
-    country VARCHAR(255),
+    country_id INT REFERENCES country(id) NOT NULL,
     email VARCHAR(255) UNIQUE,
     password VARCHAR(255),
     profile_photo TEXT,
@@ -85,13 +101,16 @@ CREATE TABLE admin (
 );
 
 CREATE TABLE banned (
-    user_id INT PRIMARY KEY REFERENCES users(id)
+    user_id INT PRIMARY KEY REFERENCES users(id),
+    ban_date DATE NOT NULL CHECK (ban_date <= now())
 );
 
 CREATE TABLE unban_request (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
+    date DATE NOT NULL CHECK (date <= now()),
+    accept_appeal BOOLEAN DEFAULT NULL,
     banned_user_id INT REFERENCES banned(user_id) NOT NULL
 );
 
@@ -99,6 +118,7 @@ CREATE TABLE common_help (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
+    date DATE NOT NULL CHECK (date <= now()),
     user_id INT REFERENCES users(id) NOT NULL
 );
 
@@ -115,37 +135,36 @@ CREATE TABLE report (
     description TEXT NOT NULL,
     evaluater_id INT REFERENCES admin(user_id) NOT NULL,
     reporter_id INT REFERENCES users(id) NOT NULL,
-    infractor_id INT REFERENCES users(id) NOT NULL
+    infractor_id INT REFERENCES users(id) NOT NULL,
+    date DATE NOT NULL CHECK (date <= now()),
+    ban_infractor BOOLEAN DEFAULT NULL
 );
 
 CREATE TABLE requests (
     user1_id INT REFERENCES users(id) NOT NULL,
-    user2_id INT REFERENCES users(id) NOT NULL,
+    user2_id INT REFERENCES users(id) NOT NULL CHECK (user1_id <> user2_id),
     PRIMARY KEY (user1_id, user2_id)
 );
 
 CREATE TABLE follows (
     user1_id INT REFERENCES users(id) NOT NULL,
-    user2_id INT REFERENCES users(id) NOT NULL,
+    user2_id INT REFERENCES users(id) NOT NULL CHECK (user1_id <> user2_id),
     PRIMARY KEY (user1_id, user2_id)
 );
 
 CREATE TABLE blocks (
     user1_id INT REFERENCES users(id) NOT NULL,
-    user2_id INT REFERENCES users(id) NOT NULL,
+    user2_id INT REFERENCES users(id) NOT NULL CHECK (user1_id <> user2_id),
     PRIMARY KEY (user1_id, user2_id)
 );
 
 CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    country_id INT REFERENCES country(id) ON DELETE CASCADE,
     description TEXT NOT NULL,
-    banner_pic TEXT
-);
-
-CREATE TABLE subgroup (
-    subgroup_id INT REFERENCES groups(id) PRIMARY KEY,
-    group_id INT REFERENCES groups(id) NOT NULL
+    banner_pic TEXT,
+    approved BOOLEAN DEFAULT NULL,
+    subgroup_id INT REFERENCES groups(id) ON DELETE CASCADE
 );
 
 CREATE TABLE post (
@@ -166,7 +185,7 @@ CREATE TABLE like_post (
 
 CREATE TABLE tag (
     id SERIAL PRIMARY KEY,
-    hashtag VARCHAR(255) NOT NULL
+    hashtag VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE post_tag (
@@ -209,13 +228,13 @@ CREATE TABLE members (
     PRIMARY KEY (user_id, group_id)
 );
 
-CREATE TABLE group_invitation (
+CREATE TABLE banned_member (
     user_id INT REFERENCES users(id) NOT NULL,
     group_id INT REFERENCES groups(id) NOT NULL,
     PRIMARY KEY (user_id, group_id)
 );
 
-CREATE TABLE group_creation (
+CREATE TABLE group_invitation (
     user_id INT REFERENCES users(id) NOT NULL,
     group_id INT REFERENCES groups(id) NOT NULL,
     PRIMARY KEY (user_id, group_id)
@@ -224,8 +243,7 @@ CREATE TABLE group_creation (
 CREATE TABLE report_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    admin_id INT REFERENCES admin(user_id) NOT NULL,
-    user_id INT REFERENCES users(id) NOT NULL,
+    notified_id INT REFERENCES admin(user_id) NOT NULL,
     report_id INT REFERENCES report(id) NOT NULL,
     opened BOOLEAN DEFAULT false
 );
@@ -233,8 +251,7 @@ CREATE TABLE report_notification (
 CREATE TABLE common_help_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    admin_id INT REFERENCES admin(user_id) NOT NULL,
-    user_id INT REFERENCES users(id) NOT NULL,
+    notified_id INT REFERENCES admin(user_id) NOT NULL,
     common_help_id INT REFERENCES common_help(id) NOT NULL,
     opened BOOLEAN DEFAULT false
 );
@@ -242,8 +259,7 @@ CREATE TABLE common_help_notification (
 CREATE TABLE appeal_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    admin_id INT REFERENCES admin(user_id) NOT NULL,
-    user_id INT REFERENCES users(id) NOT NULL,
+    notified_id INT REFERENCES admin(user_id) NOT NULL,
     unban_request_id INT REFERENCES unban_request(id) NOT NULL,
     opened BOOLEAN DEFAULT false
 );
@@ -251,16 +267,14 @@ CREATE TABLE appeal_notification (
 CREATE TABLE group_creation_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    admin_id INT REFERENCES admin(user_id) NOT NULL,
-    user_id INT REFERENCES users(id) NOT NULL,
-    group_id INT REFERENCES groups(id) NOT NULL,
+    notified_id INT REFERENCES admin(user_id) NOT NULL,
+    group_id INT REFERENCES groups(id) ON DELETE CASCADE,
     opened BOOLEAN DEFAULT false
 );
 
 CREATE TABLE follow_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    sender_id INT REFERENCES users(id) NOT NULL,
     notified_id INT REFERENCES users(id) NOT NULL,
     notification_type follow_notification_types NOT NULL,
     opened BOOLEAN DEFAULT false
@@ -269,7 +283,6 @@ CREATE TABLE follow_notification (
 CREATE TABLE new_message_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    sender_id INT REFERENCES users(id) NOT NULL,
     notified_id INT REFERENCES users(id) NOT NULL,
     message_id INT REFERENCES message(id) NOT NULL,
     opened BOOLEAN DEFAULT false
@@ -278,9 +291,8 @@ CREATE TABLE new_message_notification (
 CREATE TABLE comment_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    sender_id INT REFERENCES users(id) NOT NULL,
     notified_id INT REFERENCES users(id) NOT NULL,
-    comment_id INT REFERENCES comments(id) NOT NULL,
+    comment_id INT REFERENCES comments(id) ON DELETE CASCADE,
     notification_type comment_notification_types NOT NULL,
     opened BOOLEAN DEFAULT false
 );
@@ -288,9 +300,8 @@ CREATE TABLE comment_notification (
 CREATE TABLE post_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    sender_id INT REFERENCES users(id) NOT NULL,
     notified_id INT REFERENCES users(id) NOT NULL,
-    post_id INT REFERENCES post(id) NOT NULL,
+    post_id INT REFERENCES post(id) ON DELETE CASCADE,
     notification_type post_notification_types NOT NULL,
     opened BOOLEAN DEFAULT false
 );
@@ -298,9 +309,8 @@ CREATE TABLE post_notification (
 CREATE TABLE group_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    sender_id INT REFERENCES users(id) NOT NULL,
     notified_id INT REFERENCES users(id) NOT NULL,
-    group_id INT REFERENCES groups(id) NOT NULL,
+    group_id INT REFERENCES groups(id) ON DELETE CASCADE,
     notification_type group_notification_types NOT NULL,
     opened BOOLEAN DEFAULT false
 );
@@ -378,11 +388,11 @@ ADD COLUMN tsvectors TSVECTOR;
 CREATE FUNCTION groups_search_update() RETURNS TRIGGER AS $$
 BEGIN
 IF TG_OP = 'INSERT' THEN
-NEW.tsvectors = to_tsvector('portuguese', NEW.name);
+NEW.tsvectors = to_tsvector('portuguese', (SELECT name FROM country WHERE NEW.country_id = country.id));
 END IF;
 IF TG_OP = 'UPDATE' THEN
-IF (NEW.name <> OLD.name) THEN
-NEW.tsvectors = to_tsvector('portuguese', NEW.name);
+IF ((SELECT name FROM country WHERE NEW.country_id = country.id) <> (SELECT name FROM country WHERE OLD.country_id = country.id)) THEN
+NEW.tsvectors = to_tsvector('portuguese', (SELECT name FROM country WHERE NEW.country_id = country.id));
 END IF;
 END IF;
 RETURN NEW;
@@ -423,43 +433,6 @@ CREATE INDEX search_tag ON tag USING GIN (tsvectors);
 
 -- Triggers
 
--- TRIGGER01
--- Users may only like a post once (BR05)
-
-CREATE FUNCTION verify_post_likes() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    IF EXISTS (SELECT * FROM like_post WHERE NEW.user_id = user_id AND NEW.post_id = post_id) THEN
-        RAISE EXCEPTION 'Users may only like a post once';
-    END IF;
-    RETURN NEW;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER verify_post_likes
-    BEFORE INSERT OR UPDATE ON like_post
-    FOR EACH ROW
-    EXECUTE PROCEDURE verify_post_likes();
-
--- TRIGGER02
--- Users may only like a comment once (BR06)
-
-CREATE FUNCTION verify_comment_likes() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    IF EXISTS (SELECT * FROM like_comment WHERE NEW.user_id = user_id AND NEW.comment_id = comment_id) THEN
-        RAISE EXCEPTION 'Users may only like a comment once';
-    END IF;
-    RETURN NEW;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER verify_comment_likes
-    BEFORE INSERT OR UPDATE ON like_comment
-    FOR EACH ROW
-    EXECUTE PROCEDURE verify_comment_likes();
 
 -- TRIGGER03
 -- Users may only post to groups they are members of (BR07)
@@ -481,25 +454,6 @@ CREATE TRIGGER verify_group_post
     FOR EACH ROW
     EXECUTE PROCEDURE verify_group_post();
 
--- TRIGGER04
--- Users cannot follow themselves (BR08)
-
-CREATE FUNCTION verify_self_follow() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    IF NEW.user1_id = NEW.user2_id THEN
-        RAISE EXCEPTION 'Users cannot follow themselves';
-    END IF;
-    RETURN NEW;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER verify_self_follow
-    BEFORE INSERT OR UPDATE ON follows
-    FOR EACH ROW
-    EXECUTE PROCEDURE verify_self_follow();
-
 -- TRIGGER05
 -- The owner of a group is automatically a member of that group (BR09)
 
@@ -517,44 +471,6 @@ CREATE TRIGGER group_owner
     FOR EACH ROW
     EXECUTE PROCEDURE group_owner();
 
--- TRIGGER06
--- Users cannot request to follow someone they are already following (BR10)
-
-CREATE FUNCTION verify_follow_request() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    IF EXISTS 
-        (SELECT * FROM follows WHERE NEW.user1_id = user1_id AND NEW.user2_id = user2_id) THEN
-            RAISE EXCEPTION 'Users cannot request to follow someone they are already following';
-    END IF;
-    RETURN NEW;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER verify_follow_request
-    BEFORE INSERT ON requests
-    FOR EACH ROW
-    EXECUTE PROCEDURE verify_follow_request();
-
--- TRIGGER07
--- Users cannot request to follow themselves (BR11)
-
-CREATE FUNCTION verify_self_follow_request() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    IF NEW.user1_id = NEW.user2_id THEN
-        RAISE EXCEPTION 'Users cannot request to follow themselves';
-    END IF;
-    RETURN NEW;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER verify_self_follow_request
-    BEFORE INSERT OR UPDATE ON requests
-    FOR EACH ROW
-    EXECUTE PROCEDURE verify_self_follow_request();
 
 -- TRIGGER08
 -- Follow requests can only be sent to private profiles (BR12)
@@ -596,73 +512,374 @@ CREATE TRIGGER verify_group_invite
     FOR EACH ROW
     EXECUTE PROCEDURE verify_group_invite();
 
--- TRIGGER10
--- When deleting a group it also deletes its subgroups, posts and notifications (BR15)
+------------------------------------- NEW TRIGGERS -------------------------------------
 
-CREATE FUNCTION delete_group() RETURNS TRIGGER AS
+-- TRIGGER NOTIFICATION 1
+CREATE FUNCTION follow_request_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    DELETE FROM subgroup WHERE OLD.id = subgroup.group_id;
-    DELETE FROM post WHERE OLD.id = post.group_id;
-    DELETE FROM group_invitation WHERE OLD.id = group_invitation.group_id;
-    DELETE FROM group_notification WHERE OLD.id = group_notification.group_id;
-    RETURN OLD;
+    INSERT INTO follow_notification (time, notified_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user2_id, 'follow_request');
+    RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER delete_group
-    BEFORE DELETE ON groups
-    FOR EACH ROW
-    EXECUTE PROCEDURE delete_group();
+CREATE TRIGGER follow_request_notification
+AFTER INSERT ON requests
+FOR EACH ROW
+EXECUTE FUNCTION follow_request_notification();
 
--- TRIGGER11
--- When deleting a post it also deletes its comments, likes and notifications (BR16)
-
-CREATE FUNCTION delete_post() RETURNS TRIGGER AS
+-- TRIGGER NOTIFICATION 2
+CREATE FUNCTION follow_accept_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    DELETE FROM comments WHERE OLD.id = comments.post_id;
-    DELETE FROM like_post WHERE OLD.id = like_post.post_id;
-    DELETE FROM post_notification WHERE OLD.id = post_notification.post_id;
-    RETURN OLD;
+    INSERT INTO follow_notification (time, notified_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user1_id, 'follow_accept');
+    RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER delete_post
-    BEFORE DELETE ON post
-    FOR EACH ROW
-    EXECUTE PROCEDURE delete_post();
+CREATE TRIGGER follow_accept_notification
+AFTER INSERT ON follows
+FOR EACH ROW
+EXECUTE FUNCTION follow_accept_notification();
 
--- TRIGGER12
--- When deleting a comment it also deletes its likes and notifications (BR17)
-
-CREATE FUNCTION delete_comment() RETURNS TRIGGER AS
+-- TRIGGER NOTIFICATION 3
+CREATE FUNCTION group_invite_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    DELETE FROM like_comment WHERE OLD.id = like_comment.comment_id;
-    DELETE FROM comment_notification WHERE OLD.id = comment_notification.comment_id;
-    RETURN OLD;
+    INSERT INTO group_notification (time, notified_id, group_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_invite');
+    RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER delete_comment
-    BEFORE DELETE ON comments
-    FOR EACH ROW
-    EXECUTE PROCEDURE delete_comment();
+CREATE TRIGGER group_invite_notification
+AFTER INSERT ON group_invitation
+FOR EACH ROW
+EXECUTE FUNCTION group_invite_notification();
+
+-- TRIGGER NOTIFICATION 4
+CREATE FUNCTION group_join_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO group_notification (time, notified_id, group_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_join');
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER group_join_notification
+AFTER INSERT ON members
+FOR EACH ROW
+EXECUTE FUNCTION group_join_notification();
+
+-- TRIGGER NOTIFICATION 5 (Should we notify the user who left or the owner?)
+CREATE FUNCTION group_leave_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO group_notification (time, notified_id, group_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_leave');
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER group_leave_notification
+AFTER DELETE ON members
+FOR EACH ROW
+EXECUTE FUNCTION group_leave_notification();
+
+-- TRIGGER NOTIFICATION 6
+CREATE FUNCTION group_ban_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO group_notification (time, notified_id, group_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_ban');
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER group_ban_notification
+AFTER INSERT ON banned_member
+FOR EACH ROW
+EXECUTE FUNCTION group_ban_notification();
+
+-- TRIGGER NOTIFICATION 7
+CREATE FUNCTION group_owner_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO group_notification (time, notified_id, group_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_owner');
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER group_owner_notification
+AFTER INSERT ON owner
+FOR EACH ROW
+EXECUTE FUNCTION group_owner_notification();
+
+-- TRIGGER NOTIFICATION 8
+CREATE FUNCTION new_message_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO new_message_notification (time, notified_id, message_id)
+    VALUES (CURRENT_DATE, NEW.receiver_id, NEW.id);
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER new_message_notification
+AFTER INSERT ON message
+FOR EACH ROW
+EXECUTE FUNCTION new_message_notification();
+
+-- TRIGGER NOTIFICATION 9
+CREATE FUNCTION new_comment_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO comment_notification (time, notified_id, comment_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.author_id, NEW.id, 'new_comment');
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER new_comment_notification
+AFTER INSERT ON comments
+FOR EACH ROW
+EXECUTE FUNCTION new_comment_notification();
+
+-- TRIGGER NOTIFICATION 10
+CREATE FUNCTION like_comment_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO comment_notification (time, notified_id, comment_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user_id, NEW.comment_id, 'liked_comment');
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER like_comment_notification
+AFTER INSERT ON like_comment
+FOR EACH ROW
+EXECUTE FUNCTION like_comment_notification();
+
+-- TRIGGER NOTIFICATION 11
+CREATE FUNCTION mention_comment_notification() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+    mentioned_user_id INT;
+BEGIN
+    FOR mentioned_user_id IN SELECT id FROM users WHERE POSITION(username IN NEW.text)>0 AND POSITION(username IN ('@' || username)) = 2
+    LOOP
+        INSERT INTO comment_notification (time, notified_id, comment_id, notification_type)
+        VALUES (CURRENT_DATE, mentioned_user_id, NEW.id, 'mention_comment');
+    END LOOP;
+
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER mention_comment_notification
+AFTER INSERT ON comments
+FOR EACH ROW
+EXECUTE FUNCTION mention_comment_notification();
+
+-- TRIGGER NOTIFICATION 12
+CREATE FUNCTION like_post_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO post_notification (time, notified_id, post_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user_id, NEW.post_id, 'new_like');
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER like_post_notification
+AFTER INSERT ON like_post
+FOR EACH ROW
+EXECUTE FUNCTION like_post_notification();
+
+-- TRIGGER NOTIFICATION 13
+CREATE FUNCTION mention_description_notification() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+    mentioned_user_id INT;
+BEGIN
+    FOR mentioned_user_id IN SELECT id FROM users WHERE POSITION(username IN NEW.text)>0 AND POSITION(username IN ('@' || username)) = 2
+    LOOP
+        INSERT INTO post_notification (time, notified_id, post_id, notification_type)
+        VALUES (CURRENT_DATE, mentioned_user_id, NEW.id, 'mention_description');
+    END LOOP;
+
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER mention_description_notification
+AFTER INSERT ON post
+FOR EACH ROW
+EXECUTE FUNCTION mention_description_notification();
+
+-- TRIGGER NOTIFICATION 14
+CREATE FUNCTION group_creation_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO group_creation_notification (time, notified_id, group_id)
+    VALUES (CURRENT_DATE, (SELECT user_id FROM admin ORDER BY random() LIMIT 1), NEW.id);
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER group_creation_notification
+AFTER INSERT ON groups
+FOR EACH ROW
+EXECUTE FUNCTION group_creation_notification();
+
+-- TRIGGER NOTIFICATION 15
+CREATE FUNCTION common_help_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO common_help_notification (time, notified_id, common_help_id)
+    VALUES (CURRENT_DATE, (SELECT user_id FROM admin ORDER BY random() LIMIT 1), NEW.id);
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER common_help_notification
+AFTER INSERT ON common_help
+FOR EACH ROW
+EXECUTE FUNCTION common_help_notification();
+
+-- TRIGGER NOTIFICATION 16
+CREATE FUNCTION appeal_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO appeal_notification (time, notified_id, unban_request_id)
+    VALUES (CURRENT_DATE, (SELECT user_id FROM admin ORDER BY random() LIMIT 1), NEW.id);
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER appeal_notification
+AFTER INSERT ON unban_request
+FOR EACH ROW
+EXECUTE FUNCTION appeal_notification();
+
+-- TRIGGER NOTIFICATION 17
+CREATE FUNCTION report_notification() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO report_notification (time, notified_id, report_id)
+    VALUES (CURRENT_DATE, (SELECT user_id FROM admin ORDER BY random() LIMIT 1), NEW.id);
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER report_notification
+AFTER INSERT ON report
+FOR EACH ROW
+EXECUTE FUNCTION report_notification();
+
+INSERT INTO country (name, city_id) VALUES 
+    ('Portugal', NULL),
+    ('United States', NULL),
+    ('India', NULL),
+    ('Brazil', NULL),
+    ('Japan', NULL),
+    ('Egypt', NULL),
+    ('South Korea', NULL),
+    ('United Kingdom', NULL),
+    ('Germany', NULL),
+    ('France', NULL),
+    ('Italy', NULL),
+    ('Spain', NULL),
+    ('China', NULL),
+    ('Russia', NULL),
+    ('Australia', NULL),
+    ('Canada', NULL),
+    ('Mexico', NULL),
+    ('Netherlands', NULL),
+    ('Switzerland', NULL),
+    ('Sweden', NULL),
+    ('Norway', NULL),
+    ('Denmark', NULL),
+    ('Finland', NULL),
+    ('Belgium', NULL),
+    ('Austria', NULL),
+    ('Greece', NULL),
+    ('Turkey', NULL),
+    ('South Africa', NULL),
+    ('Porto', 1),
+    ('Lisbon', 1),
+    ('Leça da Palmeira', 1),
+    ('New York City', 2),
+    ('Mumbai', 3),
+    ('Rio de Janeiro', 4),
+    ('Tokyo', 5),
+    ('Cairo', 6),
+    ('Seoul', 7),
+    ('London', 8),
+    ('Berlin', 9),
+    ('Paris', 10),
+    ('Rome', 11),
+    ('Madrid', 12),
+    ('Beijing', 13),
+    ('Moscow', 14),
+    ('Sydney', 15),
+    ('Toronto', 16),
+    ('Mexico City', 17),
+    ('Amsterdam', 18),
+    ('Zurich', 19),
+    ('Stockholm', 20),
+    ('Oslo', 21),
+    ('Copenhagen', 22),
+    ('Helsinki', 23),
+    ('Brussels', 24),
+    ('Vienna', 25),
+    ('Athens', 26),
+    ('Istanbul', 27),
+    ('Cape Town', 28);
+
+    
 
 
-
-
-INSERT INTO users (username, name, country, email, password, profile_photo, profile_private)
+INSERT INTO users (username, name, country_id, email, password, profile_photo, profile_private)
 VALUES
-    ('francisco.campos03', 'Francisco Campos', 'Portugal', 'francisco.campos@gmail.com', '$2y$10$53jvyZTBMRAkoN/KdkA1s.n.QZ.zTXK6406l5ZmGUSslsEH07WkuS', 'https://picsum.photos/1000', false),
-    ('antonio.romao03', 'António Romão', 'Portugal', 'antonio.romao@gmail.com', '$2y$10$EpgSBve6Nc.Q.PepTjNp8uJUEyZQjnVfmIlLDHR9LGDZC8/VHWPl.', 'https://picsum.photos/1000', false),
-    ('henrique.pinheiro03', 'Henrique Pinheiro', 'Portugal', 'henrique.pinheiro@gmail.com', '$2y$10$/zHdv.sEpPASgf6nXgObI.c.dleL0jqzAEVANmzB.GjFvjvPQ5kYO', 'https://picsum.photos/1000', true),
-    ('jane-doe2346', 'Jane Doe', 'United States', 'jane.doe@gmail.com', '$2y$10$8dw4v6YscmyD6MG4Jf92BeOpi299ULr/Z57FCjhH6GrCWwhPb8Y7a', 'https://picsum.photos/1000', true),
-    ('hackerman', 'Hackerman', 'India', 'hacker.man@hack.hk', '$2y$10$xRQgfBx4DIkNk.Y6R4qOPuACJ8MTOm7I1VTPkF9K5Rh85tMRa7x0.', 'https://picsum.photos/1000', false);
+    ('francisco.campos03', 'Francisco Campos', 1, 'francisco.campos@gmail.com', '$2y$10$53jvyZTBMRAkoN/KdkA1s.n.QZ.zTXK6406l5ZmGUSslsEH07WkuS', 'https://picsum.photos/1000', false),
+    ('antonio.romao03', 'António Romão', 1, 'antonio.romao@gmail.com', '$2y$10$EpgSBve6Nc.Q.PepTjNp8uJUEyZQjnVfmIlLDHR9LGDZC8/VHWPl.', 'https://picsum.photos/1000', false),
+    ('henrique.pinheiro03', 'Henrique Pinheiro', 1, 'henrique.pinheiro@gmail.com', '$2y$10$/zHdv.sEpPASgf6nXgObI.c.dleL0jqzAEVANmzB.GjFvjvPQ5kYO', 'https://picsum.photos/1000', true),
+    ('jane-doe2346', 'Jane Doe', 2, 'jane.doe@gmail.com', '$2y$10$8dw4v6YscmyD6MG4Jf92BeOpi299ULr/Z57FCjhH6GrCWwhPb8Y7a', 'https://picsum.photos/1000', true),
+    ('hackerman', 'Hackerman', 3, 'hacker.man@hack.hk', '$2y$10$xRQgfBx4DIkNk.Y6R4qOPuACJ8MTOm7I1VTPkF9K5Rh85tMRa7x0.', 'https://picsum.photos/1000', false),
+    ('josefina', 'Josefina dos Santos', 4, 'josefina@gmail.com', '$2y$10$53jvyZTBMRAkoN/KdkA1s.n.QZ.zTXK6406l5ZmGUSslsEH07WkuS', 'https://picsum.photos/1000', false),
+    ('haruki.murakami', 'Haruki Murakami', 5, 'haruki@gmail.jp', '$2y$10$53jvyZTBMRAkoN/KdkA1s.n.QZ.zTXK6406l5ZmGUSslsEH07WkuS', 'https://picsum.photos/1000', false),
+    ('mohamed.ali', 'Mohamed Ali', 6, 'mohamed.ali@gmail.com', '$2y$10$53jvyZTBMRAkoN/KdkA1s.n.QZ.zTXK6406l5ZmGUSslsEH07WkuS', 'https://picsum.photos/1000', false),
+    ('joo.won', 'Joo Won', 7, 'joo.won@gmail.com', '$2y$10$53jvyZTBMRAkoN/KdkA1s.n.QZ.zTXK6406l5ZmGUSslsEH07WkuS', 'https://picsum.photos/1000', false),
+    ('james.bond', 'James Bond', 8, 'james.bond@gmail.com', '$2y$10$53jvyZTBMRAkoN/KdkA1s.n.QZ.zTXK6406l5ZmGUSslsEH07WkuS', 'https://picsum.photos/1000', false),
+    ('eren.yeager', 'Eren Yeager', 9, 'eren.yeager@gmail.com', '$2y$10$53jvyZTBMRAkoN/KdkA1s.n.QZ.zTXK6406l5ZmGUSslsEH07WkuS', 'https://picsum.photos/1000', false),
+    ('lupin', 'Lupin', 10, 'lupin@gmail.com', '$2y$10$53jvyZTBMRAkoN/KdkA1s.n.QZ.zTXK6406l5ZmGUSslsEH07WkuS', 'https://picsum.photos/1000', false),
+    ('giorno.giovanna', 'Giorno Giovanna', 11, 'giorno.giovanna@gmail.com', '$2y$10$EpgSBve6Nc.Q.PepTjNp8uJUEyZQjnVfmIlLDHR9LGDZC8/VHWPl.', 'https://picsum.photos/1000', true),
+    ('gabriel.garcia', 'Gabriel Garcia', 12, 'gabriel.garcia@gmail.com', '$2y$10$/zHdv.sEpPASgf6nXgObI.c.dleL0jqzAEVANmzB.GjFvjvPQ5kYO', 'https://picsum.photos/1000', false),
+    ('jacky.chan', 'Jacky Chan', 13, 'jacky.chan@gmail.com', '$2y$10$8dw4v6YscmyD6MG4Jf92BeOpi299ULr/Z57FCjhH6GrCWwhPb8Y7a', 'https://picsum.photos/1000', true),
+    ('anastasia.steele', 'Anastasia Steele', 14, 'anastasia.steele@gmail.com', '$2y$10$xRQgfBx4DIkNk.Y6R4qOPuACJ8MTOm7I1VTPkF9K5Rh85tMRa7x0.', 'https://picsum.photos/1000', false);
+    
 
 INSERT INTO admin (user_id)
 VALUES
@@ -670,28 +887,34 @@ VALUES
     (2),
     (3);
 
-INSERT INTO banned (user_id)
+INSERT INTO banned (user_id, ban_date)
 VALUES
-    (5);
+    (5, CURRENT_DATE),
+    (11, CURRENT_DATE);
 
-INSERT INTO unban_request (title, description, banned_user_id)
+INSERT INTO unban_request (title, description, date, banned_user_id)
 VALUES
-    ('Please unban me', 'I promise I will not do it again', 5);
+    ('Please unban me', 'I only tried to hack you because of FSI I swear', CURRENT_DATE, 5),
+    ('Be careful...', 'I will try again to wipe out your website', CURRENT_DATE, 11);
 
-INSERT INTO common_help (title, description, user_id)
+INSERT INTO common_help (title, description, date, user_id)
 VALUES
-    ('I need help', 'I want to create another account', 3);
+    ('Account creation', 'I want to create another account', CURRENT_DATE, 3),
+    ('Password change', 'I want to change my password', CURRENT_DATE, 4),
+    ('Account deletion', 'I want to delete my account', CURRENT_DATE, 6),
+    ('Account recovery', 'I want to recover my account', CURRENT_DATE, 7);
 
 
 INSERT INTO faq (answer, question, last_edited, author_id)
 VALUES
-    ('You can create another account by clicking on the "Create Account" button on the top right corner of the page.', 'How can I create another account?', '2021-05-01 12:00:00', 1),
+    ('You can join has many groups as you like! And dont worry, you wont need a VISA', 'Can I join multiple groups?', '2021-05-01 12:00:00', 1),
     ('You can change your password by clicking on the "Change Password" button on the top right corner of the page.', 'How can I change my password?', '2021-05-01 12:00:00', 2);
+    
 
-INSERT INTO report (description, evaluater_id, reporter_id, infractor_id)
+INSERT INTO report (description, evaluater_id, reporter_id, infractor_id, date)
 VALUES
-    ('This user is spamming', 1, 4, 3),
-    ('This user is spamming', 1, 3, 4);
+    ('He doesnt stop spamming my posts with mean comments!', 1, 4, 6, CURRENT_DATE),
+    ('He stinks and hes a bad person', 1, 6, 4, CURRENT_DATE);
 
 INSERT INTO requests (user1_id, user2_id)
 VALUES
@@ -717,32 +940,78 @@ VALUES
     (3, 5),
     (4, 5);
 	
-INSERT INTO groups (name, description, banner_pic)
+INSERT INTO groups (country_id, description, banner_pic, approved, subgroup_id)
 VALUES
-    ('Portugal', 'Description', 'https://picsum.photos/1000'),
-    ('United States', 'Description', 'https://picsum.photos/1000'),
-    ('India', 'Description', 'https://picsum.photos/1000'),
-    ('Brazil', 'Description', 'https://picsum.photos/1000'),
-    ('Leça da Palmeira', 'Description', 'https://picsum.photos/1000'),
-    ('NYC', 'Description', 'https://picsum.photos/1000'),
-    ('Mumbai', 'Description', 'https://picsum.photos/1000'),
-    ('Rio de Janeiro', 'Description', 'https://picsum.photos/1000'),
-    ('Lisboa', 'Description', 'https://picsum.photos/1000');
+    (1, 'Welcome to the land of pastel de nata! SIUUUU', 'https://picsum.photos/1000', true, null),
+    (2, 'Welcome to the land of the fredom (or at leat cowboys)', 'https://picsum.photos/1000', true, null),
+    (3, 'This is the holy land of Hinduism. We love cows', 'https://picsum.photos/1000', true, null),
+    (4, 'Carnaval, cachaça, and good beaches! What more could you ask for?', 'https://picsum.photos/1000', true, null),
+    (5, 'This is the land of the rising sun. We love anime', 'https://picsum.photos/1000', true, null),
+    (6, 'This is the land of the pyramids. We love cats', 'https://picsum.photos/1000', true, null),
+    (7, 'This is the land of K-pop. We love kimchi', 'https://picsum.photos/1000', true, null),
+    (8, 'This is the land of the queen. We love tea', 'https://picsum.photos/1000', true, null),
+    (9, 'This is the land of the beer. We love beer', 'https://picsum.photos/1000', true, null),
+    (10, 'This is the land of the baguette. We love baguettes', 'https://picsum.photos/1000', true, null),
+    (11, 'This is the land of the pizza. We love pizza', 'https://picsum.photos/1000', true, null),
+    (12, 'This is the land of the bull. We love bull', 'https://picsum.photos/1000', true, null),
+    (13, 'This is the land of the panda. We love panda', 'https://picsum.photos/1000', true, null),
+    (14, 'This is the land of the vodka. We love vodka', 'https://picsum.photos/1000', true, null),
+    (15, 'This is the land of the kangaroo. We love kangaroo', 'https://picsum.photos/1000', true, null),
+    (16, 'This is the land of the maple syrup. We love maple syrup', 'https://picsum.photos/1000', true, null),
+    (17, 'This is the land of the taco. We love taco', 'https://picsum.photos/1000', true, null),
+    (18, 'This is the land of the tulip. We love tulip', 'https://picsum.photos/1000', true, null),
+    (19, 'This is the land of the chocolate. We love chocolate', 'https://picsum.photos/1000', true, null),
+    (20, 'This is the land of the meatballs. We love meatballs', 'https://picsum.photos/1000', true, null),
+    (21, 'This is the land of the viking. We love viking', 'https://picsum.photos/1000', true, null),
+    (22, 'This is the land of the mermaid. We love mermaid', 'https://picsum.photos/1000', true, null),
+    (23, 'This is the land of the viking. We love viking', 'https://picsum.photos/1000', true, null),
+    (24, 'This is the land of the waffle. We love waffle', 'https://picsum.photos/1000', true, null),
+    (25, 'This is the land of the schnitzel. We love schnitzel', 'https://picsum.photos/1000', true, null),
+    (26, 'This is the land of the olive. We love olive', 'https://picsum.photos/1000', true, null),
+    (27, 'This is the land of the kebab. We love kebab', 'https://picsum.photos/1000', true, null),
+    (28, 'This is the land of the lion. We love lion', 'https://picsum.photos/1000', true, null),
+    (29, 'Esta é a terra invicta <3. Francesinha, dragão, e bifana é o que vos damos!', 'https://picsum.photos/1000', true, 1),
+    (30, 'This is the land of the lion. We love lion', 'https://picsum.photos/1000', true, 1),
+    (31, 'Capital Nobre de Portugal, verdadeiramente fantástica!', 'https://picsum.photos/1000', true, 1),
+    (32, 'The city never sleeps, and so dont I', 'https://picsum.photos/1000', true, 2),
+    (33, 'One of the most ICONIC indian cities!', 'https://picsum.photos/1000', null, 3),
+    (34, 'Incredible parties, weather, and ', 'https://picsum.photos/1000', null, 4);
 
-INSERT INTO subgroup (subgroup_id, group_id)
-VALUES
-    (5, 1),
-    (9, 1),
-    (6, 2),
-    (7, 3),
-    (8, 4);
 
 INSERT INTO owner (user_id, group_id)
 VALUES
     (1, 1),
     (2, 2),
     (3, 3),
-    (4, 4);
+    (4, 4),
+    (6, 5),
+    (7, 6),
+    (8, 7),
+    (9, 8),
+    (10, 9),
+    (12, 10),
+    (13, 11),
+    (14, 12),
+    (15, 13),
+    (16, 14),
+    (1, 15),
+    (2, 16),
+    (3, 17),
+    (4, 18),
+    (6, 19),
+    (7, 20),
+    (8, 21),
+    (9, 22),
+    (10, 23),
+    (12, 24),
+    (13, 25),
+    (14, 26),
+    (15, 27),
+    (16, 28),
+    (1, 29),
+    (2, 30),
+    (3, 31),
+    (4, 32);
 
 INSERT INTO members (user_id, group_id)
 VALUES
@@ -752,30 +1021,66 @@ VALUES
     (3, 1),
     (3, 4),
     (4, 5),
-    (4, 1);
+    (4, 1),
+    (6, 7),
+    (7, 10),
+    (8, 11),
+    (9, 12),
+    (10, 13),
+    (12, 14),
+    (13, 15),
+    (14, 16),
+    (15, 17),
+    (16, 18),
+    (1, 19),
+    (2, 20),
+    (3, 21),
+    (4, 22),
+    (6, 23),
+    (7, 24),
+    (8, 25),
+    (9, 26),
+    (10, 27),
+    (12, 28),
+    (13, 29),
+    (14, 30),
+    (15, 31),
+    (16, 32);
 
 INSERT INTO group_invitation (user_id, group_id)
 VALUES
     (1, 5),
-    (1, 6);
+    (1, 6),
+    (5, 20),
+    (7, 12),
+    (9, 14),
+    (11, 16),
+    (13, 18),
+    (15, 20),
+    (16, 22),
+    (15, 24),
+    (12, 26),
+    (9, 28),
+    (3, 30),
+    (1, 32);
 
-INSERT INTO group_creation (user_id, group_id)
+INSERT INTO banned_member (user_id, group_id)
 VALUES
-    (3, 7),
-    (4, 8);
+    (10, 31),
+    (11, 32);
 
 
 INSERT INTO post (date, text, media, author_id, group_id)
 VALUES
-    ('2023-05-01 09:00:00', 'Pyramids of Giza', 'images/post-1.jpg', 1, 1),
+    ('2023-05-01 09:00:00', 'Pyramids of Giza with @antonio.romao03', 'images/post-1.jpg', 1, 1),
     ('2019-08-21 12:00:00', 'Invicta', 'images/post-2.jpg', 1, 2),
     ('2018-04-07 14:00:00', 'Gladiators!', 'images/post-3.jpg', 1, 1),
-    ('2012-06-09 07:30:00', 'Cup of tea', 'images/post-4.jpg', 1, 2),
+    ('2012-06-09 07:30:00', 'Cup of tea with @francisco.campos03', 'images/post-4.jpg', 1, 2),
     ('2021-05-01 15:00:00', 'Tokyo', 'images/post-5.jpg', 2, 3),
-    ('2022-07-01 10:00:00', 'Lisboa', 'images/post-6.jpg', 2, 2),
-    ('2021-05-01 12:00:00', 'This is a post', 'images/post-1.jpg', 3, 3),
-    ('2021-05-01 12:00:00', 'This is a post', 'images/post-1.jpg', 3, 3),
-    ('2021-05-01 12:00:00', 'This is a post', 'images/post-1.jpg', 4, 4);
+    ('2023-08-01 10:00:00', 'Lisboa', 'images/post-6.jpg', 2, 2),
+    ('2017-11-24 12:02:50', 'Freedom!!!', 'images/post-7.jpg', 3, 3),
+    ('2015-03-31 16:12:11', 'hola to @lupin', 'images/post-8.jpg', 3, 3),
+    ('2020-05-06 12:04:34', 'WOW', 'images/post-9.jpg', 4, 4);
 
 INSERT INTO like_post (user_id, post_id)
 VALUES
@@ -817,31 +1122,31 @@ VALUES
 
 INSERT INTO message (time, content, sender_id, receiver_id)
 VALUES
-    ('2021-05-01 12:00:00', 'Hello', 1, 2),
-    ('2021-05-01 13:00:00', 'Hello', 1, 3),
-    ('2021-05-01 14:00:00', 'Hello', 1, 4),
-    ('2021-05-01 15:00:00', 'Hello', 2, 1),
-    ('2021-05-01 16:00:00', 'Hello', 2, 3),
-    ('2021-05-01 17:00:00', 'Hello', 2, 4),
-    ('2021-05-01 18:00:00', 'Hello', 3, 1),
-    ('2021-05-01 19:00:00', 'Hello', 3, 2),
-    ('2021-05-01 20:00:00', 'Hello', 3, 4),
-    ('2021-05-01 21:00:00', 'Hello', 4, 1),
-    ('2021-05-01 22:00:00', 'Hello', 4, 2),
-    ('2021-05-01 23:00:00', 'Hello', 4, 3);
+    ('2021-05-01 12:00:00', 'Hello! Welcome to the app!', 1, 2),
+    ('2021-05-01 13:00:00', 'Hello! Welcome to the app!', 1, 3),
+    ('2021-05-01 14:00:00', 'Hello! Welcome to the app!', 1, 4),
+    ('2021-05-01 15:00:00', 'Hi! Thankss', 2, 1),
+    ('2021-05-01 16:00:00', 'Heyhey, glad to be here :)', 2, 3),
+    ('2021-05-01 17:00:00', 'Whatsapp dude?', 2, 4),
+    ('2021-05-01 18:00:00', 'txs', 3, 1),
+    ('2021-05-01 19:00:00', 'hi.', 3, 2),
+    ('2021-05-01 20:00:00', 'wyd', 3, 4),
+    ('2021-05-01 21:00:00', 'Thanks fellow traveller!', 4, 1),
+    ('2021-05-01 22:00:00', 'Im incredible bro, and you?', 4, 2),
+    ('2021-05-01 23:00:00', 'pull up', 4, 3);
 
 INSERT INTO comments (text, date, post_id, author_id)
 VALUES
-    ('This is a comment', '2021-05-01 12:00:00', 1, 1),
-    ('This is a comment', '2021-05-01 12:00:00', 1, 2),
-    ('This is a comment', '2021-05-01 12:00:00', 1, 3),
-    ('This is a comment', '2021-05-01 12:00:00', 1, 4),
-    ('This is a comment', '2021-05-01 12:00:00', 2, 1),
-    ('This is a comment', '2021-05-01 12:00:00', 2, 2),
-    ('This is a comment', '2021-05-01 12:00:00', 2, 3),
-    ('This is a comment', '2021-05-01 12:00:00', 3, 1),
-    ('This is a comment', '2021-05-01 12:00:00', 3, 2),
-    ('This is a comment', '2021-05-01 12:00:00', 4, 1);
+    ('@josefina check this outt', '2021-05-01 12:00:00', 1, 1),
+    ('@jacky.chan, you surely like this!', '2021-05-01 12:00:00', 1, 2),
+    ('Beautiful scene!', '2021-05-01 12:00:00', 1, 3),
+    ('When there last year, really liked it!', '2021-05-01 12:00:00', 1, 4),
+    ('Please be careful with pickpockets!', '2021-05-01 12:00:00', 2, 1),
+    ('If you loved it, you should really visit Porto!', '2021-05-01 12:00:00', 2, 2),
+    ('My god @james.bond', '2021-05-01 12:00:00', 2, 3),
+    ('@joo.won pleaseee come with me', '2021-05-01 12:00:00', 3, 1),
+    ('Amazing!', '2021-05-01 12:00:00', 3, 2),
+    ('Cool...', '2021-05-01 12:00:00', 4, 1);
 
 INSERT INTO like_comment (user_id, comment_id)
 VALUES
@@ -855,3 +1160,4 @@ VALUES
     (3, 1),
     (3, 2),
     (4, 1);
+
