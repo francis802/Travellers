@@ -7,6 +7,13 @@ button{
     background-color: transparent;
 }
 
+.comment-count, .like-count{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
 article.post{
     margin-left: 5%;
 }
