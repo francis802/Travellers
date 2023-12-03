@@ -34,12 +34,8 @@ function addEventListeners() {
     if (this.status != 200) window.location = '/';
     let post = JSON.parse(this.responseText);
     let element = document.querySelector('#post-id-' + post.id );
-    if(window.location.pathname == '/post/' + post.id){
-      window.location = '/home';
-    }
-    else{
-      element.remove();
-    }
+    element.style.display = 'none';
+    element.remove();
   }
 
 addEventListeners();
