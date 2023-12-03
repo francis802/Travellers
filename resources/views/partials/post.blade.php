@@ -32,9 +32,21 @@
     <footer class="post-footer">
         <div class="post-footer-details">
             <ul class="post-footer-links">
-                <img src="../heart-empty.png" alt="Like Post" class="like-post">
-                <img src="../comment.png" alt="Comment" class="comment-post">
-                <img src="../send.png" alt="Share" class="share-post">
+                <button class="like-post">
+                    <h5 class="like-count">{{ 0 }}
+                    <i class="fa-regular fa-heart fa-3x" style="color: #cc0f0f;"></i>
+                    </h5>
+                </button>
+                <button class="comment-post">
+                    <h5 class="comment-count">{{ 0 }}
+                    <i class="fa-regular fa-comment fa-3x"></i>
+                    </h5>
+                </button>
+                <button class="share-post">
+                    <h5>
+                    <i class="fa-solid fa-share-from-square fa-3x"></i>
+                    </h5>
+                </button>
             </ul>
         </div>
         <form action="{{ url('comment/create') }}" method="post" class="post-comment-form">

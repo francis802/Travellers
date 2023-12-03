@@ -63,4 +63,9 @@ class Post extends Model
         ->hasMany(PostTag::class)
         ->withPivotValue('post_tag');
     }
+
+    public function likes(): HasMany
+    {
+        return $this->hasMany(Like::class);
+    }
 }
