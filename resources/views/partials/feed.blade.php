@@ -52,15 +52,17 @@
     
     <section id="fy-posts">
         <ul id="user-post-list">
-            @include('partials.postsProfile', ['posts' => $publicPosts])
-            @yield('postsProfile')
+            @foreach($publicPosts as $post)
+                @include('partials.post', ['post' => $post])
+            @endforeach
         </ul>
     </section>
 
     <section id="following-posts">
     <ul id="user-post-list">
-            @include('partials.postsFeed', ['posts' => $followingPosts])
-            @yield('postsFeed')
+            @foreach($followingPosts as $post)
+                @include('partials.post', ['post' => $post])
+            @endforeach
         </ul>
     </section>
     

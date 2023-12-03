@@ -12,7 +12,7 @@
     overflow-y: auto;
     */
     width: 10em;
-    position: fixed;
+    position: sticky; /* CHANGE LATER */
     height: 100%;
 }
 

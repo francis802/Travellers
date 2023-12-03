@@ -8,8 +8,7 @@ a.post-author-name, a.post-comment-author-name{
     text-decoration: none;
 }
 
-.post-container{
-   
+.post{
     font-size: large;
     background-color: #CCCCCC;
     margin-bottom: 1em;
@@ -17,7 +16,7 @@ a.post-author-name, a.post-comment-author-name{
     padding: 1em;
 }
 
-#post-date{
+.post-date{
     margin: 0;
 }
 
@@ -59,14 +58,14 @@ a.post-edit{
     text-decoration: none;
 }
 
-#post-header {
+.post-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
 }
 
-#edit-delete-post{
+.edit-delete-post{
     display: flex;
     flex-direction: row;
 }

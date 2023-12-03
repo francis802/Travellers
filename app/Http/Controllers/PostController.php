@@ -110,19 +110,10 @@ class PostController extends Controller
         
         ImageController::delete($post->id);
         $post->delete();
-        return redirect('home/')->with('success', 'Post successfully deleted');
+        if(url()->previous() === 'post/'.$postId) {
+            return redirect('home/')->with('success', 'Post successfully deleted');
+        }
+        else return response()->json($post);
     }
 
-    /**
-     * Remove the specified resource from storage, using API
-     */
-    public function api_destroy(int $postId)
-    {
-        $post = Post::find($postId);
-        $this->authorize('delete', $post);
-        
-        ImageController::delete($post->id);
-        $post->delete();
-        return response()->json($post);
-    }
 }
