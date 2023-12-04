@@ -13,6 +13,11 @@ function addEventListeners() {
   [].forEach.call(dislikePost, function(dislike) {
     dislike.addEventListener('click', sendDislikePostRequest);
   });
+
+  let commentDeleter = document.querySelectorAll('.comment-delete');
+  [].forEach.call(commentDeleter, function(deleter) {
+    deleter.addEventListener('click', sendDeleteCommentRequest);
+  });
 }
   
   
@@ -85,6 +90,20 @@ function addEventListeners() {
     '<i class="fa-regular fa-heart fa-3x" style="color: #cc0f0f;"></i>' +
     resp.likes +
     '</h5>'
+  }
+
+  function sendDeleteCommentRequest() {
+    let id = this.closest('.comment-delete').getAttribute('data-id');
+    sendAjaxRequest('delete', '/api/comment/' + id + '/delete', null, commentDeletedHandler);
+  }
+
+  
+  function commentDeletedHandler() {
+    if (this.status != 200) window.location = '/';
+    let comment = JSON.parse(this.responseText);
+    let element = document.querySelector('#comment-id-' + comment.id );
+    element.style.display = 'none';
+    element.remove();
   }
 
 addEventListeners();

@@ -5,7 +5,7 @@
     </form>
     <ul class="post-comments-list">
         @foreach ($post->comments as $comment)
-            <li class="post-comment">
+            <li class="post-comment" id="comment-id-{{$comment->id}}">
                 <div class="post-comment-author">
                     <a href="{{ url('/user/'.$comment->author->id) }}" class="post-comment-author-name">
                         {{ $comment->author->name }}
@@ -13,13 +13,13 @@
                 </div>
                 <div class="post-comment-edit-delete">
                     @if ($comment->author->id == Auth::user()->id)
-                        <button class="post-comment-edit" data-id="{{$comment->id}}">
-                            <i class="fa-solid fa-pen fa-2x"></i>
+                        <button class="comment-edit" data-id="{{$comment->id}}">
+                            <i class="fa-solid fa-pen fa-1x"></i>
                         </button>
                     @endif
                     @if ($comment->author->id == Auth::user()->id || Auth::user()->isAdmin())
-                        <button class="post-comment-delete" data-id="{{$comment->id}}">
-                            <i class="fa-solid fa-trash fa-2x"></i>
+                        <button class="comment-delete" data-id="{{$comment->id}}">
+                            <i class="fa-solid fa-trash fa-1x"></i>
                         </button>
                     @endif
                 </div>

@@ -10,6 +10,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;   
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\CommentController;
 
 
 /*
@@ -70,6 +71,8 @@ Route::get('api/userVerify', [UserController::class, 'userVerify']);
 
 Route::post('api/post/{id}/like', [PostController::class, 'like_post']);
 Route::delete('api/post/{id}/dislike', [PostController::class, 'dislike_post']);
+
+Route::delete('api/comment/{id}/delete', [CommentController::class, 'destroy']);
 
 // Admin
 Route::get('admin', [AdminController::class, 'show']);

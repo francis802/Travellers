@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Follow;
 use App\Models\FollowRequest;
 use App\Models\Group;
+use App\Models\LikePost;
+use App\Models\LikeComment;
 
 
 class User extends Authenticatable
@@ -94,6 +96,11 @@ class User extends Authenticatable
     public function likedPost($post_id){
         return LikePost::where('user_id', $this->id)
                         ->where('post_id', $post_id)->exists();
+    }
+
+    public function likedComment($comment_id){
+        return LikeComment::where('user_id', $this->id)
+                        ->where('comment_id', $comment_id)->exists();
     }
 
 }
