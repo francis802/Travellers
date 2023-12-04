@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use App\Models\User;
 use App\Models\Comment;
+use App\Models\Tag;
+use Illuminate\Support\Facades\DB;
 
 class Post extends Model
 {
@@ -57,15 +59,19 @@ class Post extends Model
         
       }
 
-    public function tags(): HasMany
+    public function tags()
     {
         return $this
-        ->hasMany(PostTag::class)
-        ->withPivotValue('post_tag');
+        ->belongsToMany(Tag::class)
+        ->withPivot('post_tag');
     }
 
-    public function likes(): HasMany
+    public function likes()
     {
-        return $this->hasMany(Like::class);
+        return DB::table('users')
+        ->join('like_post', 'like_post.user_id', '=', 'users.id')
+        ->join('post', 'like_post.post_id', '=', 'post.id')
+        ->where('post.id', '=', $this->id)
+        ->get();
     }
 }

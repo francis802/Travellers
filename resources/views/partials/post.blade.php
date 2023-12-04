@@ -35,13 +35,13 @@
                 <button class="like-post">
                     <h5 class="like-count">
                     <i class="fa-regular fa-heart fa-3x" style="color: #cc0f0f;"></i>
-                    {{ 0 }}
+                    {{count($post->likes())}}
                     </h5>
                 </button>
                 <button class="comment-post">
                     <h5 class="comment-count">
                     <i class="fa-regular fa-comment fa-3x"></i>
-                    {{ 0 }}
+                    {{ count($post->comments) }}
                     </h5>
                 </button>
                 <button class="share-post">
