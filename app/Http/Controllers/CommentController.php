@@ -62,8 +62,6 @@ class CommentController extends Controller
     {
         $comment = Comment::find($commentId);
         $this->authorize('delete', $comment);
-        
-        ImageController::delete($comment->id);
         $comment->delete();
         return response()->json($comment);
     }
