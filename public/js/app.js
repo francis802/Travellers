@@ -112,32 +112,38 @@ function addEventListeners() {
   }
 
   function clickEditComment() {
+    console.log('click');
     let id = this.closest('.comment-edit').getAttribute('data-id');
     let comment = document.querySelector('#comment-id-' + id);
     let comment_text_ele = comment.querySelector('.comment-text');
     let comment_text = comment_text_ele.innerHTML;
+    comment.querySelector('.comment-edit').style.display = 'none';
+    comment.querySelector('.comment-delete').style.display = 'none';
     comment_text_ele.remove();
     comment.innerHTML += '<textarea class="comment-text-area">' + comment_text + '</textarea>'
-      + '<button class="cancel-comment" data-id="' + id + '"> <i class="fa-regular fa-circle-xmark"></i> </button>'
-      + '<button class="send-comment" data-id="' + id + '"> <i class="fa-regular fa-circle-check"></i> </button>';
-    comment.querySelector('.send-comment').addEventListener('click', sendEditCommentRequest);
-    comment.querySelector('.cancel-comment').addEventListener('click', function() {
+      + '<button class="comment-cancel" data-id="' + id + '"> <i class="fa-regular fa-circle-xmark"></i> </button>'
+      + '<button class="comment-send" data-id="' + id + '"> <i class="fa-regular fa-circle-check"></i> </button>';
+    comment.querySelector('.comment-send').addEventListener('click', sendEditCommentRequest);
+    comment.querySelector('.comment-cancel').addEventListener('click', function() {
       cancelEditComment.call(this, comment_text);
     });
   }
 
   function cancelEditComment(comment_text) {
-    let id = this.closest('.cancel-comment').getAttribute('data-id');
+    let id = this.closest('.comment-cancel').getAttribute('data-id');
     let comment = document.querySelector('#comment-id-' + id);
     comment.querySelector('.comment-text-area').remove();
-    comment.querySelector('.send-comment').remove();
-    comment.querySelector('.cancel-comment').remove();
+    comment.querySelector('.comment-send').remove();
+    comment.querySelector('.comment-cancel').remove();
+    comment.querySelector('.comment-edit').style.display = 'inline-block';
+    comment.querySelector('.comment-delete').style.display = 'inline-block';
     comment.innerHTML += '<p class="comment-text">' + comment_text + '</p>';
-
+    comment.querySelector('.comment-delete').addEventListener('click', sendDeleteCommentRequest);
+    comment.querySelector('.comment-edit').addEventListener('click', clickEditComment);
   }
 
   function sendEditCommentRequest() {
-    let id = this.closest('.comment-edit').getAttribute('data-id');
+    let id = this.closest('.comment-send').getAttribute('data-id');
     sendAjaxRequest('delete', '/api/comment/' + id + '/delete', null, commentEditHandler);
   }
 
