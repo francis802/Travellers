@@ -51,9 +51,10 @@
                 </button>
             </ul>
         </div>
-        <form action="{{ url('comment/create') }}" method="post" class="post-comment-form">
-            @csrf
-        </form>
-        {{-- @include('partials.commentsection', ['post'=>$post]) --}}
+        @if(url()->current() == url('/post/'.$post->id))
+            @include('partials.commentsection', ['post'=>$post])
+        @endif
+
+        
     </footer>
 </article>
