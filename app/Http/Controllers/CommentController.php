@@ -50,9 +50,13 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, int $commentId)
     {
-        //
+        $comment = Comment::find($commentId);
+        $this->authorize('update', $comment);
+        $comment->text = $request->text;
+        $comment->save();
+        return response()->json($comment);
     }
 
     /**

@@ -144,16 +144,24 @@ function addEventListeners() {
 
   function sendEditCommentRequest() {
     let id = this.closest('.comment-send').getAttribute('data-id');
-    sendAjaxRequest('delete', '/api/comment/' + id + '/delete', null, commentEditHandler);
+    let comment = document.querySelector('#comment-id-' + id);
+    let comment_text = comment.querySelector('.comment-text-area').value;
+    sendAjaxRequest('post', '/api/comment/' + id + '/edit', {text: comment_text}, commentEditHandler);
   }
 
   
   function commentEditHandler() {
     if (this.status != 200) window.location = '/';
-    let comment = JSON.parse(this.responseText);
-    let element = document.querySelector('#comment-id-' + comment.id + ' .comment-text');
-    element.remove();
-    let comment_html = document.querySelector('#comment-id-' + comment.id);
+    let comment_obj = JSON.parse(this.responseText);
+    let comment = document.querySelector('#comment-id-' + comment_obj.id);
+    comment.querySelector('.comment-text-area').remove();
+    comment.querySelector('.comment-send').remove();
+    comment.querySelector('.comment-cancel').remove();
+    comment.querySelector('.comment-edit').style.display = 'inline-block';
+    comment.querySelector('.comment-delete').style.display = 'inline-block';
+    comment.innerHTML += '<p class="comment-text">' + comment_obj.text + '</p>';
+    comment.querySelector('.comment-delete').addEventListener('click', sendDeleteCommentRequest);
+    comment.querySelector('.comment-edit').addEventListener('click', clickEditComment);
   }
 
 addEventListeners();

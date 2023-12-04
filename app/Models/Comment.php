@@ -16,6 +16,12 @@ class Comment extends Model
     // Don't add create and update timestamps in database.
     public $timestamps  = false;
 
+    protected $fillable = ['text', 'date'];
+
+    protected $casts = [
+        'date' => 'datetime',
+    ];
+
     /**
      * Get the author of the comment.
      */
