@@ -23,7 +23,7 @@
                         </button>
                     @endif
                 </div>
-                <p class="post-comment-text">{{ $comment->text }}</p>
+                <p class="comment-text">{{ $comment->text }}</p>
             </li>
         @endforeach
     </ul>

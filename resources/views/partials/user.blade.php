@@ -32,9 +32,9 @@
             @if((Auth::check() && Auth::user()->id == $user->id) || (!$user->profile_private) || (Auth::check() && Auth::user()->follows($user->id) || Auth::user()->isAdmin()))
                 @if(count($posts) > 0)
                     <ul id="user-post-list">
-                        @include('partials.postsProfile', ['posts' => $posts])
-                        @yield('postsProfile')
-                    
+                        @foreach($posts as $post)
+                            @include('partials.post', ['post' => $post])
+                        @endforeach
                     </ul>
                 @else
                     <p>This user has no posts.</p>
