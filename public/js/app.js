@@ -20,11 +20,27 @@ function addEventListeners() {
   });
 
   let commentEditor = document.querySelectorAll('.comment-edit');
-  [].forEach.call(commentEditor, function(deleter) {
-    deleter.addEventListener('click', clickEditComment);
+  [].forEach.call(commentEditor, function(editor) {
+    editor.addEventListener('click', clickEditComment);
   });
+
+  let commentCreator = document.querySelectorAll('.comment-create');
+  [].forEach.call(commentCreator, function(creator) {
+    creator.addEventListener('click', sendCreateCommentRequest);
+  });
+
+  let postComment = document.querySelector('textarea#comment');
+  postComment.addEventListener('input', postButtonVisibility);
 }
   
+  function postButtonVisibility() {
+    let postButton = document.querySelector('button.comment-create');
+    if (this.value.length > 0) {
+      postButton.style.display = 'inline-block';
+    } else {
+      postButton.style.display = 'none';
+    }
+  }
   
   function encodeForAjax(data) {
     if (data == null) return null;
@@ -55,6 +71,26 @@ function addEventListeners() {
     let element = document.querySelector('#post-id-' + post.id );
     element.style.display = 'none';
     element.remove();
+  }
+
+  function sendCreateCommentRequest() {
+    let text = document.querySelector('textarea#comment').value;
+    let id = this.closest('.comment-create').getAttribute('post-id');
+    if (text != '')
+      sendAjaxRequest('put', '/api/comment/create', {text: text, post_id: id}, commentCreatedHandler);
+  }
+
+  
+  function commentCreatedHandler() {
+    if (this.status != 200) window.location = '/';
+    let comment_obj = JSON.parse(this.responseText);
+    let comment = createComment(comment_obj.comment, comment_obj.author);
+    var comment_section = document.querySelector("ul.post-comments-list");
+    if (comment_section.firstChild) {
+      comment_section.insertBefore(comment, comment_section.firstChild);
+    } else {
+      comment_section.appendChild(comment);
+    }
   }
 
   function sendLikePostRequest() {
@@ -112,7 +148,6 @@ function addEventListeners() {
   }
 
   function clickEditComment() {
-    console.log('click');
     let id = this.closest('.comment-edit').getAttribute('data-id');
     let comment = document.querySelector('#comment-id-' + id);
     let comment_text_ele = comment.querySelector('.comment-text');
@@ -132,14 +167,8 @@ function addEventListeners() {
   function cancelEditComment(comment_text) {
     let id = this.closest('.comment-cancel').getAttribute('data-id');
     let comment = document.querySelector('#comment-id-' + id);
-    comment.querySelector('.comment-text-area').remove();
-    comment.querySelector('.comment-send').remove();
-    comment.querySelector('.comment-cancel').remove();
-    comment.querySelector('.comment-edit').style.display = 'inline-block';
-    comment.querySelector('.comment-delete').style.display = 'inline-block';
     comment.innerHTML += '<p class="comment-text">' + comment_text + '</p>';
-    comment.querySelector('.comment-delete').addEventListener('click', sendDeleteCommentRequest);
-    comment.querySelector('.comment-edit').addEventListener('click', clickEditComment);
+    restoreEditComment(comment);
   }
 
   function sendEditCommentRequest() {
@@ -154,14 +183,51 @@ function addEventListeners() {
     if (this.status != 200) window.location = '/';
     let comment_obj = JSON.parse(this.responseText);
     let comment = document.querySelector('#comment-id-' + comment_obj.id);
+    comment.innerHTML += '<p class="comment-text">' + comment_obj.text + '</p>';
+    restoreEditComment(comment);
+  }
+
+  function restoreEditComment(comment) {
     comment.querySelector('.comment-text-area').remove();
     comment.querySelector('.comment-send').remove();
     comment.querySelector('.comment-cancel').remove();
     comment.querySelector('.comment-edit').style.display = 'inline-block';
     comment.querySelector('.comment-delete').style.display = 'inline-block';
-    comment.innerHTML += '<p class="comment-text">' + comment_obj.text + '</p>';
     comment.querySelector('.comment-delete').addEventListener('click', sendDeleteCommentRequest);
     comment.querySelector('.comment-edit').addEventListener('click', clickEditComment);
   }
+
+  function createComment(comment, name) {
+    let new_comment = document.createElement('li');
+    new_comment.classList.add('post-comment');
+    new_comment.id = 'comment-id-' + comment.id;
+    let profile = location.hostname + '/user/' + comment.author_id;
+    console.log(profile);
+    new_comment.innerHTML = `
+    <div class="post-comment-author">
+        <a href="`+ profile + `" class="post-comment-author-name">
+            `+ name + `
+        </a>
+    </div>
+    <div class="post-comment-edit-delete">
+            <button class="comment-edit" data-id="` + comment.id + `">
+                <i class="fa-solid fa-pen fa-1x"></i>
+            </button>
+            <button class="comment-delete" data-id="` + comment.id + `">
+                <i class="fa-solid fa-trash fa-1x"></i>
+            </button>
+    </div>
+    <p class="comment-text">`+ comment.text + `</p>
+    `;
+  
+    let creator = new_comment.querySelector('button.comment-edit');
+    creator.addEventListener('click', clickEditComment);
+  
+    let deleter = new_comment.querySelector('button.comment-delete');
+    deleter.addEventListener('click', sendDeleteCommentRequest);
+  
+    return new_comment;
+  }
+
 
 addEventListeners();

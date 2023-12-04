@@ -72,6 +72,7 @@ Route::get('api/userVerify', [UserController::class, 'userVerify']);
 Route::post('api/post/{id}/like', [PostController::class, 'like_post']);
 Route::delete('api/post/{id}/dislike', [PostController::class, 'dislike_post']);
 
+Route::put('api/comment/create', [CommentController::class, 'store']);
 Route::post('api/comment/{id}/edit', [CommentController::class, 'update']);
 Route::delete('api/comment/{id}/delete', [CommentController::class, 'destroy']);
 

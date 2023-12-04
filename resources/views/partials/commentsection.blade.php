@@ -1,7 +1,7 @@
 <div class="comment-section">
-    <form action="{{ url('comment/create') }}" method="post" class="post-comment-form">
-        <textarea name="comment" id="comment" cols="30" rows="1" placeholder="Write a comment..."></textarea>
-        @csrf
+    <form class="comment-submit">
+        <textarea name="comment" id="comment" cols="40" rows="1" placeholder="Write a comment..."></textarea>
+        <button class="comment-create" post-id="{{$post->id}}">Post</i></button>
     </form>
     <ul class="post-comments-list">
         @foreach ($post->comments as $comment)
