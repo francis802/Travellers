@@ -91,4 +91,9 @@ class User extends Authenticatable
                 ->where('owner.user_id', $this->id);
     }
 
+    public function likedPost($post_id){
+        return LikePost::where('user_id', $this->id)
+                        ->where('post_id', $post_id)->exists();
+    }
+
 }

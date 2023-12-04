@@ -68,6 +68,9 @@ Route::get('/search', [SearchController::class, 'show'])->name('search');
 Route::get('api/user', [SearchController::class, 'show']);
 Route::get('api/userVerify', [UserController::class, 'userVerify']);
 
+Route::post('api/post/{id}/like', [PostController::class, 'like_post']);
+Route::delete('api/post/{id}/dislike', [PostController::class, 'dislike_post']);
+
 // Admin
 Route::get('admin', [AdminController::class, 'show']);
 
