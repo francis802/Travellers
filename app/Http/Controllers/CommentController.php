@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
+
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -62,6 +64,8 @@ class CommentController extends Controller
         $comment = Comment::find($commentId);
         $this->authorize('update', $comment);
         $comment->text = $request->text;
+        $comment->date = date('Y-m-d H:i');
+        $comment->edited = true;
         $comment->save();
         return response()->json($comment);
     }
@@ -75,5 +79,31 @@ class CommentController extends Controller
         $this->authorize('delete', $comment);
         $comment->delete();
         return response()->json($comment);
+    }
+
+    public function like_comment(int $commentId)
+    {
+        $comment = Comment::find($commentId);
+        
+        DB::table('like_comment')
+        ->insert(['comment_id' => $comment->id, 'user_id' => Auth::user()->id]);
+
+        $likes = $comment->likes();
+        
+        return response()->json(['comment' => $comment, 'likes' => count($likes)]);
+    }
+
+    public function dislike_comment(int $commentId)
+    {
+        $comment = comment::find($commentId);
+        
+        DB::table('like_comment')
+        ->where('comment_id', '=', $comment->id)
+        ->where('user_id', '=', Auth::user()->id)
+        ->delete();
+
+        $likes = $comment->likes();
+
+        return response()->json(['comment' => $comment, 'likes' => count($likes)]);
     }
 }

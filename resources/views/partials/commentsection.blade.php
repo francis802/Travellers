@@ -23,7 +23,19 @@
                         </button>
                     @endif
                 </div>
-                <p class="comment-text">{{ $comment->text }}</p>
+                <div class="comment-body">
+                    <p class="comment-text">{{ $comment->text }}</p>
+                    <button class="{{Auth::check() && Auth::user()->likedComment($comment->id) ? 'dislike-comment' : 'like-comment'}}" data-id="{{$comment->id}}">
+                    <h5 class="like-count">
+                    <i class="{{Auth::check() && Auth::user()->likedComment($comment->id) ? 'fa-solid fa-heart fa-1x' : 'fa-regular fa-heart fa-1x'}}" style="color: #cc0f0f;"></i>
+                    {{count($comment->likes())}}
+                    </h5>
+                </button>
+                    <p class="comment-date">{{ $comment->date }}</p>
+                    @if($comment->edited)
+                        <p class="comment-edited">Edited</p>
+                    @endif
+                </div>
             </li>
         @endforeach
     </ul>

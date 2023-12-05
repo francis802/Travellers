@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
+
 
 class PostController extends Controller
 {
@@ -81,6 +82,7 @@ class PostController extends Controller
         $post->group_id = 1; // TODO: Change this to the group the user chose to upload the post to
         $post->text = $request->text;
         $post->date = date('Y-m-d H:i');
+        $post->edited = true;
         $post->update();
         if (!isset($contentFound) && $_FILES["image"]["error"]) {
             if($post->media !== null) {

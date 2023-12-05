@@ -207,7 +207,8 @@ CREATE TABLE comments (
     text TEXT NOT NULL,
     date DATE NOT NULL CHECK (date <= now()),
     post_id INT REFERENCES post(id) ON DELETE CASCADE,
-    author_id INT REFERENCES users(id) NOT NULL
+    author_id INT REFERENCES users(id) NOT NULL,
+    edited BOOLEAN DEFAULT false
 );
 
 CREATE TABLE like_comment (

@@ -75,6 +75,8 @@ Route::delete('api/post/{id}/dislike', [PostController::class, 'dislike_post']);
 Route::put('api/comment/create', [CommentController::class, 'store']);
 Route::post('api/comment/{id}/edit', [CommentController::class, 'update']);
 Route::delete('api/comment/{id}/delete', [CommentController::class, 'destroy']);
+Route::post('api/comment/{id}/like', [CommentController::class, 'like_comment']);
+Route::delete('api/comment/{id}/dislike', [CommentController::class, 'dislike_comment']);
 
 // Admin
 Route::get('admin', [AdminController::class, 'show']);

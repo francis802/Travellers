@@ -16,7 +16,7 @@ class Comment extends Model
     // Don't add create and update timestamps in database.
     public $timestamps  = false;
 
-    protected $fillable = ['text', 'date'];
+    protected $fillable = ['text', 'date', 'edited'];
 
     protected $casts = [
         'date' => 'datetime',
@@ -42,8 +42,8 @@ class Comment extends Model
     {
         return DB::table('users')
         ->join('like_comment', 'like_comment.user_id', '=', 'users.id')
-        ->join('comment', 'like_comment.post_id', '=', 'comment.id')
-        ->where('comment.id', '=', $this->id)
+        ->join('comments', 'like_comment.comment_id', '=', 'comments.id')
+        ->where('comments.id', '=', $this->id)
         ->get();
     }
 }
