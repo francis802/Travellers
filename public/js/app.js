@@ -39,7 +39,8 @@ function addEventListeners() {
     creator.addEventListener('click', sendCreateCommentRequest);
   });
 
-  let postButtonShower = document.querySelectorAll('.comment-create');
+  let postComment = document.querySelector('textarea#comment');
+  postComment.addEventListener('input', postButtonVisibility);
   [].forEach.call(postButtonShower, function(postComment) {
     postComment.addEventListener('input', postButtonVisibility);
   });
