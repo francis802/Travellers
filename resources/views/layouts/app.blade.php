@@ -19,6 +19,9 @@
         <link href="{{ url('css/topbar.css') }}" rel="stylesheet">
         <link href="{{ url('css/adminpage.css') }}" rel="stylesheet">
         <link href="{{ url('css/post.css') }}" rel="stylesheet">
+        <link href="{{ url('css/comment.css') }}" rel="stylesheet">
+
+        <script src="https://kit.fontawesome.com/a2d4a9c2fb.js" crossorigin="anonymous"></script>
 
         
 

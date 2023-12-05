@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +15,12 @@ class Comment extends Model
 
     // Don't add create and update timestamps in database.
     public $timestamps  = false;
+
+    protected $fillable = ['text', 'date'];
+
+    protected $casts = [
+        'date' => 'datetime',
+    ];
 
     /**
      * Get the author of the comment.
@@ -29,5 +36,14 @@ class Comment extends Model
     public function post(): BelongsTo
     {
         return $this->belongsTo(Post::class);
+    }
+
+    public function likes()
+    {
+        return DB::table('users')
+        ->join('like_comment', 'like_comment.user_id', '=', 'users.id')
+        ->join('comment', 'like_comment.post_id', '=', 'comment.id')
+        ->where('comment.id', '=', $this->id)
+        ->get();
     }
 }

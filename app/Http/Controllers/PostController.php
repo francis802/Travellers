@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -114,6 +115,32 @@ class PostController extends Controller
             return redirect('home/')->with('success', 'Post successfully deleted');
         }
         else return response()->json($post);
+    }
+
+    public function like_post(int $postId)
+    {
+        $post = Post::find($postId);
+        
+        DB::table('like_post')
+        ->insert(['post_id' => $post->id, 'user_id' => Auth::user()->id]);
+
+        $likes = $post->likes();
+        
+        return response()->json(['post' => $post, 'likes' => count($likes)]);
+    }
+
+    public function dislike_post(int $postId)
+    {
+        $post = Post::find($postId);
+        
+        DB::table('like_post')
+        ->where('post_id', '=', $post->id)
+        ->where('user_id', '=', Auth::user()->id)
+        ->delete();
+
+        $likes = $post->likes();
+
+        return response()->json(['post' => $post, 'likes' => count($likes)]);
     }
 
 }
