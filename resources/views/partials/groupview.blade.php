@@ -1,7 +1,7 @@
 @include('partials.topbar')
 
 @section('groupview')
-<section id="profile">
+<section id="feed">
     @yield('topbar')
         <section id="user-presentation"> 
             <div id="profile-picture">
@@ -12,13 +12,18 @@
                 @endif
             </div>
                 <section id="profile-text">
-                    <h3 id="user-name">{{ count($group->members) }}</h3>
+                    <h3 id="user-name">{{ $group->country->name }}</h3>
                     <section id="user-infos">
-                        <p>{{ $group->description }}</p>
-                        
+                        <p class="infos-with-margin">{{ $group->description }}</p>
+                        <p class="infos-with-margin"><a href="">{{ count($subgroups) }} Subgroups</a></p>
+                        <p class="infos-with-margin"><a href="{{ url('/group/'.$group->id.'/members') }}">{{ count($members) }} Members</a></p>
                     </section>
-                    <p>{{ count($subgroups) }}</p>
                 </section>
+                <section id="profile-buttons-area">
+                        <a class="button" href="{{ url('/group/'.$group->id.'/edit') }}"> Edit </a>
+                        <a class="button" href=""> Follow </a>
+                </section>
+                
         </section>
 
         
@@ -27,8 +32,9 @@
         <section id="user-posts">
                 @if(count($posts) > 0)
                     <ul id="user-post-list">
-                        @include('partials.postsProfile', ['posts' => $posts])
-                        @yield('postsProfile')
+                        @foreach($posts as $post)
+                            @include('partials.post', ['post' => $post])
+                        @endforeach
                     </ul>
                 @else
                     <p>This group has no posts.</p>

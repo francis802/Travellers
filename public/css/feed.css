@@ -48,3 +48,14 @@
 #buttons button.underline {
     text-decoration: underline;
 }
+
+#feed{
+    flex: 1;
+    overflow-y: auto;
+}
+
+#fy-posts{
+    display: flex;
+    justify-content: center;
+    padding: 1em;
+}

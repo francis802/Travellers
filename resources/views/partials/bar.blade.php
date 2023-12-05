@@ -14,10 +14,11 @@
             <li><a href="#" class="side-bar-link">Terms of Use and Privacy Policy</a></li>
         </ul>
         <ul id="lower-sidebar">
+            <li><a href="{{ url('/post/create/')}}" class="side-bar-link" id="last-link">Create Post</a></li>
+            <li><a href="{{ url('/group/create/')}}" class="side-bar-link" id="last-link">Create Group</a></li>
             @if(Auth::check() && Auth::user()->isAdmin())
                 <li><a href="{{ url('/admin/')}}" class="side-bar-link" id="last-link">Admin Console</a></li>
             @endif
-            <li><a href="{{ url('/post/create/')}}" class="side-bar-link" id="last-link">Create Post</a></li>
             <li><p class="rights-text">&copy; Travellers. All right reserved</p></li>
         </ul>
 </nav>
