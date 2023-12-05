@@ -16,7 +16,7 @@ class Comment extends Model
     // Don't add create and update timestamps in database.
     public $timestamps  = false;
 
-    protected $fillable = ['text', 'date'];
+    protected $fillable = ['text', 'date', 'edited'];
 
     protected $casts = [
         'date' => 'datetime',

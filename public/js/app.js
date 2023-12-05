@@ -39,8 +39,11 @@ function addEventListeners() {
     creator.addEventListener('click', sendCreateCommentRequest);
   });
 
-  let postComment = document.querySelector('textarea#comment');
-  postComment.addEventListener('input', postButtonVisibility);
+  let postButtonShower = document.querySelectorAll('.comment-create');
+  [].forEach.call(postButtonShower, function(postComment) {
+    postComment.addEventListener('input', postButtonVisibility);
+  });
+
 }
   
   function postButtonVisibility() {
@@ -219,7 +222,9 @@ function addEventListeners() {
     let comment_text = comment_text_ele.innerHTML;
     comment.querySelector('.comment-edit').style.display = 'none';
     comment.querySelector('.comment-delete').style.display = 'none';
-    comment_text_ele.remove();
+    comment.querySelector('.comment-edited').style.display = 'none';
+    comment.querySelector('.comment-date').style.display = 'none';
+    comment_text_ele.style.display = 'none';
     comment.innerHTML += '<textarea class="comment-text-area">' + comment_text + '</textarea>'
       + '<button class="comment-cancel" data-id="' + id + '"> <i class="fa-regular fa-circle-xmark"></i> </button>'
       + '<button class="comment-send" data-id="' + id + '"> <i class="fa-regular fa-circle-check"></i> </button>';
@@ -232,7 +237,8 @@ function addEventListeners() {
   function cancelEditComment(comment_text) {
     let id = this.closest('.comment-cancel').getAttribute('data-id');
     let comment = document.querySelector('#comment-id-' + id);
-    comment.innerHTML += '<p class="comment-text">' + comment_text + '</p>';
+    comment.querySelector('.comment-text').textContent = comment_text;
+    comment.querySelector('.comment-text').style.display = 'block';
     restoreEditComment(comment);
   }
 
@@ -247,10 +253,10 @@ function addEventListeners() {
   function commentEditHandler() {
     console.log(this.responseText);
     if (this.status != 200) window.location = '/';
-    console.log('herre');
     let comment_obj = JSON.parse(this.responseText);
     let comment = document.querySelector('#comment-id-' + comment_obj.id);
-    comment.innerHTML += '<p class="comment-text">' + comment_obj.text + '</p>';
+    comment.querySelector('.comment-text').textContent = comment_obj.text;
+    comment.querySelector('.comment-text').style.display = 'block';
     restoreEditComment(comment);
   }
 
@@ -260,6 +266,8 @@ function addEventListeners() {
     comment.querySelector('.comment-cancel').remove();
     comment.querySelector('.comment-edit').style.display = 'inline-block';
     comment.querySelector('.comment-delete').style.display = 'inline-block';
+    comment.querySelector('.comment-edited').style.display = 'block';
+    comment.querySelector('.comment-date').style.display = 'block';
     comment.querySelector('.comment-delete').addEventListener('click', sendDeleteCommentRequest);
     comment.querySelector('.comment-edit').addEventListener('click', clickEditComment);
   }
@@ -284,7 +292,16 @@ function addEventListeners() {
                 <i class="fa-solid fa-trash fa-1x"></i>
             </button>
     </div>
-    <p class="comment-text">`+ comment.text + `</p>
+    <div class="comment-body">
+      <p class="comment-text">`+ comment.text + `</p>
+      <button class="like-comment" data-id="` + comment.id + `">
+        <h5 class="like-count">
+          <i class="fa-regular fa-heart fa-1x" style="color: #cc0f0f;"></i>
+        ` + 0 + `
+        </h5>
+      </button>
+      <p class="comment-date">` + comment.date + `</p>
+    </div>
     `;
   
     let creator = new_comment.querySelector('button.comment-edit');
@@ -292,6 +309,9 @@ function addEventListeners() {
   
     let deleter = new_comment.querySelector('button.comment-delete');
     deleter.addEventListener('click', sendDeleteCommentRequest);
+
+    let liker = new_comment.querySelector('button.like-comment');
+    liker.addEventListener('click', sendLikeCommentRequest);
   
     return new_comment;
   }

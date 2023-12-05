@@ -33,7 +33,7 @@ class CommentController extends Controller
     {
         $comment = new Comment();
         $comment->author_id = Auth::user()->id;
-        $comment->comment_id = $request->comment_id;
+        $comment->post_id = $request->post_id;
         $comment->text = $request->text;
         $comment->date = date('Y-m-d H:i');
         $comment->save();
@@ -64,6 +64,8 @@ class CommentController extends Controller
         $comment = Comment::find($commentId);
         $this->authorize('update', $comment);
         $comment->text = $request->text;
+        $comment->date = date('Y-m-d H:i');
+        $comment->edited = true;
         $comment->save();
         return response()->json($comment);
     }

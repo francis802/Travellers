@@ -32,7 +32,9 @@
                     </h5>
                 </button>
                     <p class="comment-date">{{ $comment->date }}</p>
-                    <p class="comment-edited" style="display: none;">Edited</p>
+                    @if($comment->edited)
+                        <p class="comment-edited">Edited</p>
+                    @endif
                 </div>
             </li>
         @endforeach
