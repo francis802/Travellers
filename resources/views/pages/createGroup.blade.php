@@ -2,9 +2,11 @@
 
 @section('title', 'Home')
 @include('partials.bar')
-@include('partials.createPostForm')
+@include('partials.createGroupForm')
 
 @section('content')
+    
         @yield('bar')
-        @yield('createPostForm')
+        @yield('createGroupForm')
+   
 @endsection

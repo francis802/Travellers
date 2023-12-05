@@ -1,7 +1,7 @@
 @include('partials.topbar')
 
 @section('user')
-<section id="profile">
+<section id="feed">
     @yield('topbar')
         <section id="user-presentation"> 
             <div id="profile-picture">
@@ -28,6 +28,7 @@
                 </section>
         </section>
       
+        
         <section id="user-posts">
             @if((Auth::check() && Auth::user()->id == $user->id) || (!$user->profile_private) || (Auth::check() && Auth::user()->follows($user->id) || Auth::user()->isAdmin()))
                 @if(count($posts) > 0)

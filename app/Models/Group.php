@@ -36,5 +36,26 @@ class Group extends Model
         return Group::select('groups.*')->where('groups.subgroup_id', '=', $this->id);
     }
 
+    public function isMember(User $user){
+        return $this->members()
+                    ->where('user_id', $user->id)
+                    ->exists();
+    }
+
+    public function isOwner(User $user){
+        return $this->owners()
+                    ->where('user_id', $user->id)
+                    ->exists();
+    }
+
+    public function isSubgroup(){
+        return $this->subgroup_id != null;
+    }
+
+    public function country(){
+        return $this->belongsTo('App\Models\Country');
+    }
+
+    
     
 }

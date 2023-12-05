@@ -1,3 +1,5 @@
+
+
 #profile-buttons-area > .button {
     width: 5em;
     font-size: small;
@@ -11,152 +13,78 @@
     overflow: hidden;
     margin-right: 2rem;
 }
-  
+
 #profile-picture img {
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; 
-    display: block; 
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
-#profile{
+#profile {
     flex: 1;
     overflow-y: auto;
-    margin-left: 10em;
 }
 
-#user-presentation{
-    padding-bottom: 1em;
+#user-presentation {
+    padding: 2em;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-top: 2em;
-    padding-right: 2em;
-    padding-left: 2em;
     border-bottom: 1px solid cornflowerblue;
 }
 
-#user-name{
-    margin: 0;
-}
-
-#user-name{
+#user-name {
     margin: 0;
     font-size: x-large;
 }
 
-#user-username{
+#user-username {
     font-size: large;
     font-weight: 100;
     margin: 0;
 }
 
-#profile-buttons-area{
+#profile-buttons-area {
     margin-left: 15em;
     text-align: center;
 }
 
-#edit-profil-form{
+#edit-profil-form {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-#user-infos{
+#user-infos {
     display: flex;
     font-size: medium;
 }
 
-.infos-with-margin{
+.infos-with-margin {
     margin-right: 10%;
 }
 
-p{
+p {
     white-space: nowrap;
 }
 
-/*---------------------------- USER'S POSTS ---------------------------------*/
+/* USER'S POSTS */
 
-#user-post-list{
+#user-post-list {
     list-style: none;
     margin: 0;
+    padding: 0;
     color: black;
 }
 
-.post-container{
-   
+.post-container {
     font-size: large;
     background-color: #CCCCCC;
     margin-bottom: 1em;
     border-radius: 1em;
 }
 
-#user-posts{
-    padding-top: 2em;
-    padding-left: 2em;
-    padding-right: 2em;
+#user-posts {
+    padding: 2em;
 }
-
-
-/*
-ul.posts-grid {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
-    gap: 10px; 
-}
-
-.post {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden; 
-    width: 100%; 
-    padding-right: 2em;
-}
-
-.post-container {
-    padding: 10px;
-}
-
-#post-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-#post-author {
-    font-weight: bold;
-    text-decoration: none;
-    color: #333;
-}
-
-#post-date {
-    color: #777;
-    font-size: 0.9em;
-}
-
-#edit-post {
-    text-decoration: none;
-    color: #333;
-}
-
-#post-content {
-    margin-top: 10px;
-}
-
-.postmedia {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 5px;
-}
-
-#post-interaction {
-    margin-top: 10px;
-}
-*/
-
-

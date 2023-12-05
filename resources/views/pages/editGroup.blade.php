@@ -1,12 +1,10 @@
 @extends('layouts.app')
 @include('partials.bar')
-@include('partials.groupview')
-
+@include('partials.editGroupForm')
 
 @section('content')
     
         @yield('bar')
-        @yield('groupview')
-    
-    
+        @yield('editGroupForm')
+   
 @endsection
