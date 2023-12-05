@@ -14,6 +14,16 @@ function addEventListeners() {
     dislike.addEventListener('click', sendDislikePostRequest);
   });
 
+  let likeComment = document.querySelectorAll('.like-comment');
+  [].forEach.call(likeComment, function(like) {
+    like.addEventListener('click', sendLikeCommentRequest);
+  });
+
+  let dislikeComment = document.querySelectorAll('.dislike-comment');
+  [].forEach.call(dislikeComment, function(dislike) {
+    dislike.addEventListener('click', sendDislikeCommentRequest);
+  });
+
   let commentDeleter = document.querySelectorAll('.comment-delete');
   [].forEach.call(commentDeleter, function(deleter) {
     deleter.addEventListener('click', sendDeleteCommentRequest);
@@ -136,6 +146,51 @@ function addEventListeners() {
 
     element.innerHTML = '<h5 class="like-count">' +
     '<i class="fa-regular fa-heart fa-3x" style="color: #cc0f0f;"></i>' +
+    resp.likes +
+    '</h5>'
+  }
+
+  function sendDeleteCommentRequest() {
+    let id = this.closest('.comment-delete').getAttribute('data-id');
+    sendAjaxRequest('delete', '/api/comment/' + id + '/delete', null, commentDeletedHandler);
+  }
+
+  function sendLikeCommentRequest() {
+    let id = this.closest('.like-comment').getAttribute('data-id');
+    sendAjaxRequest('post', '/api/comment/' + id + '/like', null, commentLikedHandler);
+  }
+
+  function commentLikedHandler() {
+    if (this.status != 200) window.location = '/';
+    let resp = JSON.parse(this.responseText);
+    let element = document.querySelector('.like-comment[data-id="' + resp.comment.id + '"]');
+    
+    element.removeEventListener('click', sendLikeCommentRequest);
+    element.addEventListener('click', sendDislikeCommentRequest);
+    element.className = 'dislike-comment';
+
+    element.innerHTML = '<h5 class="like-count">' +
+    '<i class="fa-solid fa-heart fa-1x" style="color: #cc0f0f;"></i>' +
+    resp.likes +
+    '</h5>'
+  }
+
+  function sendDislikeCommentRequest() {
+    let id = this.closest('.dislike-comment').getAttribute('data-id');
+    sendAjaxRequest('delete', '/api/comment/' + id + '/dislike', null, commentDislikedHandler);
+  }
+
+  function commentDislikedHandler() {
+    if (this.status != 200) window.location = '/';
+    let resp = JSON.parse(this.responseText);
+    let element = document.querySelector('.dislike-comment[data-id="' + resp.comment.id + '"]');
+
+    element.removeEventListener('click', sendDislikeCommentRequest);
+    element.addEventListener('click', sendLikeCommentRequest);
+    element.className = 'like-comment';
+
+    element.innerHTML = '<h5 class="like-count">' +
+    '<i class="fa-regular fa-heart fa-1x" style="color: #cc0f0f;"></i>' +
     resp.likes +
     '</h5>'
   }
