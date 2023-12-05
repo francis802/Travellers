@@ -93,6 +93,11 @@ function addEventListeners() {
     } else {
       comment_section.appendChild(comment);
     }
+    document.querySelector('textarea#comment').value = '';
+    document.querySelector('button.comment-create').style.display = 'none';
+    let num_comments = document.querySelector('h5.comment-count').textContent
+    let num = parseInt(num_comments) + 1;
+    document.querySelector('h5.comment-count').innerHTML = `<i class="fa-regular fa-comment fa-3x"></i>` + num;
   }
 
   function sendLikePostRequest() {
@@ -147,6 +152,9 @@ function addEventListeners() {
     let element = document.querySelector('#comment-id-' + comment.id );
     element.style.display = 'none';
     element.remove();
+    let num_comments = document.querySelector('h5.comment-count').textContent
+    let num = parseInt(num_comments) - 1;
+    document.querySelector('h5.comment-count').innerHTML = `<i class="fa-regular fa-comment fa-3x"></i>` + num;
   }
 
   function clickEditComment() {
