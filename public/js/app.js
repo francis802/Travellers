@@ -73,11 +73,13 @@ function addEventListeners() {
     element.remove();
   }
 
-  function sendCreateCommentRequest() {
+  function sendCreateCommentRequest(event) {
     let text = document.querySelector('textarea#comment').value;
     let id = this.closest('.comment-create').getAttribute('post-id');
     if (text != '')
       sendAjaxRequest('put', '/api/comment/create', {text: text, post_id: id}, commentCreatedHandler);
+
+    event.preventDefault();
   }
 
   
@@ -180,7 +182,9 @@ function addEventListeners() {
 
   
   function commentEditHandler() {
+    console.log(this.responseText);
     if (this.status != 200) window.location = '/';
+    console.log('herre');
     let comment_obj = JSON.parse(this.responseText);
     let comment = document.querySelector('#comment-id-' + comment_obj.id);
     comment.innerHTML += '<p class="comment-text">' + comment_obj.text + '</p>';
@@ -201,7 +205,7 @@ function addEventListeners() {
     let new_comment = document.createElement('li');
     new_comment.classList.add('post-comment');
     new_comment.id = 'comment-id-' + comment.id;
-    let profile = location.hostname + '/user/' + comment.author_id;
+    let profile = 'http://' + location.host + '/user/' + comment.author_id;
     console.log(profile);
     new_comment.innerHTML = `
     <div class="post-comment-author">
