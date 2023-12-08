@@ -5,7 +5,11 @@
     @yield('topbar')
         <section id="user-presentation"> 
             <div id="profile-picture">
-                <img src="../man.jpg" alt="Profile Picture">
+                @if ($user->profile_photo !== null)
+                    <img src="{{ url($user->profile_photo) }}">
+                @else
+                    <img src="../man.jpg" alt="Profile Picture">
+                @endif
             </div>
                 <section id="profile-text">
                     <h3 id="user-name">{{$user->name }}</h3>

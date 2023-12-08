@@ -25,7 +25,7 @@ class User extends Authenticatable
     public $timestamps  = false;
 
    
-    protected $fillable = ['username', 'email', 'name', 'profile_private', 'tsvectors', 'country', 'password'];
+    protected $fillable = ['username', 'email', 'name', 'profile_private', 'profile_photo', 'tsvectors', 'country', 'password'];
 
     protected $hidden = ['password'];
 

@@ -19,13 +19,7 @@
             </span>
         @endif
 
-        <label for="country">Country</label>
-        <input id="country" type="text" name="country" value="{{ old('country', $old['country']) }}" required autofocus>
-        @if ($errors->has('country'))
-            <span class="error">
-                {{ $errors->first('country') }}
-            </span>
-        @endif
+        
 
         <label for="email">E-Mail Address</label>
         <input id="email" type="email" name="email" value="{{ old('email', $old['email']) }}" required autofocus>
@@ -49,7 +43,11 @@
         <p>
             Private profile? <input type="checkbox" name="private" {{old('private', $old['private']) ? 'checked' : '' }}>
         </p>
-
+        <section id="post-choose-photo">
+            <label>
+                Select Photo: <input type="file" id="image" name="image" accept="image/png, image/jpeg">
+            </label>
+        </section>
             <section class="edit-page-final-buttons">
                 <button class="button" type="submit">Submit</button>
             </section>

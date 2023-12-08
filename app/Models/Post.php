@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use App\Models\User;
+use App\Models\Group;
 use App\Models\Comment;
 use App\Models\Tag;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +50,11 @@ class Post extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(Group::class);
     }
 
     public static function publicPosts() {

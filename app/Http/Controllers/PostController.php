@@ -24,7 +24,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('pages.createPost');
+        $usergroups = Auth::user()->myGroups()->get();
+        return view('pages.createPost' , ['usergroups' => $usergroups]);
     }
 
     /**
@@ -35,7 +36,7 @@ class PostController extends Controller
         $this->authorize('create', Post::class);
         $post = new Post();
         $post->author_id = Auth::user()->id;
-        $post->group_id = 1; // TODO: Change this to the group the user chose to upload the post to
+        $post->group_id = $request->group_id;
         $post->text = $request->text;
         $post->date = date('Y-m-d H:i');
         $post->save();
