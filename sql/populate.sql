@@ -63,7 +63,7 @@ INSERT INTO country (name, city_id) VALUES
 
 INSERT INTO users (username, name, country_id, email, password, profile_photo, profile_private)
 VALUES
-    ('francisco.campos03', 'Francisco Campos', 1, 'francisco.campos@gmail.com', '$2y$10$53jvyZTBMRAkoN/KdkA1s.n.QZ.zTXK6406l5ZmGUSslsEH07WkuS', 'https://picsum.photos/1000', false),
+    ('francisco.campos03', 'Francisco Campos', 1, 'francisco.campos@gmail.com', '$2y$10$53jvyZTBMRAkoN/KdkA1s.n.QZ.zTXK6406l5ZmGUSslsEH07WkuS', 'images/pfp/pfp-1.jpg', false),
     ('antonio.romao03', 'António Romão', 1, 'antonio.romao@gmail.com', '$2y$10$EpgSBve6Nc.Q.PepTjNp8uJUEyZQjnVfmIlLDHR9LGDZC8/VHWPl.', 'https://picsum.photos/1000', false),
     ('henrique.pinheiro03', 'Henrique Pinheiro', 1, 'henrique.pinheiro@gmail.com', '$2y$10$/zHdv.sEpPASgf6nXgObI.c.dleL0jqzAEVANmzB.GjFvjvPQ5kYO', 'https://picsum.photos/1000', true),
     ('jane-doe2346', 'Jane Doe', 2, 'jane.doe@gmail.com', '$2y$10$8dw4v6YscmyD6MG4Jf92BeOpi299ULr/Z57FCjhH6GrCWwhPb8Y7a', 'https://picsum.photos/1000', true),

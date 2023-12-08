@@ -12,7 +12,6 @@
             <li><a href="{{ url('/admin/groups/')}}" class="side-bar-link">Groups</a></li>
             <li><a href="{{ url('/admin/reports/')}}" class="side-bar-link">Reports</a></li>
             <li><a href="{{ url('/admin/helps/')}}" class="side-bar-link">Help Requests</a></li>
-            <li><a href="{{ url('/admin/unban-requests/')}}" class="side-bar-link">Unban Requests</a></li>
         </ul>
         <ul id="lower-sidebar">
             @if(Auth::check() && Auth::user()->isAdmin())
