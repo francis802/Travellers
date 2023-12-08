@@ -1,6 +1,10 @@
-
-
 #profile-buttons-area > .button {
+    width: 5em;
+    font-size: small;
+    margin-left: 1rem;
+}
+
+#profile-buttons-area button {
     width: 5em;
     font-size: small;
     margin-left: 1rem;

@@ -48,18 +48,18 @@ class User extends Authenticatable
     }
 
     public function follows(int $id) {
-        return Follow::where('user2_id', $this->id)
-                    ->where('user1_id', $id)->exists();
-    }
-
-    public function following(int $id) {
         return Follow::where('user1_id', $this->id)
                     ->where('user2_id', $id)->exists();
     }
+
+    public function following(int $id) {
+        return Follow::where('user2_id', $this->id)
+                    ->where('user1_id', $id)->exists();
+    }
     
     public function requestFollowing(int $id) {
-        return FollowRequest::where('user2_id', $this->id)
-                            ->where('user1_id', $id)->exists();
+        return FollowRequest::where('user1_id', $this->id)
+                            ->where('user2_id', $id)->exists();
     }
     
     public function ownPosts() {
@@ -101,6 +101,12 @@ class User extends Authenticatable
     public function likedComment($comment_id){
         return LikeComment::where('user_id', $this->id)
                         ->where('comment_id', $comment_id)->exists();
+    }
+
+    public function followRequestUsers() {
+        return User::select('users.*')
+                ->join('requests', 'requests.user1_id', '=', 'users.id')
+                ->where('requests.user2_id', $this->id);
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -120,5 +121,72 @@ class UserController extends Controller
         $user = User::find($id);
         $groups = $user->myGroups()->get();
         return view('pages.listGroups', ['groups' => $groups]);
+    }
+
+    public function followUser(int $id) 
+    {
+        $user = User::find($id);
+        
+        if ($user->profile_private) {
+            DB::table('requests')
+            ->insert(['user1_id' => Auth::user()->id, 'user2_id' => $id]);
+        }
+        else {
+            DB::table('follows')
+            ->insert(['user1_id' => Auth::user()->id, 'user2_id' => $id]);
+        }
+
+        $followers = $user->getFollowers()->get();
+
+        return response()->json(['user' => $user, 'followers' => count($followers)]);
+    }
+
+    public function unfollowUser(int $id) 
+    {
+        $user = User::find($id);
+        
+        if (Auth::user()->follows($id)) {
+            DB::table('follows')
+            ->where('user1_id', '=', Auth::user()->id)
+            ->where('user2_id', '=', $id)
+            ->delete();
+        }
+        else {
+            DB::table('requests')
+            ->where('user1_id', '=', Auth::user()->id)
+            ->where('user2_id', '=', $id)
+            ->delete();
+        }
+
+        $followers = $user->getFollowers()->get();
+
+        return response()->json(['user' => $user, 'followers' => count($followers)]);
+    }
+
+    public function acceptUser(int $id) 
+    {
+        $user = User::find($id);
+
+        DB::table('follows')
+        ->insert(['user1_id' => $id, 'user2_id' => Auth::user()->id]);
+
+        DB::table('requests')
+        ->where('user1_id', '=', $id)
+        ->where('user2_id', '=', Auth::user()->id)
+        ->delete();
+
+        return response()->json(['user' => $user]);
+    }
+
+    public function declineUser(int $id) 
+    {
+        $user = User::find($id);
+
+        DB::table('requests')
+        ->where('user1_id', '=', $id)
+        ->where('user2_id', '=', Auth::user()->id)
+        ->delete();
+
+        return response()->json(['user' => $user]);
     }
 }
