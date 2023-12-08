@@ -16,7 +16,7 @@ class ImageController extends Controller
 
                 $file->move(public_path('images/'), $filename);
             
-        }
+    }
 
     public static function delete(int $id) {
         foreach ( glob(public_path().'/images/'.'post-'.$id.'.*',GLOB_BRACE) as $image){
@@ -29,6 +29,28 @@ class ImageController extends Controller
             ImageController::delete($id);
             ImageController::create($id, $request);
         }
+    }
+
+    public static function createUser(int $id, Request $request) {
+        $file= $request->file('image');
+
+        $filename = "user-".$id.".".pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION);
+
+        $file->move(public_path('images/'), $filename);
+    
+}
+
+    public static function deleteUser(int $id) {
+    foreach ( glob(public_path().'/images/'.'user-'.$id.'.*',GLOB_BRACE) as $image){
+        if (file_exists($image)) unlink($image);
+    }
+    }
+
+    public static function updateUser(int $id, Request $request) {
+    if ($request->file('image')) {
+        ImageController::deleteUser($id);
+        ImageController::createUser($id, $request);
+    }
     }
 
 }

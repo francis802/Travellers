@@ -81,8 +81,17 @@ class UserController extends Controller
             $user->name = $request->input('name');
             $user->username = $request->input('username');
             $user->email = $request->input('email');
-            $user->country = $request->input('country');
+            
             $user->profile_private = null !== $request->input('private');
+            $user->save();
+
+            if (!isset($contentFound) && $_FILES["image"]["error"]) {
+                $user->profile_photo = null;
+            }
+            else {
+                ImageController::createUser($user->id, $request);
+                $user->profile_photo = "images/user-".$user->id.".".pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION);
+            }
 
             $user->save();
             return redirect('user/'.$user->id);
