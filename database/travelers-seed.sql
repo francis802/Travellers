@@ -864,7 +864,7 @@ INSERT INTO country (name, city_id) VALUES
 
 INSERT INTO users (username, name, country_id, email, password, profile_photo, profile_private)
 VALUES
-    ('francisco.campos03', 'Francisco Campos', 1, 'francisco.campos@gmail.com', '$2y$10$53jvyZTBMRAkoN/KdkA1s.n.QZ.zTXK6406l5ZmGUSslsEH07WkuS', 'https://picsum.photos/1000', false),
+    ('francisco.campos03', 'Francisco Campos', 1, 'francisco.campos@gmail.com', '$2y$10$53jvyZTBMRAkoN/KdkA1s.n.QZ.zTXK6406l5ZmGUSslsEH07WkuS', 'images/pfp/pfp-1.jpg', false),
     ('antonio.romao03', 'António Romão', 1, 'antonio.romao@gmail.com', '$2y$10$EpgSBve6Nc.Q.PepTjNp8uJUEyZQjnVfmIlLDHR9LGDZC8/VHWPl.', 'https://picsum.photos/1000', false),
     ('henrique.pinheiro03', 'Henrique Pinheiro', 1, 'henrique.pinheiro@gmail.com', '$2y$10$/zHdv.sEpPASgf6nXgObI.c.dleL0jqzAEVANmzB.GjFvjvPQ5kYO', 'https://picsum.photos/1000', true),
     ('jane-doe2346', 'Jane Doe', 2, 'jane.doe@gmail.com', '$2y$10$8dw4v6YscmyD6MG4Jf92BeOpi299ULr/Z57FCjhH6GrCWwhPb8Y7a', 'https://picsum.photos/1000', true),
@@ -1073,15 +1073,15 @@ VALUES
 
 INSERT INTO post (date, text, media, author_id, group_id)
 VALUES
-    ('2023-05-01 09:00:00', 'Pyramids of Giza with @antonio.romao03', 'images/post-1.jpg', 1, 1),
-    ('2019-08-21 12:00:00', 'Invicta', 'images/post-2.jpg', 1, 2),
-    ('2018-04-07 14:00:00', 'Gladiators!', 'images/post-3.jpg', 1, 1),
-    ('2012-06-09 07:30:00', 'Cup of tea with @francisco.campos03', 'images/post-4.jpg', 1, 2),
-    ('2021-05-01 15:00:00', 'Tokyo', 'images/post-5.jpg', 2, 3),
-    ('2023-08-01 10:00:00', 'Lisboa', 'images/post-6.jpg', 2, 2),
-    ('2017-11-24 12:02:50', 'Freedom!!!', 'images/post-7.jpg', 3, 3),
-    ('2015-03-31 16:12:11', 'hola to @lupin', 'images/post-8.jpg', 3, 3),
-    ('2020-05-06 12:04:34', 'WOW', 'images/post-9.jpg', 4, 4);
+    ('2023-05-01 09:00:00', 'Pyramids of Giza with @antonio.romao03', 'images/post/post-1.jpg', 1, 1),
+    ('2019-08-21 12:00:00', 'Invicta', 'images/post/post-2.jpg', 1, 2),
+    ('2018-04-07 14:00:00', 'Gladiators!', 'images/post/post-3.jpg', 1, 1),
+    ('2012-06-09 07:30:00', 'Cup of tea with @francisco.campos03', 'images/post/post-4.jpg', 1, 2),
+    ('2021-05-01 15:00:00', 'Tokyo', 'images/post/post-5.jpg', 2, 3),
+    ('2023-08-01 10:00:00', 'Lisboa', 'images/post/post-6.jpg', 2, 2),
+    ('2017-11-24 12:02:50', 'Freedom!!!', 'images/post/post-7.jpg', 3, 3),
+    ('2015-03-31 16:12:11', 'hola to @lupin', 'images/post/post-8.jpg', 3, 3),
+    ('2020-05-06 12:04:34', 'WOW', 'images/post/post-9.jpg', 4, 4);
 
 INSERT INTO like_post (user_id, post_id)
 VALUES

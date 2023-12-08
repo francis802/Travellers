@@ -44,8 +44,8 @@ class PostController extends Controller
             $post->media = null;
         }
         else {
-            ImageController::create($post->id, $request);
-            $post->media = "images/post-".$post->id.".".pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION);
+            ImageController::create($post->id, $request, "post");
+            $post->media = "images/post/post-".$post->id.".".pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION);
         }
         $post->save();
         return redirect('post/'.$post->id)->with('success', 'Post successfully created');
@@ -87,17 +87,17 @@ class PostController extends Controller
         $post->update();
         if (!isset($contentFound) && $_FILES["image"]["error"]) {
             if($post->media !== null) {
-                ImageController::delete($post->id);
+                ImageController::delete($post->id, "post");
             }
             $post->media = null;
         }
         else {
             if($post->media === null) {
-                ImageController::create($post->id, $request);
-                $post->media = "images/post-".$post->id.".".pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION);
+                ImageController::create($post->id, $request, "post");
+                $post->media = "images/post/post-".$post->id.".".pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION);
             }
             else{
-                ImageController::update($post->id, $request);
+                ImageController::update($post->id, $request, "post");
             }
         }
         $post->update();
@@ -112,7 +112,7 @@ class PostController extends Controller
         $post = Post::find($postId);
         $this->authorize('delete', $post);
         
-        ImageController::delete($post->id);
+        ImageController::delete($post->id, "post");
         $post->delete();
         if(url()->previous() == url().'post/'.$post->id) {
             return redirect('home/')->with('success', 'Post successfully deleted');

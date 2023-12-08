@@ -89,8 +89,8 @@ class UserController extends Controller
                 $user->profile_photo = null;
             }
             else {
-                ImageController::createUser($user->id, $request);
-                $user->profile_photo = "images/user-".$user->id.".".pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION);
+                ImageController::create($user->id, $request, "pfp");
+                $user->profile_photo = "images/pfp/pfp-".$user->id.".".pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION);
             }
 
             $user->save();
