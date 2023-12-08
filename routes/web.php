@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;   
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\NotificationController;
 
 
 /*
@@ -51,6 +52,8 @@ Route::get('user/{id}/groups', [UserController::class, 'listGroups']);
 Route::post('user/edit', [UserController::class, 'update']);
 Route::get('user/{id}', [UserController::class, 'show'])->name('users');
 
+// Notifications
+Route::get('/notifications', [NotificationController::class, 'show']);
 
 // Post
 Route::get('post/create', [PostController::class, 'create']);
@@ -70,6 +73,8 @@ Route::get('api/user', [SearchController::class, 'show']);
 Route::get('api/userVerify', [UserController::class, 'userVerify']);
 Route::put('api/user/{id}/follow', [UserController::class, 'followUser']);
 Route::delete('api/user/{id}/unfollow', [UserController::class, 'unfollowUser']);
+Route::put('api/user/{id}/accept', [UserController::class, 'acceptUser']);
+Route::delete('api/user/{id}/decline', [UserController::class, 'declineUser']);
 
 Route::post('api/post/{id}/like', [PostController::class, 'like_post']);
 Route::delete('api/post/{id}/dislike', [PostController::class, 'dislike_post']);

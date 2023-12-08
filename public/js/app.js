@@ -46,7 +46,7 @@ function addEventListeners() {
     [].forEach.call(postButtonShower, function(postComment) {
       postComment.addEventListener('input', postButtonVisibility);
     });
-}
+  }
 
   let followUser = document.querySelectorAll('.request-follow');
   [].forEach.call(followUser, function(follow) {
@@ -58,6 +58,15 @@ function addEventListeners() {
   unfollow.addEventListener('click', sendUnfollowRequest);
   });
 
+  let acceptUser = document.querySelectorAll('.accept-request');
+  [].forEach.call(acceptUser, function(accept){
+  accept.addEventListener('click', sendAcceptRequest);
+  });
+
+  let declineUser = document.querySelectorAll('.decline-request');
+  [].forEach.call(declineUser, function(decline){
+  decline.addEventListener('click', sendDeclineRequest);
+  });
 }
   
   function postButtonVisibility() {
@@ -387,6 +396,34 @@ function addEventListeners() {
 
       new_count.textContent = new_followers + ' Followers';
     }
+  }
+
+  function sendAcceptRequest() {
+    let id = this.closest('.accept-request').getAttribute('data-id');
+    sendAjaxRequest('put', '/api/user/' + id + '/accept', null, acceptRequestHandler);
+  }
+
+  function acceptRequestHandler() {
+    if (this.status != 200) window.location = '/';
+    let resp = JSON.parse(this.responseText);
+    let element = document.querySelector('#follow-request-id-' + resp.user.id);
+
+    element.style.display = 'none';
+    element.remove();
+  }
+
+  function sendDeclineRequest() {
+    let id = this.closest('.decline-request').getAttribute('data-id');
+    sendAjaxRequest('delete', '/api/user/' + id + '/decline', null, declineRequestHandler);
+  }
+
+  function declineRequestHandler() {
+    if (this.status != 200) window.location = '/';
+    let resp = JSON.parse(this.responseText);
+    let element = document.querySelector('#follow-request-id-' + resp.user.id);
+
+    element.style.display = 'none';
+    element.remove();
   }
 
 addEventListeners();

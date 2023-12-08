@@ -7,7 +7,7 @@
             </li>
             @endif
             <li><a href="{{url('/home/')}}" class="side-bar-link">Feed</a></li>
-            <li><a href="#" class="side-bar-link">Notifications</a></li>
+            <li><a href="{{url('/notifications/')}}" class="side-bar-link">Notifications</a></li>
             <li><a href="#" class="side-bar-link">Help</a></li>
             <li><a href="#" class="side-bar-link">About Us</a></li>
             <li><a href="#" class="side-bar-link">Main Features</a></li>

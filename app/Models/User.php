@@ -103,4 +103,10 @@ class User extends Authenticatable
                         ->where('comment_id', $comment_id)->exists();
     }
 
+    public function followRequestUsers() {
+        return User::select('users.*')
+                ->join('requests', 'requests.user1_id', '=', 'users.id')
+                ->where('requests.user2_id', $this->id);
+    }
+
 }

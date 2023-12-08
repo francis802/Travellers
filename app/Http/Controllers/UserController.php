@@ -153,4 +153,31 @@ class UserController extends Controller
 
         return response()->json(['user' => $user, 'followers' => count($followers)]);
     }
+
+    public function acceptUser(int $id) 
+    {
+        $user = User::find($id);
+
+        DB::table('follows')
+        ->insert(['user1_id' => $id, 'user2_id' => Auth::user()->id]);
+
+        DB::table('requests')
+        ->where('user1_id', '=', $id)
+        ->where('user2_id', '=', Auth::user()->id)
+        ->delete();
+
+        return response()->json(['user' => $user]);
+    }
+
+    public function declineUser(int $id) 
+    {
+        $user = User::find($id);
+
+        DB::table('requests')
+        ->where('user1_id', '=', $id)
+        ->where('user2_id', '=', Auth::user()->id)
+        ->delete();
+
+        return response()->json(['user' => $user]);
+    }
 }

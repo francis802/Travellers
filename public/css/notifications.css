@@ -1,0 +1,13 @@
+follow-request {
+    display: flex;
+    align-items: center;
+}
+
+.request-buttons {
+    margin-left: auto;
+}
+
+.accept-request,
+.decline-request {
+    margin-left: 10px;
+}
