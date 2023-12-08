@@ -15,10 +15,9 @@
             <h3 id="user-name">{{$user->name }}</h3>
             <h4 id="user-username">&#64;{{$user->username }} | {{$user->country }}</h4>
             <section id="user-infos">
-                <p class="infos-with-margin"><a href="{{ url('/user/'.$user->id.'/groups') }}">{{ count($groups) }}
-                        Groups</a></p>
-                <p class="infos-with-margin followers"> {{ count($followers) }} Followers </p>
-                <p>{{ count($following) }} Following</p>
+                <p class="infos-with-margin groups"><a href="{{ url('/user/'.$user->id.'/groups') }}">{{ count($groups) }} Groups</a></p>
+                <p class="infos-with-margin followers"><a href="{{ url('/user/'.$user->id.'/followers') }}"> {{ count($followers) }} Followers</a></p>
+                <p class="infos-with-margin following"><a href="{{ url('/user/'.$user->id.'/following') }}"> {{ count($following) }} Following</a></p>
             </section>
         </section>
         <section id="profile-buttons-area">

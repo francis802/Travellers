@@ -49,6 +49,8 @@ Route::get('/home', [HomeController::class, 'show'])->name('home');
 // User
 Route::get('user/edit', [UserController::class, 'edit']);
 Route::get('user/{id}/groups', [UserController::class, 'listGroups']);
+Route::get('user/{id}/followers', [UserController::class, 'followers']);
+Route::get('user/{id}/following', [UserController::class, 'following']);
 Route::post('user/edit', [UserController::class, 'update']);
 Route::get('user/{id}', [UserController::class, 'show'])->name('users');
 
@@ -75,6 +77,7 @@ Route::put('api/user/{id}/follow', [UserController::class, 'followUser']);
 Route::delete('api/user/{id}/unfollow', [UserController::class, 'unfollowUser']);
 Route::put('api/user/{id}/accept', [UserController::class, 'acceptUser']);
 Route::delete('api/user/{id}/decline', [UserController::class, 'declineUser']);
+Route::delete('api/user/{id}/remove', [UserController::class, 'removeFollower']);
 
 Route::post('api/post/{id}/like', [PostController::class, 'like_post']);
 Route::delete('api/post/{id}/dislike', [PostController::class, 'dislike_post']);

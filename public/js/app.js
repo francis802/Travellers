@@ -67,6 +67,11 @@ function addEventListeners() {
   [].forEach.call(declineUser, function(decline){
   decline.addEventListener('click', sendDeclineRequest);
   });
+
+  let removeFollower = document.querySelectorAll('.remove-follower');
+  [].forEach.call(removeFollower, function(remove){
+    remove.addEventListener('click', sendRemoveFollowerRequest);
+  });
 }
   
   function postButtonVisibility() {
@@ -391,7 +396,6 @@ function addEventListeners() {
       let new_count = document.querySelector('p.infos-with-margin.followers');
 
       let followers = new_count.textContent;
-      console.log(followers);
       let new_followers = parseInt(followers) - 1;
 
       new_count.textContent = new_followers + ' Followers';
@@ -424,6 +428,26 @@ function addEventListeners() {
 
     element.style.display = 'none';
     element.remove();
+  }
+
+  function sendRemoveFollowerRequest() {
+    let id = this.closest('.remove-follower').getAttribute('data-id');
+    sendAjaxRequest('delete', '/api/user/' + id + '/remove', null, removeFollowerRequestHandler);
+  }
+
+  function removeFollowerRequestHandler() {
+    if (this.status != 200) window.location = '/';
+    let resp = JSON.parse(this.responseText);
+    let element = document.querySelector('#user-bar-id-' + resp.user.id);
+
+    element.style.display = 'none';
+    element.remove();
+
+    let new_count = document.querySelector('h2');
+
+    let new_followers = resp.followers - 1;
+
+    new_count.textContent = 'Followers (' + new_followers + ')';
   }
 
 addEventListeners();

@@ -189,4 +189,31 @@ class UserController extends Controller
 
         return response()->json(['user' => $user]);
     }
+
+    public function followers(int $id)
+    {
+        $user = User::find($id);
+        $followers = $user->getFollowers()->get();
+        return view('pages.followers', ['followers' => $followers, 'user' => $user]);
+    }
+
+    public function following(int $id)
+    {
+        $user = User::find($id);
+        $following = $user->getFollowing()->get();
+        return view('pages.following', ['following' => $following, 'user' => $user]);
+    }
+
+    public function removeFollower(int $id)
+    {
+        $user = User::find($id);
+        $followers = Auth::user()->getFollowers()->get();
+
+        DB::table('follows')
+        ->where('user1_id', '=', $id)
+        ->where('user2_id', '=', Auth::user()->id)
+        ->delete();
+
+        return response()->json(['user' => $user, 'followers' => count($followers)]);
+    }
 }
