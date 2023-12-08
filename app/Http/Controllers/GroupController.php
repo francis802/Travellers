@@ -33,8 +33,8 @@ class GroupController extends Controller
             $group->banner_pic = null;
         }
         else {
-            ImageController::create($group->id, $request);
-            $group->banner_pic = "images/group-".$group->id.".".pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION);
+            ImageController::create($group->id, $request, "group");
+            $group->banner_pic = "images/group/group-".$group->id.".".pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION);
         }
 
         $group->save();
@@ -84,17 +84,17 @@ class GroupController extends Controller
         $group->update();
         if (!isset($contentFound) && $_FILES["image"]["error"]) {
             if($group->banner_pic !== null) {
-                ImageController::delete($group->id);
+                ImageController::delete($group->id, 'groups');
             }
             $group->banner_pic = null;
         }
         else {
             if($group->banner_pic === null) {
-                ImageController::create($group->id, $request);
-                $post->media = "images/group-".$group->id.".".pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION);
+                ImageController::create($group->id, $request, "group");
+                $group->banner_pic = "images/group/group-".$group->id.".".pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION);
             }
             else{
-                ImageController::update($group->id, $request);
+                ImageController::update($group->id, $request, "group");
             }
         }
         $group->update();

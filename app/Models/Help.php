@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Help extends Model
 {
     use HasFactory;
+
+    public $timestamps  = false;
+
+    protected $table = 'common_help';
+
+    protected $fillable = ['title', 'description', 'date'];
 }
