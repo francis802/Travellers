@@ -40,9 +40,22 @@ function addEventListeners() {
   });
 
   let postComment = document.querySelector('textarea#comment');
-  postComment.addEventListener('input', postButtonVisibility);
-  [].forEach.call(postButtonShower, function(postComment) {
+  if (postComment != null) {
     postComment.addEventListener('input', postButtonVisibility);
+    
+    [].forEach.call(postButtonShower, function(postComment) {
+      postComment.addEventListener('input', postButtonVisibility);
+    });
+}
+
+  let followUser = document.querySelectorAll('.request-follow');
+  [].forEach.call(followUser, function(follow) {
+  follow.addEventListener('click', sendFollowRequest);
+  });
+
+  let unfollowUser = document.querySelectorAll('.unfollow-user');
+  [].forEach.call(unfollowUser, function(unfollow) {
+  unfollow.addEventListener('click', sendUnfollowRequest);
   });
 
 }
@@ -317,5 +330,63 @@ function addEventListeners() {
     return new_comment;
   }
 
+  function sendFollowRequest(event) {
+    let id = this.closest('.request-follow').getAttribute('data-id');
+    sendAjaxRequest('put', '/api/user/' + id + '/follow', null, followRequestHandler);
+
+    event.preventDefault();
+  }
+
+  function followRequestHandler() {
+    if (this.status != 200) window.location = '/';
+    let resp = JSON.parse(this.responseText);
+    let element = document.querySelector('.request-follow[data-id="' + resp.user.id + '"]');
+
+    element.removeEventListener('click', sendFollowRequest);
+    element.addEventListener('click', sendUnfollowRequest);
+
+    element.className = 'unfollow-user';
+
+
+
+    if (resp.user.profile_private) 
+    element.innerHTML = 'Requested'
+    else {
+      element.innerHTML = 'Unfollow'  
+      let new_count = document.querySelector('p.infos-with-margin.followers');
+
+      let followers = new_count.textContent;
+      let new_followers = parseInt(followers) + 1;
+
+      new_count.textContent = new_followers + ' Followers';
+    }
+  }
+
+  function sendUnfollowRequest() {
+    let id = this.closest('.unfollow-user').getAttribute('data-id');
+    sendAjaxRequest('delete', '/api/user/' + id + '/unfollow', null, unfollowRequestHandler);
+  }
+
+  function unfollowRequestHandler() {
+    if (this.status != 200) window.location = '/';
+    let resp = JSON.parse(this.responseText);
+    let element = document.querySelector('.unfollow-user[data-id="' + resp.user.id + '"]');
+
+    element.removeEventListener('click', sendUnfollowRequest);
+    element.addEventListener('click', sendFollowRequest);
+    element.className = 'request-follow';
+
+    element.innerHTML = 'Follow'
+
+    if (!resp.user.profile_private) {
+      let new_count = document.querySelector('p.infos-with-margin.followers');
+
+      let followers = new_count.textContent;
+      console.log(followers);
+      let new_followers = parseInt(followers) - 1;
+
+      new_count.textContent = new_followers + ' Followers';
+    }
+  }
 
 addEventListeners();
