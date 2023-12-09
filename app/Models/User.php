@@ -39,6 +39,10 @@ class User extends Authenticatable
         return count($this->hasOne('App\Models\Admin', 'user_id')->get());
     }
 
+    public function isBanned() {
+        return count($this->hasOne('App\Models\Banned', 'user_id')->get());
+    }
+
     public function getFollowing() {
         return $this->belongsToMany(User::class, 'follows', 'user1_id', 'user2_id')->orderBy('name', 'asc');
     }
