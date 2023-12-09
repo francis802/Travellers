@@ -17,6 +17,7 @@
                 @include('partials.countryButton', ['group' => $group])
             @endif
         @endforeach
+        <br><br><br>
       </div>
     </div>
   </div>
@@ -33,11 +34,12 @@
       </div>
       <div class="modal-body">
         @foreach($group->subgroups()->get() as $subgroup)
-            @include('partials.subgroupButton', ['subgroup' => $subgroup])
+            @include('partials.countryButton', ['group' => $subgroup])
         @endforeach
+        <br><br><br>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-primary" data-bs-target="#exampleModal" data-bs-toggle="modal">Back to first</button>
+        <button class="btn btn-primary" data-bs-target="#allCountries" data-bs-toggle="modal">Back to first</button>
       </div>
     </div>
   </div>

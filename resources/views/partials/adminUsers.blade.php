@@ -42,7 +42,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        @include('partials.groupsMembership', ['groups' => $groups])
+                                        @include('partials.groupsMembership', ['groups' => $groups, 'user' => $user])
                                     </td>
                                     <td>
                                         @include('partials.deleteAccount')
