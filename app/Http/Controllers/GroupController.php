@@ -13,13 +13,11 @@ use App\Models\Member;
 class GroupController extends Controller
 {
 
-    public function create()
-    {
+    public function create(){
         return view('pages.createGroup');
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $group = new Group();
         $group->description = $request->text;
         $group->save();
@@ -51,8 +49,7 @@ class GroupController extends Controller
 
     }
 
-    public function show(int $id)
-    {
+    public function show(int $id){
         $group = Group::findOrFail($id);
         if(is_null($group)){
             return redirect()->back();
@@ -65,19 +62,14 @@ class GroupController extends Controller
         return view('pages.group', ['group' => $group, 'posts' => $posts, 'subgroups' => $subgroups, 'members' => $members]); 
     }
     
-    public function edit(int $groupId)
-    {
+    public function edit(int $groupId){
         $group = Group::findOrFail($groupId);
         return view('pages.editGroup', [
             'group' => $group,
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, int $groupId)
-    {
+    public function update(Request $request, int $groupId){
         $group = Group::findOrFail($groupId);
         /*$this->authorize('update', $group);*/
         $group->description = $request->text;
@@ -101,33 +93,38 @@ class GroupController extends Controller
         return redirect('group/'.$group->id)->with('success', 'Group successfully edited');
     }
 
-    public function listMembers(int $id)
-    {
+    public function listMembers(int $id){
         $group = Group::findOrFail($id);
         $members = $group->members()->get();
         return view('pages.listMembers', ['members' => $members]);
     }
 
-    public function join(Request $request) {
-        
-        $this->authorize('join', Group::class);
-        $group = Group::find($request->group_id);
+    public function join(int $group_id) {
+        $group = Group::find($group_id);
 
         Member::insert([
             'user_id' => Auth::user()->id,
             'group_id' => $group->id,
         ]);
-    }
-    public function leave(Request $request) {
 
-        $this->authorize('leave', Group::class);
-        $group = Group::find($request->group_id);
+        $members = $group->members()->get();
+        return response()->json(['group' => $group, 'members' => $members]);
+    }
+
+    public function leave(int $group_id) {
+        $group = Group::find($group_id);
+        
 
         Member::where('group_id', $group->id)
               ->where('user_id', Auth::user()->id)->delete();
         
+         DB::table('group_notification')
+            ->where('user1_id', '=', Auth::user()->id)
+            ->where('user2_id', '=', $id)
+            ->delete();
+
+        $members = $group->members()->get();
+        return response()->json(['group' => $group, 'members' => $members]);
+        
     }
-
-
-    
-}
+} 

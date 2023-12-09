@@ -72,6 +72,16 @@ function addEventListeners() {
   [].forEach.call(removeFollower, function(remove){
     remove.addEventListener('click', sendRemoveFollowerRequest);
   });
+
+  let joinGroup = document.querySelectorAll('.join-group');
+  [].forEach.call(joinGroup, function(join) {
+  join.addEventListener('click', joinGroupRequest);
+  });
+
+  let leaveGroup = document.querySelectorAll('.leave-group');
+  [].forEach.call(leaveGroup, function(leave) {
+  leave.addEventListener('click', leaveGroupRequest);
+  });
 }
   
   function postButtonVisibility() {
@@ -344,6 +354,61 @@ function addEventListeners() {
     return new_comment;
   }
 
+  function joinGroupRequest(event) {
+    let id = this.closest('.join-group').getAttribute('data-id');
+    sendAjaxRequest('put', '/api/group/' + id + '/join', null, joinRequestHandler);
+
+    event.preventDefault();
+  }
+
+  function joinRequestHandler(event) {
+    if (this.status != 200) window.location = '/';
+    let resp = JSON.parse(this.responseText);
+    let element = document.querySelector('.join-group[data-id="' + resp.group.id + '"]');
+
+    element.removeEventListener('click', joinGroupRequest);
+    element.className = 'leave-group';
+
+    element.innerHTML = 'Leave'
+
+    let new_members = document.querySelector('p.infos-with-margin.members a');
+    let members = new_members.textContent;
+    let new_members_count = parseInt(members) + 1;
+
+    new_members.textContent = new_members_count + ' Members';
+
+    element.addEventListener('click', leaveGroupRequest);
+  }
+
+  function leaveGroupRequest(event) {
+    let id = this.closest('.leave-group').getAttribute('data-id');
+    sendAjaxRequest('delete', '/api/group/' + id + '/leave', null, leaveRequestHandler);
+
+    event.preventDefault();
+  }
+
+  function leaveRequestHandler(event) {
+    if (this.status != 200) window.location = '/';
+    console.log(this.responseText);
+    let resp = JSON.parse(this.responseText);
+    let element = document.querySelector('.leave-group[data-id="' + resp.group.id + '"]');
+
+    element.removeEventListener('click', leaveGroupRequest);
+    element.className = 'join-group';
+
+    element.innerHTML = 'Join'
+
+    let new_members = document.querySelector('p.infos-with-margin.members a');
+    let members = new_members.textContent;
+    let new_members_count = parseInt(members) - 1;
+
+    new_members.textContent = new_members_count + ' Members';
+
+    element.addEventListener('click', joinGroupRequest);
+  }
+
+  
+
   function sendFollowRequest(event) {
     let id = this.closest('.request-follow').getAttribute('data-id');
     sendAjaxRequest('put', '/api/user/' + id + '/follow', null, followRequestHandler);
@@ -361,13 +426,11 @@ function addEventListeners() {
 
     element.className = 'unfollow-user';
 
-
-
     if (resp.user.profile_private) 
     element.innerHTML = 'Requested'
     else {
       element.innerHTML = 'Unfollow'  
-      let new_count = document.querySelector('p.infos-with-margin.followers');
+      let new_count = document.querySelector('p.infos-with-margin.followers a');
 
       let followers = new_count.textContent;
       let new_followers = parseInt(followers) + 1;
@@ -393,7 +456,7 @@ function addEventListeners() {
     element.innerHTML = 'Follow'
 
     if (!resp.user.profile_private) {
-      let new_count = document.querySelector('p.infos-with-margin.followers');
+      let new_count = document.querySelector('p.infos-with-margin.followers a');
 
       let followers = new_count.textContent;
       let new_followers = parseInt(followers) - 1;

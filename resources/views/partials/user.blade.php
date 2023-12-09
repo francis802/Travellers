@@ -28,11 +28,11 @@
             @if (Auth::check() && Auth::user()->id == $user->id)
             <a class="button" href="{{ url('/logout') }}"> Logout </a>
             @elseif (Auth::check() && Auth::user()->follows($user->id))
-            <button class="unfollow-user" data-id="{{$user->id}}"> Unfollow </button>
+            <button class="unfollow-user button" data-id="{{$user->id}}"> Unfollow </button>
             @elseif (Auth::check() && Auth::user()->requestFollowing($user->id))
-            <button class="unfollow-user" data-id="{{$user->id}}"> Requested </button>
+            <button class="unfollow-user button" data-id="{{$user->id}}"> Requested </button>
             @else
-            <button class="request-follow" data-id="{{$user->id}}"> Follow </button>
+            <button class="request-follow button" data-id="{{$user->id}}"> Follow </button>
             @endif
         </section>
     </section>

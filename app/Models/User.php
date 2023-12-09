@@ -113,4 +113,11 @@ class User extends Authenticatable
                 ->where('requests.user2_id', $this->id);
     }
 
+    public function isMember($group_id) {
+        return Member::where('user_id', $this->id)
+                    ->where('group_id', $group_id)->exists();
+    }
+
+    
+
 }

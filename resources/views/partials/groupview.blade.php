@@ -15,13 +15,20 @@
                     <h3 id="user-name">{{ $group->country->name }}</h3>
                     <section id="user-infos">
                         <p class="infos-with-margin">{{ $group->description }}</p>
-                        <p class="infos-with-margin"><a href="">{{ count($subgroups) }} Subgroups</a></p>
-                        <p class="infos-with-margin"><a href="{{ url('/group/'.$group->id.'/members') }}">{{ count($members) }} Members</a></p>
+                        <p class="infos-with-margin subgroups"><a href="">{{ count($subgroups) }} Subgroups</a></p>
+                        <p class="infos-with-margin members"><a href="{{ url('/group/'.$group->id.'/members') }}">{{ count($members) }} Members</a></p>
                     </section>
                 </section>
                 <section id="profile-buttons-area">
+                        @if(Auth::user()->isAdmin())
                         <a class="button" href="{{ url('/group/'.$group->id.'/edit') }}"> Edit </a>
-                        <a class="button" href=""> Follow </a>
+                        @endif
+                        @if (Auth::check() && Auth::user()->isMember($group->id))
+                        <button class="leave-group button" data-id="{{$group->id}}"> Leave </button>
+                        @else
+                        <button class="join-group button" data-id="{{$group->id}}"> Join </button>
+                        @endif
+                        
                 </section>
                 
         </section>
