@@ -90,7 +90,11 @@ Route::delete('api/comment/{id}/dislike', [CommentController::class, 'dislike_co
 
 // Admin
 Route::get('admin', [AdminController::class, 'show']);
-
+Route::get('admin/users', [AdminController::class, 'show_users']);
+Route::get('admin/groups', [AdminController::class, 'show_groups']);
+Route::get('admin/reports', [AdminController::class, 'show_reports']);
+Route::get('admin/helps', [AdminController::class, 'show_helps']);
+Route::get('admin/unban-requests', [AdminController::class, 'show_unban_requests']);
 
 // Group
 Route::get('group/create', [GroupController::class, 'create']);

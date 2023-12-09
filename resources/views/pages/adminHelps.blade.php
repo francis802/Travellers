@@ -1,12 +1,12 @@
 @extends('layouts.app')
 @include('partials.adminbar')
-@include('partials.adminDashboard')
+@include('partials.adminHelps')
 
 
 
 @section('content')
     <section class="inner-content">
     @yield('adminbar')
-    @yield('adminDashboard')
+    @yield('adminHelps')
     </section>
 @endsection
