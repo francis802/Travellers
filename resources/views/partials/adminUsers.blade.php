@@ -2,7 +2,7 @@
     <section id="admin-users">
         <div class="container">
             <div class="row">
-                <div class="col-12">
+                <div class="col-auto table-responsive">
                     <h1>Users</h1>
                     <table class="table table-striped">
                         <thead>
@@ -21,7 +21,7 @@
                                 <tr>
                                     <th scope="row">{{$user->id}}</th>
                                     <td>{{$user->name}}</td>
-                                    <td>{{$user->username}}</td>
+                                    <td>&#64;{{$user->username}}</td>
                                     <td>{{$user->email}}</td>
                                     <td>
                                         <div class="dropdown-center">
@@ -41,7 +41,9 @@
                                         </ul>
                                         </div>
                                     </td>
-                                    <td></td>
+                                    <td>
+                                        @include('partials.groupsMembership', ['groups' => $groups])
+                                    </td>
                                     <td>
                                         @include('partials.deleteAccount')
                                     </td>

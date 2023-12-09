@@ -20,7 +20,8 @@ class AdminController extends Controller
     public function show_users() {
         $this->authorize('show', Admin::class);
         $users = User::all();
-        return view('pages.adminUsers', ['users' => $users]);
+        $groups = Group::all();
+        return view('pages.adminUsers', ['users' => $users, 'groups' => $groups]);
     }
 
     public function show_groups() {
