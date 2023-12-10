@@ -12,8 +12,8 @@
     <span class="visually-hidden">Toggle Dropdown</span>
   </button>
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item {{$user->isOwner($group->id) ? 'active' : ''}}" href="#">Owner</a></li>
-    <li><a class="dropdown-item {{$user->isMember($group->id) && !$user->isOwner($group->id) ? 'active' : ''}}" href="#">Member</a></li>
-    <li><a class="dropdown-item {{$user->isBannedFrom($group->id) ? 'active' : ''}}" href="#">Banned</a></li>
+    <li><a class="dropdown-item group-owner {{$user->isOwner($group->id) ? 'active' : ''}}" href="#" group-id="{{$group->id}}" user-id="{{$user->id}}">Owner</a></li>
+    <li><a class="dropdown-item group-member {{$user->isMember($group->id) && !$user->isOwner($group->id) ? 'active' : ''}}" href="#" group-id="{{$group->id}}" user-id="{{$user->id}}">Member</a></li>
+    <li><a class="dropdown-item group-banned {{$user->isBannedFrom($group->id) ? 'active' : ''}}" href="#" group-id="{{$group->id}}" user-id="{{$user->id}}">Banned</a></li>
   </ul>
 </div>

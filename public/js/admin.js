@@ -13,6 +13,11 @@ function addEventListeners() {
   [].forEach.call(userBannedSetters, function(bannedSetter) {
     bannedSetter.addEventListener('click', sendBannedMembershipRequest);
   });
+
+  let groupOwnerSetters = document.querySelectorAll('.group-owner');
+    [].forEach.call(groupOwnerSetters, function(ownerSetter) {
+        ownerSetter.addEventListener('click', sendGroupOwnerRequest);
+    });
 }
 
 function encodeForAjax(data) {
@@ -104,6 +109,14 @@ function bannedMembershipHandler() {
     }
     let button = document.querySelector('.membership-btn-' + resp.user.id);
     button.textContent = 'Banned';
+}
+
+function sendGroupOwnerRequest() {
+    let group_id = this.closest('.group-owner').getAttribute('group-id');
+    let user_id = this.closest('.group-owner').getAttribute('user-id');
+    if (this.closest('.group-owner.active') == null) {
+        sendAjaxRequest('post', '/api/admin/group/' + group_id + '/owner/' + user_id, null, groupOwnerHandler);
+    }
 }
 
 addEventListeners();
