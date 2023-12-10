@@ -82,7 +82,10 @@ class AdminController extends Controller
         if($role == 'admin'){
             Admin::where('user_id', $id)->delete();
         }
-        Banned::create(['user_id' => $id, 'ban_date' => date('Y-m-d H:i:s')]);
+        $banned = new Banned();
+        $banned->user_id = $id;
+        $banned->ban_date = now();
+        $banned->save();
         
         return response()->json(['user' => $user, 'role' => $role]);
     }

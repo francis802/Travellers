@@ -245,7 +245,7 @@ CREATE TABLE group_invitation (
 CREATE TABLE report_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    notified_id INT REFERENCES admin(user_id) NOT NULL,
+    notified_id INT REFERENCES admin(user_id) ON DELETE CASCADE,
     report_id INT REFERENCES report(id) NOT NULL,
     opened BOOLEAN DEFAULT false
 );
@@ -253,7 +253,7 @@ CREATE TABLE report_notification (
 CREATE TABLE common_help_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    notified_id INT REFERENCES admin(user_id) NOT NULL,
+    notified_id INT REFERENCES admin(user_id) ON DELETE CASCADE,
     common_help_id INT REFERENCES common_help(id) NOT NULL,
     opened BOOLEAN DEFAULT false
 );
@@ -261,7 +261,7 @@ CREATE TABLE common_help_notification (
 CREATE TABLE appeal_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    notified_id INT REFERENCES admin(user_id) NOT NULL,
+    notified_id INT REFERENCES admin(user_id) ON DELETE CASCADE,
     unban_request_id INT REFERENCES unban_request(id) NOT NULL,
     opened BOOLEAN DEFAULT false
 );
@@ -269,7 +269,7 @@ CREATE TABLE appeal_notification (
 CREATE TABLE group_creation_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
-    notified_id INT REFERENCES admin(user_id) NOT NULL,
+    notified_id INT REFERENCES admin(user_id) ON DELETE CASCADE,
     group_id INT REFERENCES groups(id) ON DELETE CASCADE,
     opened BOOLEAN DEFAULT false
 );
@@ -913,10 +913,10 @@ VALUES
     ('You can change your password by clicking on the "Change Password" button on the top right corner of the page.', 'How can I change my password?', '2021-05-01 12:00:00', 2);
     
 
-INSERT INTO report (description, evaluater_id, reporter_id, infractor_id, date)
+INSERT INTO report (title, description, evaluater_id, reporter_id, infractor_id, date)
 VALUES
-    ('He doesnt stop spamming my posts with mean comments!', 1, 4, 6, CURRENT_DATE),
-    ('He stinks and hes a bad person', 1, 6, 4, CURRENT_DATE);
+    ('Ban him now', 'He doesnt stop spamming my posts with mean comments!', 1, 4, 6, CURRENT_DATE),
+    ('I hate him,', 'He stinks and hes a bad person', 1, 6, 4, CURRENT_DATE);
 
 INSERT INTO requests (user1_id, user2_id)
 VALUES

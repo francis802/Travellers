@@ -15,6 +15,8 @@ class Banned extends Model
 
     protected $fillable = ['ban_date'];
 
+    protected $primaryKey = 'user_id';
+
     protected $casts = [
         'ban_date' => 'datetime',
     ];

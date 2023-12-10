@@ -24,7 +24,6 @@ function encodeForAjax(data) {
 
 function sendAjaxRequest(method, url, data, handler) {
     let request = new XMLHttpRequest();
-    console.log(method, url, data, handler);
     request.open(method, url, true);
     request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
