@@ -25,7 +25,7 @@
                                     <td>{{$user->email}}</td>
                                     <td>
                                         <div class="dropdown-center">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+                                        <button class="btn btn-secondary dropdown-toggle membership-btn-{{$user->id}}" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
                                             @if($user->isAdmin())
                                                 Admin
                                             @elseif($user->isBanned())
@@ -35,9 +35,9 @@
                                             @endif
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#">Admin</a></li>
-                                            <li><a class="dropdown-item" href="#">User</a></li>
-                                            <li><a class="dropdown-item" href="#">Banned</a></li>
+                                            <li><a class="dropdown-item admin-membership {{$user->isAdmin() ? 'active':''}}" data-id="{{$user->id}}">Admin</a></li>
+                                            <li><a class="dropdown-item user-membership {{(!$user->isAdmin() && !$user->isBanned()) ? 'active':''}}" data-id="{{$user->id}}">User</a></li>
+                                            <li><a class="dropdown-item banned-membership {{$user->isBanned() ? 'active':''}}" data-id="{{$user->id}}">Banned</a></li>
                                         </ul>
                                         </div>
                                     </td>
