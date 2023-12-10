@@ -585,14 +585,14 @@ CREATE FUNCTION group_leave_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO group_notification (time, notified_id, group_id, notification_type)
-    VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_leave');
+    VALUES (CURRENT_DATE, OLD.user_id, OLD.group_id, 'group_leave');
     RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER group_leave_notification
-AFTER DELETE ON members
+BEFORE DELETE ON members
 FOR EACH ROW
 EXECUTE FUNCTION group_leave_notification();
 

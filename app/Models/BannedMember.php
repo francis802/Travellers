@@ -13,6 +13,9 @@ class BannedMember extends Model
 
     public $timestamps  = false;
 
+    protected $primaryKey = null;
+    public $incrementing = false;
+
     protected $table = 'banned_member';
 
 

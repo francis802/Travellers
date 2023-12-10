@@ -13,6 +13,9 @@ class Owner extends Model
 
     public $timestamps  = false;
 
+    protected $primaryKey = null;
+    public $incrementing = false;
+
     protected $table = 'owner';
 
 

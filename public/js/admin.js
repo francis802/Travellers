@@ -18,6 +18,16 @@ function addEventListeners() {
     [].forEach.call(groupOwnerSetters, function(ownerSetter) {
         ownerSetter.addEventListener('click', sendGroupOwnerRequest);
     });
+
+    let groupMemberSetters = document.querySelectorAll('.group-member');
+    [].forEach.call(groupMemberSetters, function(memberSetter) {
+        memberSetter.addEventListener('click', sendGroupMemberRequest);
+    });
+
+    let groupBannedSetters = document.querySelectorAll('.group-banned');
+    [].forEach.call(groupBannedSetters, function(bannedSetter) {
+        bannedSetter.addEventListener('click', sendGroupBannedRequest);
+    });
 }
 
 function encodeForAjax(data) {
@@ -114,8 +124,139 @@ function bannedMembershipHandler() {
 function sendGroupOwnerRequest() {
     let group_id = this.closest('.group-owner').getAttribute('group-id');
     let user_id = this.closest('.group-owner').getAttribute('user-id');
-    if (this.closest('.group-owner.active') == null) {
-        sendAjaxRequest('post', '/api/admin/group/' + group_id + '/owner/' + user_id, null, groupOwnerHandler);
+    sendAjaxRequest('post', '/api/admin/group/' + group_id + '/owner/' + user_id, null, groupOwnerHandler);
+}
+
+function groupOwnerHandler() {
+    console.log(this.responseText);
+    if (this.status != 200) window.location = '/';
+    let resp = JSON.parse(this.responseText);
+    let element = document.querySelector('.group-owner[user-id="' + resp.owner.user_id + '"][group-id="' + resp.owner.group_id + '"]');
+    let colors = document.querySelectorAll('.btn-'+resp.owner.group_id+'-'+resp.owner.user_id);
+    if(resp.role == 'owner'){
+        element.classList.remove('active');
+        [].forEach.call(colors, function(color) {
+            color.classList.remove('btn-info');
+            color.classList.add('btn-secondary');
+          });
+    }
+    else if(resp.role == 'member') {
+        let oldElement = document.querySelector('.group-member[user-id="' + resp.owner.user_id + '"][group-id="' + resp.owner.group_id + '"]');
+        oldElement.classList.remove('active');
+        element.classList.add('active');
+        [].forEach.call(colors, function(color) {
+            color.classList.add('btn-info');
+            color.classList.remove('btn-light');
+          });
+    }
+    else if(resp.role == 'banned') {
+        let oldElement = document.querySelector('.group-banned[user-id="' + resp.owner.user_id + '"][group-id="' + resp.owner.group_id + '"]');
+        oldElement.classList.remove('active');
+        element.classList.add('active');
+        [].forEach.call(colors, function(color) {
+            color.classList.add('btn-info   ')
+            color.classList.remove('btn-dark');
+          });
+    }
+    else if(resp.role == 'none') {
+        element.classList.add('active');
+        [].forEach.call(colors, function(color) {
+            color.classList.add('btn-info');
+            color.classList.remove('btn-secondary');
+          });
+    }
+}
+
+function sendGroupMemberRequest() {
+    let group_id = this.closest('.group-member').getAttribute('group-id');
+    let user_id = this.closest('.group-member').getAttribute('user-id');
+    sendAjaxRequest('post', '/api/admin/group/' + group_id + '/member/' + user_id, null, groupMemberHandler);
+}
+
+function groupMemberHandler() {
+    console.log(this.responseText);
+    if (this.status != 200) window.location = '/';
+    let resp = JSON.parse(this.responseText);
+    let element = document.querySelector('.group-member[user-id="' + resp.member.user_id + '"][group-id="' + resp.member.group_id + '"]');
+    let colors = document.querySelectorAll('.btn-'+resp.member.group_id+'-'+resp.member.user_id);
+    if(resp.role == 'member'){
+        element.classList.remove('active');
+        [].forEach.call(colors, function(color) {
+            color.classList.remove('btn-light');
+            color.classList.add('btn-secondary');
+          });
+    }
+    else if(resp.role == 'owner') {
+        let oldElement = document.querySelector('.group-owner[user-id="' + resp.member.user_id + '"][group-id="' + resp.member.group_id + '"]');
+        oldElement.classList.remove('active');
+        element.classList.add('active');
+        [].forEach.call(colors, function(color) {
+            color.classList.add('btn-light');
+            color.classList.remove('btn-info');
+          });
+    }
+    else if(resp.role == 'banned') {
+        let oldElement = document.querySelector('.group-banned[user-id="' + resp.member.user_id + '"][group-id="' + resp.member.group_id + '"]');
+        oldElement.classList.remove('active');
+        element.classList.add('active');
+        [].forEach.call(colors, function(color) {
+            color.classList.add('btn-light');
+            color.classList.remove('btn-dark');
+          });
+    }
+    else if(resp.role == 'none') {
+        element.classList.add('active');
+        [].forEach.call(colors, function(color) {
+            color.classList.add('btn-light');
+            color.classList.remove('btn-secondary');
+          });
+    }
+}
+
+function sendGroupBannedRequest() {
+    let group_id = this.closest('.group-banned').getAttribute('group-id');
+    let user_id = this.closest('.group-banned').getAttribute('user-id');
+    sendAjaxRequest('post', '/api/admin/group/' + group_id + '/banned/' + user_id, null, groupBannedHandler);
+}
+
+function groupBannedHandler() {
+    console.log(this.responseText);
+    if (this.status != 200) window.location = '/';
+    let resp = JSON.parse(this.responseText);
+    let element = document.querySelector('.group-banned[user-id="' + resp.banned.user_id + '"][group-id="' + resp.banned.group_id + '"]');
+    let colors = document.querySelectorAll('.btn-'+resp.banned.group_id+'-'+resp.banned.user_id);
+    if(resp.role == 'banned'){
+        element.classList.remove('active');
+        [].forEach.call(colors, function(color) {
+            color.classList.remove('btn-dark');
+            color.classList.add('btn-secondary');
+          });
+
+    }
+    else if(resp.role == 'member') {
+        let oldElement = document.querySelector('.group-member[user-id="' + resp.banned.user_id + '"][group-id="' + resp.banned.group_id + '"]');
+        oldElement.classList.remove('active');
+        element.classList.add('active');
+        [].forEach.call(colors, function(color) {
+            color.classList.add('btn-dark');
+            color.classList.remove('btn-light');
+          });
+    }
+    else if(resp.role == 'owner') {
+        let oldElement = document.querySelector('.group-owner[user-id="' + resp.banned.user_id + '"][group-id="' + resp.banned.group_id + '"]');
+        oldElement.classList.remove('active');
+        element.classList.add('active');
+        [].forEach.call(colors, function(color) {
+            color.classList.add('btn-dark');
+            color.classList.remove('btn-info');
+          });
+    }
+    else if(resp.role == 'none') {
+        element.classList.add('active');
+        [].forEach.call(colors, function(color) {
+            color.classList.add('btn-dark');
+            color.classList.remove('btn-secondary');
+          });
     }
 }
 
