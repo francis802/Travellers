@@ -154,7 +154,7 @@ function groupOwnerHandler() {
         oldElement.classList.remove('active');
         element.classList.add('active');
         [].forEach.call(colors, function(color) {
-            color.classList.add('btn-info   ')
+            color.classList.add('btn-info')
             color.classList.remove('btn-dark');
           });
     }
