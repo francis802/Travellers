@@ -16,6 +16,9 @@ use App\Models\FollowRequest;
 use App\Models\Group;
 use App\Models\LikePost;
 use App\Models\LikeComment;
+use App\Models\Member;
+use App\Models\Owner;
+use App\Models\BannedMember;
 
 
 class User extends Authenticatable
@@ -115,6 +118,16 @@ class User extends Authenticatable
 
     public function isMember($group_id) {
         return Member::where('user_id', $this->id)
+                    ->where('group_id', $group_id)->exists();
+    }
+
+    public function isOwner($group_id) {
+        return Owner::where('user_id', $this->id)
+                    ->where('group_id', $group_id)->exists();
+    }
+
+    public function isBannedFrom($group_id) {
+        return BannedMember::where('user_id', $this->id)
                     ->where('group_id', $group_id)->exists();
     }
 
