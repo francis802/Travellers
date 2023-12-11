@@ -20,3 +20,14 @@
 .notifications-container{
     padding: 2em;
 }
+
+.follow-request-container{
+    display: flex;
+   
+    align-items: center;
+}
+
+.request-buttons {
+    display: flex;
+    margin-left: 25em;
+}
