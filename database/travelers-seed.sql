@@ -54,7 +54,7 @@ DROP FUNCTION IF EXISTS follow_request_notification CASCADE;
 DROP FUNCTION IF EXISTS follow_accept_notification CASCADE;
 DROP FUNCTION IF EXISTS group_invite_notification CASCADE;
 DROP FUNCTION IF EXISTS group_join_notification CASCADE;
-DROP FUNCTION IF EXISTS group_leave_notification CASCADE;
+/*DROP FUNCTION IF EXISTS group_leave_notification CASCADE;*/
 DROP FUNCTION IF EXISTS group_ban_notification CASCADE;
 DROP FUNCTION IF EXISTS group_owner_notification CASCADE;
 DROP FUNCTION IF EXISTS new_message_notification CASCADE;
@@ -63,7 +63,7 @@ DROP FUNCTION IF EXISTS like_comment_notification CASCADE;
 DROP FUNCTION IF EXISTS mention_comment_notification CASCADE;
 DROP FUNCTION IF EXISTS like_post_notification CASCADE;
 DROP FUNCTION IF EXISTS mention_description_notification CASCADE;
-DROP FUNCTION IF EXISTS group_creation_notification CASCADE;
+/*DROP FUNCTION IF EXISTS group_creation_notification CASCADE;*/
 DROP FUNCTION IF EXISTS common_help_notification CASCADE;
 DROP FUNCTION IF EXISTS appeal_notification CASCADE;
 DROP FUNCTION IF EXISTS report_notification CASCADE;
@@ -246,6 +246,7 @@ CREATE TABLE report_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES admin(user_id) ON DELETE CASCADE,
+    sender_id INT REFERENCES users(id),
     report_id INT REFERENCES report(id) NOT NULL,
     opened BOOLEAN DEFAULT false
 );
@@ -254,6 +255,7 @@ CREATE TABLE common_help_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES admin(user_id) ON DELETE CASCADE,
+    sender_id INT REFERENCES users(id),
     common_help_id INT REFERENCES common_help(id) NOT NULL,
     opened BOOLEAN DEFAULT false
 );
@@ -262,6 +264,7 @@ CREATE TABLE appeal_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES admin(user_id) ON DELETE CASCADE,
+    sender_id INT REFERENCES users(id),
     unban_request_id INT REFERENCES unban_request(id) NOT NULL,
     opened BOOLEAN DEFAULT false
 );
@@ -270,6 +273,7 @@ CREATE TABLE group_creation_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES admin(user_id) ON DELETE CASCADE,
+    sender_id INT REFERENCES users(id) NOT NULL,
     group_id INT REFERENCES groups(id) ON DELETE CASCADE,
     opened BOOLEAN DEFAULT false
 );
@@ -278,6 +282,7 @@ CREATE TABLE follow_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES users(id) NOT NULL,
+    sender_id INT REFERENCES users(id) NOT NULL,
     notification_type follow_notification_types NOT NULL,
     opened BOOLEAN DEFAULT false
 );
@@ -286,6 +291,7 @@ CREATE TABLE new_message_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES users(id) NOT NULL,
+    sender_id INT REFERENCES users(id) NOT NULL,
     message_id INT REFERENCES message(id) NOT NULL,
     opened BOOLEAN DEFAULT false
 );
@@ -294,6 +300,7 @@ CREATE TABLE comment_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES users(id) NOT NULL,
+    sender_id INT REFERENCES users(id) NOT NULL,
     comment_id INT REFERENCES comments(id) ON DELETE CASCADE,
     notification_type comment_notification_types NOT NULL,
     opened BOOLEAN DEFAULT false
@@ -303,6 +310,7 @@ CREATE TABLE post_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES users(id) NOT NULL,
+    sender_id INT REFERENCES users(id) NOT NULL,
     post_id INT REFERENCES post(id) ON DELETE CASCADE,
     notification_type post_notification_types NOT NULL,
     opened BOOLEAN DEFAULT false
@@ -312,6 +320,7 @@ CREATE TABLE group_notification (
     id SERIAL PRIMARY KEY,
     time DATE NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES users(id) NOT NULL,
+    sender_id INT REFERENCES users(id),
     group_id INT REFERENCES groups(id) ON DELETE CASCADE,
     notification_type group_notification_types NOT NULL,
     opened BOOLEAN DEFAULT false
@@ -520,8 +529,8 @@ CREATE TRIGGER verify_group_invite
 CREATE FUNCTION follow_request_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    INSERT INTO follow_notification (time, notified_id, notification_type)
-    VALUES (CURRENT_DATE, NEW.user2_id, 'follow_request');
+    INSERT INTO follow_notification (time, notified_id, sender_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user2_id, NEW.user1_id, 'follow_request');
     RETURN NEW;
 END
 $BODY$
@@ -536,8 +545,8 @@ EXECUTE FUNCTION follow_request_notification();
 CREATE FUNCTION follow_accept_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    INSERT INTO follow_notification (time, notified_id, notification_type)
-    VALUES (CURRENT_DATE, NEW.user1_id, 'follow_accept');
+    INSERT INTO follow_notification (time, notified_id, sender_id, notification_type)
+    VALUES (CURRENT_DATE, NEW.user1_id, NEW.user2_id, 'follow_accept');
     RETURN NEW;
 END
 $BODY$
@@ -567,9 +576,15 @@ EXECUTE FUNCTION group_invite_notification();
 -- TRIGGER NOTIFICATION 4
 CREATE FUNCTION group_join_notification() RETURNS TRIGGER AS
 $BODY$
+DECLARE
+    owner_id INT;
 BEGIN
-    INSERT INTO group_notification (time, notified_id, group_id, notification_type)
-    VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_join');
+    FOR owner_id IN SELECT user_id FROM owner
+    LOOP
+        INSERT INTO group_notification (time, notified_id, sender_id, group_id, notification_type)
+        VALUES (CURRENT_DATE, owner_id, NEW.user_id, NEW.group_id, 'group_join');
+    END LOOP;
+
     RETURN NEW;
 END
 $BODY$
@@ -634,8 +649,8 @@ EXECUTE FUNCTION group_owner_notification();
 CREATE FUNCTION new_message_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    INSERT INTO new_message_notification (time, notified_id, message_id)
-    VALUES (CURRENT_DATE, NEW.receiver_id, NEW.id);
+    INSERT INTO new_message_notification (time, notified_id, sender_id, message_id)
+    VALUES (CURRENT_DATE, NEW.receiver_id, NEW.sender_id, NEW.id);
     RETURN NEW;
 END
 $BODY$
@@ -649,9 +664,12 @@ EXECUTE FUNCTION new_message_notification();
 -- TRIGGER NOTIFICATION 9
 CREATE FUNCTION new_comment_notification() RETURNS TRIGGER AS
 $BODY$
+DECLARE
+    post_author INT;
 BEGIN
-    INSERT INTO comment_notification (time, notified_id, comment_id, notification_type)
-    VALUES (CURRENT_DATE, NEW.author_id, NEW.id, 'new_comment');
+    SELECT post.author_id INTO post_author FROM post, comments WHERE comments.post_id = post.id AND comments.id = NEW.id;
+    INSERT INTO comment_notification (time, notified_id, sender_id, comment_id, notification_type)
+    VALUES (CURRENT_DATE, post_author, NEW.author_id, NEW.id, 'new_comment');
     RETURN NEW;
 END
 $BODY$
@@ -665,9 +683,12 @@ EXECUTE FUNCTION new_comment_notification();
 -- TRIGGER NOTIFICATION 10
 CREATE FUNCTION like_comment_notification() RETURNS TRIGGER AS
 $BODY$
+DECLARE
+    comment_author INT;
 BEGIN
-    INSERT INTO comment_notification (time, notified_id, comment_id, notification_type)
-    VALUES (CURRENT_DATE, NEW.user_id, NEW.comment_id, 'liked_comment');
+    SELECT comments.author_id INTO comment_author FROM comments WHERE comments.id = NEW.comment_id;
+    INSERT INTO comment_notification (time, notified_id, sender_id, comment_id, notification_type)
+    VALUES (CURRENT_DATE, comment_author, NEW.user_id, NEW.comment_id, 'liked_comment');
     RETURN NEW;
 END
 $BODY$
@@ -686,8 +707,8 @@ DECLARE
 BEGIN
     FOR mentioned_user_id IN SELECT id FROM users WHERE POSITION(username IN NEW.text)>0 AND POSITION(username IN ('@' || username)) = 2
     LOOP
-        INSERT INTO comment_notification (time, notified_id, comment_id, notification_type)
-        VALUES (CURRENT_DATE, mentioned_user_id, NEW.id, 'mention_comment');
+        INSERT INTO comment_notification (time, notified_id, sender_id, comment_id, notification_type)
+        VALUES (CURRENT_DATE, mentioned_user_id, NEW.author_id, NEW.id, 'mention_comment');
     END LOOP;
 
     RETURN NEW;
@@ -703,9 +724,12 @@ EXECUTE FUNCTION mention_comment_notification();
 -- TRIGGER NOTIFICATION 12
 CREATE FUNCTION like_post_notification() RETURNS TRIGGER AS
 $BODY$
+DECLARE
+    post_author INT;
 BEGIN
-    INSERT INTO post_notification (time, notified_id, post_id, notification_type)
-    VALUES (CURRENT_DATE, NEW.user_id, NEW.post_id, 'new_like');
+    SELECT post.author_id INTO post_author FROM post WHERE post.id = NEW.post_id;
+    INSERT INTO post_notification (time, notified_id, sender_id, post_id, notification_type)
+    VALUES (CURRENT_DATE, post_author, NEW.user_id, NEW.post_id, 'new_like');
     RETURN NEW;
 END
 $BODY$
@@ -721,11 +745,13 @@ CREATE FUNCTION mention_description_notification() RETURNS TRIGGER AS
 $BODY$
 DECLARE
     mentioned_user_id INT;
+    post_author INT;
 BEGIN
+    SELECT post.author_id INTO post_author FROM post WHERE post.id = NEW.id;
     FOR mentioned_user_id IN SELECT id FROM users WHERE POSITION(username IN NEW.text)>0 AND POSITION(username IN ('@' || username)) = 2
     LOOP
-        INSERT INTO post_notification (time, notified_id, post_id, notification_type)
-        VALUES (CURRENT_DATE, mentioned_user_id, NEW.id, 'mention_description');
+        INSERT INTO post_notification (time, notified_id, sender_id, post_id, notification_type)
+        VALUES (CURRENT_DATE, post_author, mentioned_user_id, NEW.id, 'mention_description');
     END LOOP;
 
     RETURN NEW;
@@ -738,28 +764,44 @@ AFTER INSERT ON post
 FOR EACH ROW
 EXECUTE FUNCTION mention_description_notification();
 
+/* THIS MUST BE TRANSACTION
 -- TRIGGER NOTIFICATION 14
 CREATE FUNCTION group_creation_notification() RETURNS TRIGGER AS
 $BODY$
+DECLARE
+    admin_id INT;
 BEGIN
-    INSERT INTO group_creation_notification (time, notified_id, group_id)
-    VALUES (CURRENT_DATE, (SELECT user_id FROM admin ORDER BY random() LIMIT 1), NEW.id);
+    SELECT owner.user_id AS owner_id FROM owner WHERE owner.group_id = NEW.id;
+    FOR admin_id IN SELECT user_id FROM admin
+    LOOP
+        INSERT INTO group_creation_notification (time, notified_id, sender_id, group_id)
+        VALUES (CURRENT_DATE, admin_id, owner_id, NEW.id);
+    END LOOP;
+
     RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
+
 CREATE TRIGGER group_creation_notification
 AFTER INSERT ON groups
 FOR EACH ROW
 EXECUTE FUNCTION group_creation_notification();
+*/
 
 -- TRIGGER NOTIFICATION 15
 CREATE FUNCTION common_help_notification() RETURNS TRIGGER AS
 $BODY$
+DECLARE
+    admin_id INT;
 BEGIN
-    INSERT INTO common_help_notification (time, notified_id, common_help_id)
-    VALUES (CURRENT_DATE, (SELECT user_id FROM admin ORDER BY random() LIMIT 1), NEW.id);
+    FOR admin_id IN SELECT user_id FROM admin
+    LOOP
+        INSERT INTO common_help_notification (time, notified_id, sender_id, common_help_id)
+        VALUES (CURRENT_DATE, admin_id, NEW.user_id, NEW.id);
+    END LOOP;
+
     RETURN NEW;
 END
 $BODY$
@@ -773,9 +815,15 @@ EXECUTE FUNCTION common_help_notification();
 -- TRIGGER NOTIFICATION 16
 CREATE FUNCTION appeal_notification() RETURNS TRIGGER AS
 $BODY$
+DECLARE
+    admin_id INT;
 BEGIN
-    INSERT INTO appeal_notification (time, notified_id, unban_request_id)
-    VALUES (CURRENT_DATE, (SELECT user_id FROM admin ORDER BY random() LIMIT 1), NEW.id);
+    FOR admin_id IN SELECT user_id FROM admin
+    LOOP
+        INSERT INTO appeal_notification (time, notified_id, sender_id, unban_request_id)
+        VALUES (CURRENT_DATE, admin_id, NEW.banned_user_id, NEW.id);
+    END LOOP;
+
     RETURN NEW;
 END
 $BODY$
@@ -789,9 +837,15 @@ EXECUTE FUNCTION appeal_notification();
 -- TRIGGER NOTIFICATION 17
 CREATE FUNCTION report_notification() RETURNS TRIGGER AS
 $BODY$
+DECLARE
+    admin_id INT;
 BEGIN
-    INSERT INTO report_notification (time, notified_id, report_id)
-    VALUES (CURRENT_DATE, (SELECT user_id FROM admin ORDER BY random() LIMIT 1), NEW.id);
+    FOR admin_id IN SELECT user_id FROM admin
+    LOOP
+        INSERT INTO report_notification (time, notified_id, sender_id, report_id)
+        VALUES (CURRENT_DATE, admin_id, NEW.reporter_id, NEW.id);
+    END LOOP;
+
     RETURN NEW;
 END
 $BODY$
