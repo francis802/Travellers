@@ -78,10 +78,18 @@ a.post-edit{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
 }
 
 .edit-delete-post{
+    display: flex;
+    flex-direction: row;
+}
+
+.comment-post, .like-post, .dislike-post{
+    margin-right: 1em;
+}
+
+#edit-delete-post{
     display: flex;
     flex-direction: row;
 }
