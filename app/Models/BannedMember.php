@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 
-class Member extends Model
+class BannedMember extends Model
 {
     use HasFactory;
 
@@ -16,7 +16,7 @@ class Member extends Model
     protected $primaryKey = null;
     public $incrementing = false;
 
-    protected $table = 'members';
+    protected $table = 'banned_member';
 
 
     protected $fillable = ['user_id', 'group_id'];

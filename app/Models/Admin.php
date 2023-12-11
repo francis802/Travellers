@@ -13,6 +13,7 @@ class Admin extends Model
 
     protected $table = 'admin';
     public $timestamps  = false;
+    protected $primaryKey = 'user_id';
 
     public function user() {
         return $this->belongsTo('App\Models\User');

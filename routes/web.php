@@ -100,6 +100,13 @@ Route::get('admin/groups', [AdminController::class, 'show_groups']);
 Route::get('admin/reports', [AdminController::class, 'show_reports']);
 Route::get('admin/helps', [AdminController::class, 'show_helps']);
 Route::get('admin/unban-requests', [AdminController::class, 'show_unban_requests']);
+Route::post('api/admin/membership/{id}/admin', [AdminController::class, 'makeAdmin']);
+Route::post('api/admin/membership/{id}/user', [AdminController::class, 'makeUser']);
+Route::post('api/admin/membership/{id}/banned', [AdminController::class, 'makeBanned']);
+Route::post('api/admin/group/{group_id}/owner/{user_id}', [AdminController::class, 'groupMembershipOwner']);
+Route::post('api/admin/group/{group_id}/member/{user_id}', [AdminController::class, 'groupMembershipMember']);
+Route::post('api/admin/group/{group_id}/banned/{user_id}', [AdminController::class, 'groupMembershipBanned']);
+
 
 // Group
 Route::get('group/create', [GroupController::class, 'create']);
