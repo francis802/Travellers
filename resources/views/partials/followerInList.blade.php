@@ -10,7 +10,7 @@
         <section class="user-bar" id="user-bar-id-{{$follower->id}}">
             <a href="{{ url('/user/'.$follower->id) }}" class="profile-info">
                 <div id="profile-picture">
-                    <img src="../man.jpg" alt="Profile Picture">
+                    <img src="{{url('man.jpg')}}" alt="Profile Picture">
                 </div>
                 @if (Auth::check())
                     <h2 id="user-username">&#64;{{ $follower->username }}</h2>
