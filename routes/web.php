@@ -71,6 +71,8 @@ Route::delete('api/post/{id}/delete', [PostController::class, 'destroy']);
 Route::get('/search', [SearchController::class, 'show'])->name('search');
 
 // API
+Route::get('api/unseen-notifications', [NotificationController::class, 'unseenUpdate']);
+
 Route::get('api/user', [SearchController::class, 'show']);
 Route::get('api/userVerify', [UserController::class, 'userVerify']);
 Route::put('api/user/{id}/follow', [UserController::class, 'followUser']);
@@ -78,6 +80,8 @@ Route::delete('api/user/{id}/unfollow', [UserController::class, 'unfollowUser'])
 Route::put('api/user/{id}/accept', [UserController::class, 'acceptUser']);
 Route::delete('api/user/{id}/decline', [UserController::class, 'declineUser']);
 Route::delete('api/user/{id}/remove', [UserController::class, 'removeFollower']);
+Route::put('api/group/{id}/join', [GroupController::class, 'join']);
+Route::delete('api/group/{id}/leave', [GroupController::class, 'leave']);
 
 Route::post('api/post/{id}/like', [PostController::class, 'like_post']);
 Route::delete('api/post/{id}/dislike', [PostController::class, 'dislike_post']);
@@ -87,6 +91,7 @@ Route::post('api/comment/{id}/edit', [CommentController::class, 'update']);
 Route::delete('api/comment/{id}/delete', [CommentController::class, 'destroy']);
 Route::post('api/comment/{id}/like', [CommentController::class, 'like_comment']);
 Route::delete('api/comment/{id}/dislike', [CommentController::class, 'dislike_comment']);
+
 
 // Admin
 Route::get('admin', [AdminController::class, 'show']);
@@ -106,7 +111,6 @@ Route::post('api/admin/group/{group_id}/banned/{user_id}', [AdminController::cla
 // Group
 Route::get('group/create', [GroupController::class, 'create']);
 Route::post('group/create', [GroupController::class, 'store']);
-//Route::post('group/delete', [GroupController::class, 'delete']);
 Route::get('group/{id}/members', [GroupController::class, 'listMembers']);
 Route::get('group/{id}/edit', [GroupController::class, 'edit']);
 Route::post('group/{id}/edit', [GroupController::class, 'update']);

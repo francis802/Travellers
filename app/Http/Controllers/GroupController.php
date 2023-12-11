@@ -113,15 +113,10 @@ class GroupController extends Controller
 
     public function leave(int $group_id) {
         $group = Group::find($group_id);
-        
 
         Member::where('group_id', $group->id)
               ->where('user_id', Auth::user()->id)->delete();
-        
-         DB::table('group_notification')
-            ->where('user1_id', '=', Auth::user()->id)
-            ->where('user2_id', '=', $id)
-            ->delete();
+    
 
         $members = $group->members()->get();
         return response()->json(['group' => $group, 'members' => $members]);

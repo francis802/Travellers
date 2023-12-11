@@ -16,9 +16,15 @@ use App\Models\FollowRequest;
 use App\Models\Group;
 use App\Models\LikePost;
 use App\Models\LikeComment;
+
+use App\Models\PostNotification;
+use App\Models\CommentNotification;
+use App\Models\FollowNotification;
+
 use App\Models\Member;
 use App\Models\Owner;
 use App\Models\BannedMember;
+
 
 
 class User extends Authenticatable
@@ -121,6 +127,23 @@ class User extends Authenticatable
                     ->where('group_id', $group_id)->exists();
     }
 
+
+    public function postNotifications() {
+        return PostNotification::where('notified_id', $this->id)->where('opened', false)->orderBy('time', 'desc');
+    }
+
+    public function commentNotifications() {
+        return CommentNotification::where('notified_id', $this->id)->where('opened', false)->orderBy('time', 'desc');
+    }
+
+    public function followNotifications() {
+        FollowNotification::where('notified_id', $this->id)->where('opened', false)->update(['opened' => true]);
+        return FollowNotification::where('notified_id', $this->id)->orderBy('time', 'desc');
+    }
+
+    public function unseenNotifications() {
+        return FollowNotification::where('notified_id', $this->id)->where('opened', false)->count();
+
     public function isOwner($group_id) {
         return Owner::where('user_id', $this->id)
                     ->where('group_id', $group_id)->exists();
@@ -129,6 +152,7 @@ class User extends Authenticatable
     public function isBannedFrom($group_id) {
         return BannedMember::where('user_id', $this->id)
                     ->where('group_id', $group_id)->exists();
+
     }
 
     
