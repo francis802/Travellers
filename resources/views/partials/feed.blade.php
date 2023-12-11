@@ -34,7 +34,7 @@
             document.getElementById('fy-posts').style.display = 'none';
             document.getElementById('following-posts').style.display = 'none';
 
-            document.getElementById(sectionId).style.display = 'block';
+            document.getElementById(sectionId).style.display = 'flex';
         }
 
         function searchOnEnter(event) {
@@ -59,7 +59,7 @@
     </section>
 
     <section id="following-posts">
-    <ul id="user-post-list">
+        <ul id="user-post-list">
             @foreach($followingPosts as $post)
                 @include('partials.post', ['post' => $post])
             @endforeach
