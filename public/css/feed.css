@@ -54,7 +54,7 @@
     overflow-y: auto;
 }
 
-#fy-posts{
+#fy-posts, #following-posts{
     display: flex;
     justify-content: center;
     padding: 1em;
