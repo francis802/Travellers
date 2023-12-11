@@ -289,9 +289,16 @@ function addEventListeners() {
     let comment_text = comment_text_ele.innerHTML;
     comment.querySelector('.comment-edit').style.display = 'none';
     comment.querySelector('.comment-delete').style.display = 'none';
-    comment.querySelector('.comment-edited').style.display = 'none';
+    if(comment.querySelector('.comment-edited') != null)
+      comment.querySelector('.comment-edited').style.display = 'none';
     comment.querySelector('.comment-date').style.display = 'none';
     comment_text_ele.style.display = 'none';
+    if(comment.querySelector('.like-comment') != null){
+      comment.querySelector('.like-comment').style.display = 'none';
+    }
+    else{
+      comment.querySelector('.dislike-comment').style.display = 'none';
+    }
     comment.innerHTML += '<textarea class="comment-text-area">' + comment_text + '</textarea>'
       + '<button class="comment-cancel" data-id="' + id + '"> <i class="fa-regular fa-circle-xmark"></i> </button>'
       + '<button class="comment-send" data-id="' + id + '"> <i class="fa-regular fa-circle-check"></i> </button>';
@@ -333,10 +340,19 @@ function addEventListeners() {
     comment.querySelector('.comment-cancel').remove();
     comment.querySelector('.comment-edit').style.display = 'inline-block';
     comment.querySelector('.comment-delete').style.display = 'inline-block';
-    comment.querySelector('.comment-edited').style.display = 'block';
+    if(comment.querySelector('.comment-edited') != null)
+      comment.querySelector('.comment-edited').style.display = 'block';
     comment.querySelector('.comment-date').style.display = 'block';
     comment.querySelector('.comment-delete').addEventListener('click', sendDeleteCommentRequest);
     comment.querySelector('.comment-edit').addEventListener('click', clickEditComment);
+    if(comment.querySelector('.like-comment') != null){
+      comment.querySelector('.like-comment').style.display = 'inline-block';
+      comment.querySelector('.like-comment').addEventListener('click', sendLikeCommentRequest);
+    }
+    else{
+      comment.querySelector('.dislike-comment').style.display = 'inline-block';
+      comment.querySelector('.dislike-comment').addEventListener('click', sendDislikeCommentRequest);
+    }
   }
 
   function createComment(comment, name) {
