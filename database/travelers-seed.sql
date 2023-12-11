@@ -102,14 +102,14 @@ CREATE TABLE admin (
 
 CREATE TABLE banned (
     user_id INT PRIMARY KEY REFERENCES users(id),
-    ban_date DATE NOT NULL CHECK (ban_date <= now())
+    ban_date TIMESTAMP NOT NULL CHECK (ban_date <= now())
 );
 
 CREATE TABLE unban_request (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
-    date DATE NOT NULL CHECK (date <= now()),
+    date TIMESTAMP NOT NULL CHECK (date <= now()),
     accept_appeal BOOLEAN DEFAULT NULL,
     banned_user_id INT REFERENCES banned(user_id) NOT NULL
 );
@@ -118,7 +118,7 @@ CREATE TABLE common_help (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
-    date DATE NOT NULL CHECK (date <= now()),
+    date TIMESTAMP NOT NULL CHECK (date <= now()),
     user_id INT REFERENCES users(id) NOT NULL
 );
 
@@ -126,7 +126,7 @@ CREATE TABLE faq (
     id SERIAL PRIMARY KEY,
     answer TEXT NOT NULL,
     question VARCHAR(255) UNIQUE NOT NULL,
-    last_edited DATE NOT NULL CHECK (last_edited <= now()),
+    last_edited TIMESTAMP NOT NULL CHECK (last_edited <= now()),
     author_id INT REFERENCES admin(user_id)
 );
 
@@ -137,7 +137,7 @@ CREATE TABLE report (
     evaluater_id INT REFERENCES admin(user_id) NOT NULL,
     reporter_id INT REFERENCES users(id) NOT NULL,
     infractor_id INT REFERENCES users(id) NOT NULL,
-    date DATE NOT NULL CHECK (date <= now()),
+    date TIMESTAMP NOT NULL CHECK (date <= now()),
     ban_infractor BOOLEAN DEFAULT NULL
 );
 
@@ -170,7 +170,7 @@ CREATE TABLE groups (
 
 CREATE TABLE post (
     id SERIAL PRIMARY KEY,
-    date DATE NOT NULL CHECK (date <= now()),
+    date TIMESTAMP NOT NULL CHECK (date <= now()),
     text TEXT,
     media TEXT,
     author_id INT REFERENCES users(id) NOT NULL,
@@ -197,7 +197,7 @@ CREATE TABLE post_tag (
 
 CREATE TABLE message (
     id SERIAL PRIMARY KEY,
-    time DATE NOT NULL CHECK (time <= now()),
+    time TIMESTAMP NOT NULL CHECK (time <= now()),
     content TEXT NOT NULL,
     sender_id INT REFERENCES users(id) NOT NULL,
     receiver_id INT REFERENCES users(id) NOT NULL
@@ -206,7 +206,7 @@ CREATE TABLE message (
 CREATE TABLE comments (
     id SERIAL PRIMARY KEY,
     text TEXT NOT NULL,
-    date DATE NOT NULL CHECK (date <= now()),
+    date TIMESTAMP NOT NULL CHECK (date <= now()),
     post_id INT REFERENCES post(id) ON DELETE CASCADE,
     author_id INT REFERENCES users(id) NOT NULL,
     edited BOOLEAN DEFAULT false
@@ -253,7 +253,7 @@ CREATE TABLE report_notification (
 
 CREATE TABLE common_help_notification (
     id SERIAL PRIMARY KEY,
-    time DATE NOT NULL CHECK (time <= now()),
+    time TIMESTAMP NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES admin(user_id) ON DELETE CASCADE,
     sender_id INT REFERENCES users(id),
     common_help_id INT REFERENCES common_help(id) NOT NULL,
@@ -262,7 +262,7 @@ CREATE TABLE common_help_notification (
 
 CREATE TABLE appeal_notification (
     id SERIAL PRIMARY KEY,
-    time DATE NOT NULL CHECK (time <= now()),
+    time TIMESTAMP NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES admin(user_id) ON DELETE CASCADE,
     sender_id INT REFERENCES users(id),
     unban_request_id INT REFERENCES unban_request(id) NOT NULL,
@@ -271,7 +271,7 @@ CREATE TABLE appeal_notification (
 
 CREATE TABLE group_creation_notification (
     id SERIAL PRIMARY KEY,
-    time DATE NOT NULL CHECK (time <= now()),
+    time TIMESTAMP NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES admin(user_id) ON DELETE CASCADE,
     sender_id INT REFERENCES users(id) NOT NULL,
     group_id INT REFERENCES groups(id) ON DELETE CASCADE,
@@ -280,7 +280,7 @@ CREATE TABLE group_creation_notification (
 
 CREATE TABLE follow_notification (
     id SERIAL PRIMARY KEY,
-    time DATE NOT NULL CHECK (time <= now()),
+    time TIMESTAMP NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES users(id) NOT NULL,
     sender_id INT REFERENCES users(id) NOT NULL,
     notification_type follow_notification_types NOT NULL,
@@ -289,7 +289,7 @@ CREATE TABLE follow_notification (
 
 CREATE TABLE new_message_notification (
     id SERIAL PRIMARY KEY,
-    time DATE NOT NULL CHECK (time <= now()),
+    time TIMESTAMP NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES users(id) NOT NULL,
     sender_id INT REFERENCES users(id) NOT NULL,
     message_id INT REFERENCES message(id) NOT NULL,
@@ -298,7 +298,7 @@ CREATE TABLE new_message_notification (
 
 CREATE TABLE comment_notification (
     id SERIAL PRIMARY KEY,
-    time DATE NOT NULL CHECK (time <= now()),
+    time TIMESTAMP NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES users(id) NOT NULL,
     sender_id INT REFERENCES users(id) NOT NULL,
     comment_id INT REFERENCES comments(id) ON DELETE CASCADE,
@@ -308,7 +308,7 @@ CREATE TABLE comment_notification (
 
 CREATE TABLE post_notification (
     id SERIAL PRIMARY KEY,
-    time DATE NOT NULL CHECK (time <= now()),
+    time TIMESTAMP NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES users(id) NOT NULL,
     sender_id INT REFERENCES users(id) NOT NULL,
     post_id INT REFERENCES post(id) ON DELETE CASCADE,
@@ -318,7 +318,7 @@ CREATE TABLE post_notification (
 
 CREATE TABLE group_notification (
     id SERIAL PRIMARY KEY,
-    time DATE NOT NULL CHECK (time <= now()),
+    time TIMESTAMP NOT NULL CHECK (time <= now()),
     notified_id INT REFERENCES users(id) NOT NULL,
     sender_id INT REFERENCES users(id),
     group_id INT REFERENCES groups(id) ON DELETE CASCADE,
@@ -530,7 +530,7 @@ CREATE FUNCTION follow_request_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO follow_notification (time, notified_id, sender_id, notification_type)
-    VALUES (CURRENT_DATE, NEW.user2_id, NEW.user1_id, 'follow_request');
+    VALUES (CURRENT_TIMESTAMP, NEW.user2_id, NEW.user1_id, 'follow_request');
     RETURN NEW;
 END
 $BODY$
@@ -546,7 +546,7 @@ CREATE FUNCTION follow_accept_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO follow_notification (time, notified_id, sender_id, notification_type)
-    VALUES (CURRENT_DATE, NEW.user1_id, NEW.user2_id, 'follow_accept');
+    VALUES (CURRENT_TIMESTAMP, NEW.user1_id, NEW.user2_id, 'follow_accept');
     RETURN NEW;
 END
 $BODY$
@@ -562,7 +562,7 @@ CREATE FUNCTION group_invite_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO group_notification (time, notified_id, group_id, notification_type)
-    VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_invite');
+    VALUES (CURRENT_TIMESTAMP, NEW.user_id, NEW.group_id, 'group_invite');
     RETURN NEW;
 END
 $BODY$
@@ -582,7 +582,7 @@ BEGIN
     FOR owner_id IN SELECT user_id FROM owner WHERE owner.group_id = NEW.group_id
     LOOP
         INSERT INTO group_notification (time, notified_id, sender_id, group_id, notification_type)
-        VALUES (CURRENT_DATE, owner_id, NEW.user_id, NEW.group_id, 'group_join');
+        VALUES (CURRENT_TIMESTAMP, owner_id, NEW.user_id, NEW.group_id, 'group_join');
     END LOOP;
 
     RETURN NEW;
@@ -601,7 +601,7 @@ CREATE FUNCTION group_leave_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO group_notification (time, notified_id, group_id, notification_type)
-    VALUES (CURRENT_DATE, OLD.user_id, OLD.group_id, 'group_leave');
+    VALUES (CURRENT_TIMESTAMP, OLD.user_id, OLD.group_id, 'group_leave');
     RETURN NEW;
 END
 $BODY$
@@ -618,7 +618,7 @@ CREATE FUNCTION group_ban_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO group_notification (time, notified_id, group_id, notification_type)
-    VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_ban');
+    VALUES (CURRENT_TIMESTAMP, NEW.user_id, NEW.group_id, 'group_ban');
     RETURN NEW;
 END
 $BODY$
@@ -634,7 +634,7 @@ CREATE FUNCTION group_owner_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO group_notification (time, notified_id, group_id, notification_type)
-    VALUES (CURRENT_DATE, NEW.user_id, NEW.group_id, 'group_owner');
+    VALUES (CURRENT_TIMESTAMP, NEW.user_id, NEW.group_id, 'group_owner');
     RETURN NEW;
 END
 $BODY$
@@ -650,7 +650,7 @@ CREATE FUNCTION new_message_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO new_message_notification (time, notified_id, sender_id, message_id)
-    VALUES (CURRENT_DATE, NEW.receiver_id, NEW.sender_id, NEW.id);
+    VALUES (CURRENT_TIMESTAMP, NEW.receiver_id, NEW.sender_id, NEW.id);
     RETURN NEW;
 END
 $BODY$
@@ -669,7 +669,7 @@ DECLARE
 BEGIN
     SELECT post.author_id INTO post_author FROM post, comments WHERE comments.post_id = post.id AND comments.id = NEW.id;
     INSERT INTO comment_notification (time, notified_id, sender_id, comment_id, notification_type)
-    VALUES (CURRENT_DATE, post_author, NEW.author_id, NEW.id, 'new_comment');
+    VALUES (CURRENT_TIMESTAMP, post_author, NEW.author_id, NEW.id, 'new_comment');
     RETURN NEW;
 END
 $BODY$
@@ -688,7 +688,7 @@ DECLARE
 BEGIN
     SELECT comments.author_id INTO comment_author FROM comments WHERE comments.id = NEW.comment_id;
     INSERT INTO comment_notification (time, notified_id, sender_id, comment_id, notification_type)
-    VALUES (CURRENT_DATE, comment_author, NEW.user_id, NEW.comment_id, 'liked_comment');
+    VALUES (CURRENT_TIMESTAMP, comment_author, NEW.user_id, NEW.comment_id, 'liked_comment');
     RETURN NEW;
 END
 $BODY$
@@ -708,7 +708,7 @@ BEGIN
     FOR mentioned_user_id IN SELECT id FROM users WHERE POSITION(username IN NEW.text)>0 AND POSITION(username IN ('@' || username)) = 2
     LOOP
         INSERT INTO comment_notification (time, notified_id, sender_id, comment_id, notification_type)
-        VALUES (CURRENT_DATE, mentioned_user_id, NEW.author_id, NEW.id, 'mention_comment');
+        VALUES (CURRENT_TIMESTAMP, mentioned_user_id, NEW.author_id, NEW.id, 'mention_comment');
     END LOOP;
 
     RETURN NEW;
@@ -729,7 +729,7 @@ DECLARE
 BEGIN
     SELECT post.author_id INTO post_author FROM post WHERE post.id = NEW.post_id;
     INSERT INTO post_notification (time, notified_id, sender_id, post_id, notification_type)
-    VALUES (CURRENT_DATE, post_author, NEW.user_id, NEW.post_id, 'new_like');
+    VALUES (CURRENT_TIMESTAMP, post_author, NEW.user_id, NEW.post_id, 'new_like');
     RETURN NEW;
 END
 $BODY$
@@ -751,7 +751,7 @@ BEGIN
     FOR mentioned_user_id IN SELECT id FROM users WHERE POSITION(username IN NEW.text)>0 AND POSITION(username IN ('@' || username)) = 2
     LOOP
         INSERT INTO post_notification (time, notified_id, sender_id, post_id, notification_type)
-        VALUES (CURRENT_DATE, post_author, mentioned_user_id, NEW.id, 'mention_description');
+        VALUES (CURRENT_TIMESTAMP, post_author, mentioned_user_id, NEW.id, 'mention_description');
     END LOOP;
 
     RETURN NEW;
@@ -775,7 +775,7 @@ BEGIN
     FOR admin_id IN SELECT user_id FROM admin
     LOOP
         INSERT INTO group_creation_notification (time, notified_id, sender_id, group_id)
-        VALUES (CURRENT_DATE, admin_id, owner_id, NEW.id);
+        VALUES (CURRENT_TIMESTAMP, admin_id, owner_id, NEW.id);
     END LOOP;
 
     RETURN NEW;
@@ -799,7 +799,7 @@ BEGIN
     FOR admin_id IN SELECT user_id FROM admin
     LOOP
         INSERT INTO common_help_notification (time, notified_id, sender_id, common_help_id)
-        VALUES (CURRENT_DATE, admin_id, NEW.user_id, NEW.id);
+        VALUES (CURRENT_TIMESTAMP, admin_id, NEW.user_id, NEW.id);
     END LOOP;
 
     RETURN NEW;
@@ -821,7 +821,7 @@ BEGIN
     FOR admin_id IN SELECT user_id FROM admin
     LOOP
         INSERT INTO appeal_notification (time, notified_id, sender_id, unban_request_id)
-        VALUES (CURRENT_DATE, admin_id, NEW.banned_user_id, NEW.id);
+        VALUES (CURRENT_TIMESTAMP, admin_id, NEW.banned_user_id, NEW.id);
     END LOOP;
 
     RETURN NEW;
@@ -843,7 +843,7 @@ BEGIN
     FOR admin_id IN SELECT user_id FROM admin
     LOOP
         INSERT INTO report_notification (time, notified_id, sender_id, report_id)
-        VALUES (CURRENT_DATE, admin_id, NEW.reporter_id, NEW.id);
+        VALUES (CURRENT_TIMESTAMP, admin_id, NEW.reporter_id, NEW.id);
     END LOOP;
 
     RETURN NEW;
@@ -947,20 +947,20 @@ VALUES
 
 INSERT INTO banned (user_id, ban_date)
 VALUES
-    (5, CURRENT_DATE),
-    (11, CURRENT_DATE);
+    (5, CURRENT_TIMESTAMP),
+    (11, CURRENT_TIMESTAMP);
 
 INSERT INTO unban_request (title, description, date, banned_user_id)
 VALUES
-    ('Please unban me', 'I only tried to hack you because of FSI I swear', CURRENT_DATE, 5),
-    ('Be careful...', 'I will try again to wipe out your website', CURRENT_DATE, 11);
+    ('Please unban me', 'I only tried to hack you because of FSI I swear', CURRENT_TIMESTAMP, 5),
+    ('Be careful...', 'I will try again to wipe out your website', CURRENT_TIMESTAMP, 11);
 
 INSERT INTO common_help (title, description, date, user_id)
 VALUES
-    ('Account creation', 'I want to create another account', CURRENT_DATE, 3),
-    ('Password change', 'I want to change my password', CURRENT_DATE, 4),
-    ('Account deletion', 'I want to delete my account', CURRENT_DATE, 6),
-    ('Account recovery', 'I want to recover my account', CURRENT_DATE, 7);
+    ('Account creation', 'I want to create another account', CURRENT_TIMESTAMP, 3),
+    ('Password change', 'I want to change my password', CURRENT_TIMESTAMP, 4),
+    ('Account deletion', 'I want to delete my account', CURRENT_TIMESTAMP, 6),
+    ('Account recovery', 'I want to recover my account', CURRENT_TIMESTAMP, 7);
 
 
 INSERT INTO faq (answer, question, last_edited, author_id)
@@ -971,8 +971,8 @@ VALUES
 
 INSERT INTO report (title, description, evaluater_id, reporter_id, infractor_id, date)
 VALUES
-    ('Ban him now', 'He doesnt stop spamming my posts with mean comments!', 1, 4, 6, CURRENT_DATE),
-    ('I hate him,', 'He stinks and hes a bad person', 1, 6, 4, CURRENT_DATE);
+    ('Ban him now', 'He doesnt stop spamming my posts with mean comments!', 1, 4, 6, CURRENT_TIMESTAMP),
+    ('I hate him,', 'He stinks and hes a bad person', 1, 6, 4, CURRENT_TIMESTAMP);
 
 INSERT INTO requests (user1_id, user2_id)
 VALUES
