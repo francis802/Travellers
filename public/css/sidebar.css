@@ -1,17 +1,7 @@
 #side-bar{
     background-color: #CCCCCC;
-   /*
-    box-sizing: border-box;
-    position: fixed;
-    top: 0;
-    left: 0;
-    
-    height: 100vh;
-    background-color: #f2f2f2;
-    box-sizing: border-box;
-    overflow-y: auto;
-    */
-    width: 10em;
+   
+    width: 13em;
     position: sticky; /* CHANGE LATER */
     height: 100%;
 }

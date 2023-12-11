@@ -11,3 +11,12 @@
 .decline-request {
     margin-left: 10px;
 }
+
+
+.notification-list{
+    margin: 0.2em;
+}
+
+.notifications-container{
+    padding: 2em;
+}

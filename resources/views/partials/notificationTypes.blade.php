@@ -33,6 +33,7 @@
         });
     </script>
     
+    <section class="notifications-container" >
         <section id="requests">
             <h2>Requests</h2>
             @if($followRequestUsers->count() > 0)
@@ -59,35 +60,34 @@
                 <p>No follow requests.</p>
             @endif
         </section>
-        
 
-
-    <section id="notifications">
-        <h2>Notifications</h2>
-        @if($followNotifications->count() > 0)
-            <ul class="list-group list-group-flush">
-                @foreach($followNotifications as $followNotification)
-                    <section class="follow-notification-container" id="follow-notification-id-{{$followNotification->id}}">
-                        @if(!$followNotification->opened)
-                            <li class="list-group-item list-group-item-primary">
-                                <a href="" class="notification-info">
-                                    <p>{{$followNotification->notification_type}}</p>
-                                </a>
-                            </li>
-                        @else
-                            <li class="list-group-item list-group-item-light">
-                                <a href="" class="notification-info">
-                                    <p>{{$followNotification->notification_type}}</p>
-                                </a>
-                            </li>
-                        @endif
-                    </section>
-                @endforeach
-                
-            </ul>
-        @else
-            <p>No Notifications.</p>
-        @endif
+        <section id="notifications">
+            <h2>Notifications</h2>
+            @if($followNotifications->count() > 0)
+                <ul class="list-group list-group-flush">
+                    @foreach($followNotifications as $followNotification)
+                        <section class="follow-notification-container" id="follow-notification-id-{{$followNotification->id}}">
+                            @if(!$followNotification->opened)
+                                <li class="list-group-item list-group-item-primary notification-list">
+                                    <a href="" class="notification-info">
+                                        <p>{{$followNotification->notification_type}}</p>
+                                    </a>
+                                </li>
+                            @else
+                                <li class="list-group-item list-group-item-light notification-list">
+                                    <a href="" class="notification-info">
+                                        <p>{{$followNotification->notification_type}}</p>
+                                    </a>
+                                </li>
+                            @endif
+                        </section>
+                    @endforeach
+                    
+                </ul>
+            @else
+                <p>No Notifications.</p>
+            @endif
+        </section>
     </section>
 
 
