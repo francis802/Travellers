@@ -579,7 +579,7 @@ $BODY$
 DECLARE
     owner_id INT;
 BEGIN
-    FOR owner_id IN SELECT user_id FROM owner
+    FOR owner_id IN SELECT user_id FROM owner WHERE owner.group_id = NEW.group_id
     LOOP
         INSERT INTO group_notification (time, notified_id, sender_id, group_id, notification_type)
         VALUES (CURRENT_DATE, owner_id, NEW.user_id, NEW.group_id, 'group_join');
