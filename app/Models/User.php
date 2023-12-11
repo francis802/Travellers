@@ -143,7 +143,8 @@ class User extends Authenticatable
 
     public function unseenNotifications() {
         return FollowNotification::where('notified_id', $this->id)->where('opened', false)->count();
-
+    }
+    
     public function isOwner($group_id) {
         return Owner::where('user_id', $this->id)
                     ->where('group_id', $group_id)->exists();
