@@ -580,6 +580,7 @@ AFTER INSERT ON members
 FOR EACH ROW
 EXECUTE FUNCTION group_join_notification();
 
+/*
 -- TRIGGER NOTIFICATION 5 (Should we notify the user who left or the owner?)
 CREATE FUNCTION group_leave_notification() RETURNS TRIGGER AS
 $BODY$
@@ -595,6 +596,7 @@ CREATE TRIGGER group_leave_notification
 BEFORE DELETE ON members
 FOR EACH ROW
 EXECUTE FUNCTION group_leave_notification();
+*/
 
 -- TRIGGER NOTIFICATION 6
 CREATE FUNCTION group_ban_notification() RETURNS TRIGGER AS
