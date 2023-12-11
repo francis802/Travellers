@@ -5,9 +5,9 @@
 @include('partials.feed')
 
 @section('content')
-    <section class="inner-content">
+    
         @yield('bar')
         @yield('feed')
-    </section>
+    
 @endsection
 

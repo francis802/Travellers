@@ -4,8 +4,6 @@
 
 
 @section('content')
-    <section class="inner-content">
         @yield('bar')
         @yield('notificationTypes')
-    </section>
 @endsection

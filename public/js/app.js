@@ -1,3 +1,32 @@
+/*
+function updateNotifications(){
+  console.log('update notifications');
+  
+    fetch('/api/unseen-notifications')
+      .then(response =>
+        response.json()
+        )
+      .then(data => {
+        const notificationCount = data;
+  
+                  const notificationSpan = document.querySelector('#notification-count');
+  
+                  if (notificationCount > 0) {
+                      const newSpan = document.createElement('span');
+                      newSpan.id = 'notification-count';
+                      newSpan.textContent = notificationCount;
+                      notificationSpan.parentNode.replaceChild(newSpan, notificationSpan);
+                  } 
+      })
+      .catch(error => {
+        console.error('Erro na requisição fetch:', error);
+      });
+  }
+  
+  updateNotifications();
+  setInterval(updateNotifications, 5000); 
+*/
+
 function addEventListeners() {
   let itemDeleters = document.querySelectorAll('.post-delete');
   [].forEach.call(itemDeleters, function(deleter) {
@@ -512,5 +541,9 @@ function addEventListeners() {
 
     new_count.textContent = 'Followers (' + new_followers + ')';
   }
+
+
+
+
 
 addEventListeners();

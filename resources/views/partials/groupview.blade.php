@@ -26,7 +26,7 @@
                         @if (Auth::check() && Auth::user()->isMember($group->id))
                         <button class="leave-group button" data-id="{{$group->id}}"> Leave </button>
                         @else
-                        <button class="join-group button" data-id="{{$group->id}}"> Join </button>
+                        <button class="join-group" data-id="{{$group->id}}"> Join </button>
                         @endif
                         
                 </section>
