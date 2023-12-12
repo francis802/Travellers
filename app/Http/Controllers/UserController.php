@@ -102,9 +102,25 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(int $userId)
     {
-        //
+        $user = User::find($userId);
+        $this->authorize('delete', $user);
+        $user->name = null;
+        $user->username = null;
+        $user->email = null;
+        $user->password = null;
+        $user->profile_photo = null;
+        $user->profile_private = null;
+        $user->is_deleted = true;
+        $user->save();
+        if(Auth::user()->id == $userId) {
+            Auth::logout();
+            redirect('login');
+        }
+        else {
+            return redirect('admin/users');
+        }
     }
 
     public function userVerify(Request $request) {

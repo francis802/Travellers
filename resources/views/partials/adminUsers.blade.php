@@ -45,7 +45,7 @@
                                         @include('partials.groupsMembership', ['groups' => $groups, 'user' => $user])
                                     </td>
                                     <td>
-                                        @include('partials.deleteAccount')
+                                        @include('partials.deleteAccount', ['user' => $user])
                                     </td>
                                 </tr>
                             @endforeach

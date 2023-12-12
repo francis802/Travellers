@@ -53,6 +53,7 @@ Route::get('user/{id}/followers', [UserController::class, 'followers']);
 Route::get('user/{id}/following', [UserController::class, 'following']);
 Route::post('user/edit', [UserController::class, 'update']);
 Route::get('user/{id}', [UserController::class, 'show'])->name('users');
+Route::delete('user/{id}/delete', [UserController::class, 'destroy'])->name('users.destroy');
 
 // Notifications
 Route::get('/notifications', [NotificationController::class, 'show']);
