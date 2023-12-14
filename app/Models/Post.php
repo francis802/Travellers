@@ -80,4 +80,9 @@ class Post extends Model
         ->where('post.id', '=', $this->id)
         ->get();
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(PostNotification::class, 'post_id');
+    }
 }
