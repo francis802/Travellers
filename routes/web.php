@@ -47,7 +47,7 @@ Route::get('/home', [HomeController::class, 'show'])->name('home');
 
 
 // User
-Route::get('user/edit', [UserController::class, 'edit']);
+Route::get('user/edit', [UserController::class, 'edit'])->name('users.edit');
 Route::get('user/{id}/groups', [UserController::class, 'listGroups']);
 Route::get('user/{id}/followers', [UserController::class, 'followers']);
 Route::get('user/{id}/following', [UserController::class, 'following']);

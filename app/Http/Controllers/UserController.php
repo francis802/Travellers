@@ -116,7 +116,7 @@ class UserController extends Controller
         $user->save();
         if(Auth::user()->id == $userId) {
             Auth::logout();
-            redirect('login');
+            return redirect('login');
         }
         else {
             return redirect('admin/users');

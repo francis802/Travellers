@@ -25,7 +25,7 @@
     <div class="card-body">
         <a href="{{url('/post/'.$post->id)}}">
             @if ($post->media !== null)
-                <img src="../images/post/post-1.jpg"  alt="{{ $post->text }}" class="card-img-top">
+                <img src="../images/post/post-{{$post->id}}.jpg"  alt="{{ $post->text }}" class="card-img-top">
             @endif
             <div class="post-body-text">
                 <p class="post-description">{{ $post->text }}</p>

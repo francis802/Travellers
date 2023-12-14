@@ -1,5 +1,9 @@
 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteWaring-{{$user->id}}">
+    @if (url()->current() == route('users.edit'))
+    Delete Account
+    @else
     <i class="fas fa-trash-alt"></i>
+    @endif
 </button>
 
 <div class="modal fade" id="deleteWaring-{{$user->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteWarningLabel" aria-hidden="true">

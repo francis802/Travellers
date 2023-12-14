@@ -359,7 +359,7 @@ function addEventListeners() {
     let new_comment = document.createElement('li');
     new_comment.classList.add('post-comment');
     new_comment.id = 'comment-id-' + comment.id;
-    let profile = 'http://' + location.host + '/user/' + comment.author_id;
+    let profile = location.protocol + '//' + location.host + '/user/' + comment.author_id;
     console.log(profile);
     new_comment.innerHTML = `
     <div class="post-comment-author">
