@@ -17,15 +17,33 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($users as $user)
+                            @foreach($users->sortBy('id') as $user)
                                 <tr>
                                     <th scope="row">{{$user->id}}</th>
-                                    <td>{{$user->name}}</td>
-                                    <td>&#64;{{$user->username}}</td>
-                                    <td>{{$user->email}}</td>
+                                    <td>
+                                        @if ($user->is_deleted)
+                                        [Deleted User]
+                                        @else
+                                        {{$user->name}}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($user->is_deleted)
+                                        [Deleted User]
+                                        @else
+                                        &#64;{{$user->username}}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($user->is_deleted)
+                                        [Deleted User]
+                                        @else
+                                        {{$user->email}}
+                                        @endif
+                                    </td>
                                     <td>
                                         <div class="dropdown-center">
-                                        <button class="btn btn-secondary dropdown-toggle membership-btn-{{$user->id}}" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+                                        <button class="btn btn-secondary dropdown-toggle membership-btn-{{$user->id}} {{$user->is_deleted == true ? 'disabled':''}}" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
                                             @if($user->isAdmin())
                                                 Admin
                                             @elseif($user->isBanned())
@@ -42,10 +60,22 @@
                                         </div>
                                     </td>
                                     <td>
-                                        @include('partials.groupsMembership', ['groups' => $groups, 'user' => $user])
+                                        @if ($user->is_deleted)
+                                        <button type="button" class="btn btn-primary" disabled>
+                                            Check Groups
+                                        </button>
+                                        @else
+                                            @include('partials.groupsMembership', ['groups' => $groups, 'user' => $user])
+                                        @endif
                                     </td>
                                     <td>
-                                        @include('partials.deleteAccount', ['user' => $user])
+                                        @if ($user->is_deleted)
+                                        <button type="button" class="btn btn-danger" disabled>
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                        @else
+                                            @include('partials.deleteAccount', ['user' => $user])
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
