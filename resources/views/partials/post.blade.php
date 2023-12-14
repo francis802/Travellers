@@ -2,7 +2,11 @@
     <div class="card-header post-header">
         <div id="post-author">
             <a href="{{ url('/user/'.$post->author->id) }}" class="post-author-name">
-                {{ $post->author->name }}
+                @if ($post->author->is_deleted)
+                    [Deleted User]
+                @else
+                    {{ $post->author->name }}
+                @endif
             </a>
         </div>
         <div id="edit-delete-post">

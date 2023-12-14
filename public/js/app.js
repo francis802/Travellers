@@ -177,7 +177,7 @@ function addEventListeners() {
     document.querySelector('button.comment-create').style.display = 'none';
     let num_comments = document.querySelector('h5.comment-count').textContent
     let num = parseInt(num_comments) + 1;
-    document.querySelector('h5.comment-count').innerHTML = `<i class="fa-regular fa-comment fa-3x"></i>` + num;
+    document.querySelector('h5.comment-count').innerHTML = `<i class="fa-regular fa-comment fa-2x"></i>` + num;
   }
 
   function sendLikePostRequest() {
@@ -195,7 +195,7 @@ function addEventListeners() {
     element.className = 'dislike-post';
 
     element.innerHTML = '<h5 class="like-count">' +
-    '<i class="fa-solid fa-heart fa-3x" style="color: #cc0f0f;"></i>' +
+    '<i class="fa-solid fa-heart fa-2x" style="color: #cc0f0f;"></i>' +
     resp.likes +
     '</h5>'
   }
@@ -215,7 +215,7 @@ function addEventListeners() {
     element.className = 'like-post';
 
     element.innerHTML = '<h5 class="like-count">' +
-    '<i class="fa-regular fa-heart fa-3x" style="color: #cc0f0f;"></i>' +
+    '<i class="fa-regular fa-heart fa-2x" style="color: #cc0f0f;"></i>' +
     resp.likes +
     '</h5>'
   }
@@ -279,7 +279,7 @@ function addEventListeners() {
     element.remove();
     let num_comments = document.querySelector('h5.comment-count').textContent
     let num = parseInt(num_comments) - 1;
-    document.querySelector('h5.comment-count').innerHTML = `<i class="fa-regular fa-comment fa-3x"></i>` + num;
+    document.querySelector('h5.comment-count').innerHTML = `<i class="fa-regular fa-comment fa-2x"></i>` + num;
   }
 
   function clickEditComment() {
