@@ -17,7 +17,9 @@
                 </a>
                 @if (Auth::user()->isOwner($group->id) || Auth::user()->isAdmin())
                     <button class="remove-member button" data-id="{{$group->id}}" onclick="removeMemberRequest(this)">Remove</button>
-                    <button class="upgrade-member button" data-id="{{$group->id}}" onclick="upgradeToOwnerRequest(this)">Make Owner</button>
+                    @if(!$member->user()->isOwner($group->id))
+                        <button class="upgrade-member button" data-id="{{$group->id}}" onclick="upgradeToOwnerRequest(this)">Make Owner</button>
+                    @endif
                 @endif
             </li>
         @endforeach

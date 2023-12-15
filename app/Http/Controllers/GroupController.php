@@ -9,6 +9,7 @@ use App\Models\Group;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Member;
+use App\Models\Owner;
 
 class GroupController extends Controller
 {
@@ -139,7 +140,7 @@ class GroupController extends Controller
 
         Member::where('group_id', $group->id)
               ->where('user_id', $user_id)->delete();
-              
+
         Owner::insert([
             'user_id' => $user_id,
             'group_id' => $group->id,
