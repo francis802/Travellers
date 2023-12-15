@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class GroupNotification extends Model
 {
     use HasFactory;
-    protected $table = 'comment_notification';
+    protected $table = 'group_notification';
     public $timestamps  = false;
 
     protected $fillable = [
@@ -23,5 +23,10 @@ class GroupNotification extends Model
     public function senderUser()
     {
         return $this->belongsTo(User::class, 'sender_id');
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class, 'group_id');
     }
 }

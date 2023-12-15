@@ -96,7 +96,7 @@ class GroupController extends Controller
     public function listMembers(int $id){
         $group = Group::findOrFail($id);
         $members = $group->members()->get();
-        return view('pages.listMembers', ['members' => $members]);
+        return view('pages.listMembers', ['members' => $members, 'group' => $group]);
     }
 
     public function join(int $group_id) {
@@ -121,5 +121,30 @@ class GroupController extends Controller
         $members = $group->members()->get();
         return response()->json(['group' => $group, 'members' => $members]);
         
+    }
+
+    public function removeMember(int $group_id, int $user_id){
+        $group = Group::find($group_id);
+
+        Member::where('group_id', $group->id)
+              ->where('user_id', $user_id)->delete();
+
+        
+
+        return response()->json(['user_id' => $user_id]);
+    }
+
+    public function upgradeToOwner(int $group_id, int $user_id){
+        $group = Group::find($group_id);
+
+        Member::where('group_id', $group->id)
+              ->where('user_id', $user_id)->delete();
+              
+        Owner::insert([
+            'user_id' => $user_id,
+            'group_id' => $group->id,
+        ]);
+
+        return response()->json(['user_id' => $user_id]);
     }
 } 

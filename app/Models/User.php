@@ -143,6 +143,10 @@ class User extends Authenticatable
         return FollowNotification::where('notified_id', $this->id)->orderBy('time', 'desc');
     }
 
+    public function ownwdGroupsNotifications() {
+        return GroupNotification::where('notified_id', $this->id)->orderBy('time', 'desc');
+    }
+
     public function unseenNotifications(){
         $follow_count = FollowNotification::where('notified_id', $this->id)->where('opened', false)->count();
         $comment_count = CommentNotification::where('notified_id', $this->id)->where('opened', false)->count();
