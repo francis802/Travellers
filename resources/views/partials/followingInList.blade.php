@@ -10,10 +10,20 @@
         <section id="user-bar">
             <a href="{{ url('/user/'.$following_user->id) }}" class="profile-info">
                 <div id="profile-picture">
+                    @if ($following_user->profile_photo !== null)
+                        <img src="{{ url($following_user->profile_photo) }}" alt="Profile Picture">
+                    @else
                     <img src="{{url('man.jpg')}}" alt="Profile Picture">
+                    @endif
                 </div>
                 @if (Auth::check())
-                    <h2 id="user-username">&#64;{{ $following_user->username }}</h2>
+                    <h2 id="user-username">
+                        @if ($following_user->is_deleted)
+                            [Deleted User]
+                        @else
+                        &#64;{{ $following_user->username }}
+                        @endif
+                    </h2>
                 @endif
             </a>
         </section>

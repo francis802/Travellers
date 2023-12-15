@@ -52,5 +52,6 @@
                 <button class="button" type="submit">Submit</button>
             </section>
         </form>
+        @include('partials.deleteAccount', ['user' => Auth::user()])
     </section>
 @endsection

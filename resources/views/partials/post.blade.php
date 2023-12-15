@@ -2,7 +2,11 @@
     <div class="card-header post-header">
         <div id="post-author">
             <a href="{{ url('/user/'.$post->author->id) }}" class="post-author-name">
-                {{ $post->author->name }}
+                @if ($post->author->is_deleted)
+                    [Deleted User]
+                @else
+                    {{ $post->author->name }}
+                @endif
             </a>
         </div>
         <div id="edit-delete-post">
@@ -21,7 +25,7 @@
     <div class="card-body">
         <a href="{{url('/post/'.$post->id)}}">
             @if ($post->media !== null)
-                <img src="../images/post/post-1.jpg"  alt="{{ $post->text }}" class="card-img-top">
+                <img src="../images/post/post-{{$post->id}}.jpg"  alt="{{ $post->text }}" class="card-img-top">
             @endif
             <div class="post-body-text">
                 <p class="post-description">{{ $post->text }}</p>

@@ -4,11 +4,15 @@
         <button class="comment-create" post-id="{{$post->id}}">Post</i></button>
     </form>
     <ul class="post-comments-list">
-        @foreach ($post->comments as $comment)
+        @foreach ($post->comments->sortByDesc('date') as $comment)
             <li class="post-comment" id="comment-id-{{$comment->id}}">
                 <div class="post-comment-author">
                     <a href="{{ url('/user/'.$comment->author->id) }}" class="post-comment-author-name">
+                        @if ($comment->author->is_deleted)
+                            [Deleted User]
+                        @else
                         {{ $comment->author->name }}
+                        @endif
                     </a>
                 </div>
                 <div class="post-comment-edit-delete">
