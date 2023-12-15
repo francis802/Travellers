@@ -46,4 +46,9 @@ class Comment extends Model
         ->where('comments.id', '=', $this->id)
         ->get();
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(CommentNotification::class, 'comment_id');
+    }
 }

@@ -132,11 +132,13 @@ class User extends Authenticatable
 
 
     public function postNotifications() {
-        return PostNotification::where('notified_id', $this->id)->where('opened', false)->orderBy('time', 'desc');
+        PostNotification::where('notified_id', $this->id)->where('opened', false)->update(['opened' => true]);
+        return PostNotification::where('notified_id', $this->id)->orderBy('time', 'desc');
     }
 
     public function commentNotifications() {
-        return CommentNotification::where('notified_id', $this->id)->where('opened', false)->orderBy('time', 'desc');
+        CommentNotification::where('notified_id', $this->id)->where('opened', false)->update(['opened' => true]);
+        return CommentNotification::where('notified_id', $this->id)->orderBy('time', 'desc');
     }
 
     public function followNotifications() {
@@ -144,8 +146,19 @@ class User extends Authenticatable
         return FollowNotification::where('notified_id', $this->id)->orderBy('time', 'desc');
     }
 
-    public function unseenNotifications() {
-        return FollowNotification::where('notified_id', $this->id)->where('opened', false)->count();
+    public function ownwdGroupsNotifications() {
+        return GroupNotification::where('notified_id', $this->id)->orderBy('time', 'desc');
+    }
+
+    public function unseenNotifications(){
+        $follow_count = FollowNotification::where('notified_id', $this->id)->where('opened', false)->count();
+        $comment_count = CommentNotification::where('notified_id', $this->id)->where('opened', false)->count();
+        $post_count = PostNotification::where('notified_id', $this->id)->where('opened', false)->count();
+
+        // Combina os resultados usando union
+        $total_unseen = $follow_count + $comment_count + $post_count;
+
+        return $total_unseen;
     }
     
     public function isOwner($group_id) {

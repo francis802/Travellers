@@ -13,8 +13,11 @@
 }
 
 
-.notification-list{
+#notification-list{
     margin: 0.2em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .notifications-container{
@@ -30,4 +33,13 @@
 .request-buttons {
     display: flex;
     margin-left: 25em;
+}
+
+.notification-text{
+    margin-bottom: 0;
+}
+
+.notification-info{
+    display: flex;
+    align-items: center;
 }

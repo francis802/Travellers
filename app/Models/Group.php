@@ -56,6 +56,9 @@ class Group extends Model
         return $this->belongsTo('App\Models\Country');
     }
 
+    public function notifications(){
+        return $this->hasMany(GroupNotification::class, 'group_id');
+    }
     
     
 }

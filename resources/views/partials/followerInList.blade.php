@@ -2,7 +2,7 @@
 
 @section('followerInList')
 
-<section id = "follower-in-list">
+<section id="feed">
     @yield('topbar')
     @if (count($followers) > 0)
         <h2 class="followers"> Followers ({{count($followers)}}) </h2>

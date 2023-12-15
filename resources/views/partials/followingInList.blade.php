@@ -2,7 +2,7 @@
 
 @section('followingInList')
 
-<section id = "following-in-list">
+<section id="feed">
     @yield('topbar')
     @if (count($following) > 0)
     <h2> Following ({{count($following)}}) </h2>
@@ -26,6 +26,7 @@
                     </h2>
                 @endif
             </a>
+            
         </section>
         @endforeach
     @elseif (Auth::user()->id == $user->id)

@@ -560,6 +560,82 @@ function addEventListeners() {
 
 
 
+  function removeMemberRequest(button) {
+    // Obtém o elemento li correspondente ao botão clicado
+    let liElement = button.closest('li');
+
+    // Verifica se encontrou o elemento li
+    if (liElement) {
+        let group_id = liElement.getAttribute('data-id');
+        let user_id = liElement.getAttribute('data-user-id'); // Adicione este atributo ao seu <li>
+
+        console.log(group_id);
+        console.log(user_id);
+        
+        sendAjaxRequest('delete', '/api/group/' + group_id +'/remove/' + user_id, null, removeMemberRequestHandler);
+    } else {
+        console.error('Elemento li não encontrado.');
+    }
+  }
+
+  function removeMemberRequestHandler() {
+    if (this.status === 200) {
+      
+      const resp = JSON.parse(this.responseText);
+
+      const userId = resp.user_id;
+
+      console.log(userId);
+
+      const liToRemove = document.querySelector(`li[data-user-id="${userId}"]`);
+      if (liToRemove) {
+          liToRemove.remove();
+      } else {
+          console.error('Elemento <li> não encontrado para remoção.');
+      }
+  } else {
+      console.error('Erro na solicitação Ajax:', this.status);
+  }
+  }
+
+  function upgradeToOwnerRequest(button) {
+    // Obtém o elemento li correspondente ao botão clicado
+    let liElement = button.closest('li');
+
+    // Verifica se encontrou o elemento li
+    if (liElement) {
+        let group_id = liElement.getAttribute('data-id');
+        let user_id = liElement.getAttribute('data-user-id'); // Adicione este atributo ao seu <li>
+
+        console.log(group_id);
+        console.log(user_id);
+        
+        sendAjaxRequest('delete', '/api/group/' + group_id +'/upgrade/' + user_id, null, upgradeToOwnerRequestHandler);
+    } else {
+        console.error('Elemento li não encontrado.');
+    }
+  }
+
+  function upgradeToOwnerRequestHandler() {
+    if (this.status === 200) {
+      
+      const resp = JSON.parse(this.responseText);
+
+      const userId = resp.user_id;
+
+      console.log(userId);
+
+      const buttonRemove = document.querySelector(`li[data-user-id="${userId}"] .upgrade-member`);
+      if (buttonRemove) {
+        buttonRemove.remove();
+      } else {
+          console.error('Elemento <button> não encontrado para remoção.');
+      }
+  } else {
+      console.error('Erro na solicitação Ajax:', this.status);
+  }
+  }
+
 
 
 addEventListeners();

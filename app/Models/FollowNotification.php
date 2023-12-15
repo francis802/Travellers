@@ -14,4 +14,14 @@ class FollowNotification extends Model
     protected $fillable = [
        'notification_type', 'notified_id', 'opened'
     ];
+
+    public function notifiedUser()
+    {
+        return $this->belongsTo(User::class, 'notified_id');
+    }
+
+    public function senderUser()
+    {
+        return $this->belongsTo(User::class, 'sender_id');
+    }
 }

@@ -83,6 +83,8 @@ Route::delete('api/user/{id}/decline', [UserController::class, 'declineUser']);
 Route::delete('api/user/{id}/remove', [UserController::class, 'removeFollower']);
 Route::put('api/group/{id}/join', [GroupController::class, 'join']);
 Route::delete('api/group/{id}/leave', [GroupController::class, 'leave']);
+Route::delete('api/group/{group_id}/remove/{user_id}', [GroupController::class, 'removeMember']);
+Route::delete('api/group/{group_id}/upgrade/{user_id}', [GroupController::class, 'upgradeToOwner']);
 
 Route::post('api/post/{id}/like', [PostController::class, 'like_post']);
 Route::delete('api/post/{id}/dislike', [PostController::class, 'dislike_post']);
