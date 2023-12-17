@@ -217,6 +217,39 @@ class UserController extends Controller
         return response()->json(['user' => $user, 'followers' => count($followers)]);
     }
 
+    public function userBlock(int $id){
+        $user = User::find($id);
+
+        if (Auth::user()->follows($id)) {
+            DB::table('follows')
+            ->where('user1_id', '=', Auth::user()->id)
+            ->where('user2_id', '=', $id)
+            ->delete();
+        }
+
+        if($user->follows(Auth::user()->id)) {
+            DB::table('follows')
+            ->where('user1_id', '=', $id)
+            ->where('user2_id', '=', Auth::user()->id)
+            ->delete();
+        }
+
+        DB::table('blocks')
+        ->insert(['user1_id' => Auth::user()->id, 'user2_id' => $id]);
+
+        return response()->json(['user_id' => $id]);
+    }
+
+    public function userUnblock(int $id){
+        $user = User::find($id);
+
+        DB::table('blocks')
+        ->where('user1_id', '=', Auth::user()->id)
+        ->where('user2_id', '=', $id)
+        ->delete();
+
+        return response()->json(['user_id' => $id]);
+    }
     
 
 }
