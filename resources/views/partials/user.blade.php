@@ -25,10 +25,6 @@
             </section>
         </section>
         <section id="profile-buttons-area">
-            @if(Auth::user()->isAdmin() || Auth::user()->id == $user->id)
-            <a class="button" href="{{ url('/user/edit') }}"> Edit </a>
-            @endif
-            
             @if (Auth::check() && Auth::user()->id == $user->id)
             <a class="button" href="{{ url('/logout') }}"> Logout </a>
             @elseif (Auth::check() && Auth::user()->follows($user->id))
@@ -38,6 +34,18 @@
             @else
             <button class="request-follow button" data-id="{{$user->id}}"> Follow </button>
             @endif
+            <div class="btn-group">
+                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Small button
+                </button>
+                <ul class="dropdown-menu">
+                    @if(Auth::user()->isAdmin() || Auth::user()->id == $user->id)
+                        <li><a class="dropdown-item" href="{{ url('/user/edit') }}"> Edit </a></li>
+                        <li><a class="block-user dropdown-item" href="#"  data-id="{{Auth::user()->id}} "data-user-id="{{$user->id}}" onclick="changeBlockStatus(event)">Block</a></li>
+</li>
+                    @endif
+                </ul>
+            </div>
         </section>
     </section>
 
