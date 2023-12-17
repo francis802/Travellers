@@ -31,15 +31,17 @@
             <button class="request-follow button" data-id="{{$user->id}}"> Follow </button>
             @endif
             <div class="btn-group">
-                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Small button
-                </button>
+                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> ... </button>
                 <ul class="dropdown-menu">
-                    @if(Auth::user()->isAdmin() || Auth::user()->id == $user->id)
-                        <li><a class="dropdown-item" href="{{ url('/user/edit') }}"> Edit </a></li>
-                        <li><a class="block-user dropdown-item" href="#"  data-id="{{Auth::user()->id}} "data-user-id="{{$user->id}}" onclick="changeBlockStatus(event)">Block</a></li>
-</li>
-                    @endif
+                        @if(Auth::user()->id == $user->id)
+                            <li><a class="dropdown-item" href="{{ url('/user/edit') }}"> Edit </a></li>
+                        @else
+                            @if($user->isBlocked(Auth::user()->id))
+                                <li><a class="blocked block-user dropdown-item" href="#"  data-id="{{Auth::user()->id}} "data-user-id="{{$user->id}}" onclick="changeBlockStatus(event)">Unblock</a></li>
+                            @else
+                                <li><a class="block-user dropdown-item" href="#"  data-id="{{Auth::user()->id}} "data-user-id="{{$user->id}}" onclick="changeBlockStatus(event)">Block</a></li>
+                            @endif
+                        @endif
                 </ul>
             </div>
         </section>

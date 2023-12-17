@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\DB;
 
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -169,6 +170,10 @@ class User extends Authenticatable
 
     }
 
-    
+    public function isBlocked($user_id) {
+        return DB::table('blocks')
+                ->where('user1_id', $user_id)
+                ->where('user2_id', $this->id)->exists();
+    }
 
 }

@@ -81,7 +81,7 @@ Route::put('api/user/{id}/accept', [UserController::class, 'acceptUser']);
 Route::delete('api/user/{id}/decline', [UserController::class, 'declineUser']);
 Route::delete('api/user/{id}/remove', [UserController::class, 'removeFollower']);
 Route::put('api/user/block/{id}', [UserController::class, 'userBlock']);
-Route::delete('api/user/{my_id}/unblock/{id}', [UserController::class, 'userUnblock']);
+Route::delete('api/user/unblock/{id}', [UserController::class, 'userUnblock']);
 
 Route::put('api/group/{id}/join', [GroupController::class, 'join']);
 Route::delete('api/group/{id}/leave', [GroupController::class, 'leave']);
