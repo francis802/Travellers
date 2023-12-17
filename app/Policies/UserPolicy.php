@@ -27,4 +27,8 @@ class UserPolicy
       return Auth::check();
     }
 
+    public function delete(User $user1, User $user2) {
+      return $user1->id == $user2->id || $user1->isAdmin();
+    }
+
 }

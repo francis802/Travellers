@@ -13,7 +13,11 @@
         </div>
         <section id="profile-text">
             <h3 id="user-name">{{$user->name }}</h3>
-            <h4 id="user-username">&#64;{{$user->username }} | {{$user->country }}</h4>
+            @if ($user->is_deleted)
+                <h4 id="user-username">[Deleted User] | Country Unkown</h4>
+            @else
+                <h4 id="user-username">&#64;{{$user->username }} | {{$user->country->name}}</h4>
+            @endif
             <section id="user-infos">
                 <p class="infos-with-margin groups"><a href="{{ url('/user/'.$user->id.'/groups') }}">{{ count($groups) }} Groups</a></p>
                 <p class="infos-with-margin followers"><a href="{{ url('/user/'.$user->id.'/followers') }}"> {{ count($followers) }} Followers</a></p>

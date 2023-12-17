@@ -17,6 +17,7 @@ use App\Models\FollowRequest;
 use App\Models\Group;
 use App\Models\LikePost;
 use App\Models\LikeComment;
+use App\Models\Post;
 
 use App\Models\PostNotification;
 use App\Models\CommentNotification;
@@ -25,6 +26,8 @@ use App\Models\FollowNotification;
 use App\Models\Member;
 use App\Models\Owner;
 use App\Models\BannedMember;
+
+use App\Models\Country;
 
 
 
@@ -175,5 +178,11 @@ class User extends Authenticatable
                 ->where('user1_id', $user_id)
                 ->where('user2_id', $this->id)->exists();
     }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+    
 
 }

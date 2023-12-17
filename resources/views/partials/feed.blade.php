@@ -7,7 +7,11 @@
     <section id="user-bar">
         <a href="{{ url('/user/'.Auth::user()->id) }}" class="profile-info">
             <div id="profile-picture">
-                <img src="../man.jpg" alt="Profile Picture">
+                @if (Auth::user()->profile_photo !== null)
+                    <img src="{{ url(Auth::user()->profile_photo) }}" alt="Profile Picture">
+                @else
+                <img src="{{ url(man.jpg) }}" alt="Profile Picture">
+                @endif
             </div>
             @if (Auth::check())
                 <h2 id="user-username">&#64;{{ Auth::user()->username }}</h2>
@@ -52,7 +56,7 @@
     
     <section id="fy-posts">
         <ul id="user-post-list">
-            @foreach($publicPosts as $post)
+            @foreach($publicPosts->sortByDesc('date') as $post)
                 @include('partials.post', ['post' => $post])
             @endforeach
         </ul>
@@ -60,7 +64,7 @@
 
     <section id="following-posts">
         <ul id="user-post-list">
-            @foreach($followingPosts as $post)
+            @foreach($followingPosts->sortByDesc('date') as $post)
                 @include('partials.post', ['post' => $post])
             @endforeach
         </ul>
