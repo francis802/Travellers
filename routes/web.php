@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\HelpController;
 
 
 /*
@@ -121,3 +122,8 @@ Route::get('group/{id}/members', [GroupController::class, 'listMembers']);
 Route::get('group/{id}/edit', [GroupController::class, 'edit']);
 Route::post('group/{id}/edit', [GroupController::class, 'update']);
 Route::get('group/{id}', [GroupController::class, 'show']);
+
+// Help
+Route::get('help/create', [HelpController::class, 'create']);
+Route::post('help/create', [HelpController::class, 'store']);
+Route::get('help/{id}', [HelpController::class, 'show']);
