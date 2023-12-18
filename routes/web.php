@@ -115,6 +115,7 @@ Route::post('api/admin/membership/{id}/banned', [AdminController::class, 'makeBa
 Route::post('api/admin/group/{group_id}/owner/{user_id}', [AdminController::class, 'groupMembershipOwner']);
 Route::post('api/admin/group/{group_id}/member/{user_id}', [AdminController::class, 'groupMembershipMember']);
 Route::post('api/admin/group/{group_id}/banned/{user_id}', [AdminController::class, 'groupMembershipBanned']);
+Route::post('api/admin/group/{group_id}/approval', [AdminController::class, 'groupApproval']);
 
 
 // Group
