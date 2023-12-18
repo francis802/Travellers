@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\Banned;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Follow;
+use App\Models\FollowRequest;
 
 class ReportController extends Controller
 {
@@ -39,6 +41,24 @@ class ReportController extends Controller
         $report->reporter_id =Auth::user()->id;
         $report->date = now();
         $report->save();
+        $reporter = User::find(Auth::user()->id);
+        $infractor = User::find($request->infractor_id);
+        if($reporter->follows($infractor->id)) {
+            Follow::where('user1_id', $reporter->id)->where('user2_id', $infractor->id)->delete();
+        }
+        if($infractor->follows($reporter->id)) {
+            Follow::where('user1_id', $infractor->id)->where('user2_id', $reporter->id)->delete();
+        }
+        if($infractor->requestFollowing($reporter->id)) {
+            FollowRequest::where('user1_id', $infractor->id)->where('user2_id', $reporter->id)->delete();
+        }
+        if($reporter->requestFollowing($infractor->id)) {
+            FollowRequest::where('user1_id', $reporter->id)->where('user2_id', $infractor->id)->delete();
+        }
+        if(!$infractor->isBlocked($reporter->id)) {
+            $reporter->blocks($infractor);
+        }
+        
         return redirect('/user/'. $request->infractor_id);
     }
 
