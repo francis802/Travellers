@@ -37,8 +37,10 @@ class AdminController extends Controller
 
     public function show_reports() {
         $this->authorize('show', Admin::class);
-        $reports = Report::all();
-        return view('pages.adminReports', ['reports' => $reports]);
+        $openedReports = Report::where('ban_infractor', null)->get();
+        $closedReports = Report::where('ban_infractor', '!=', null)->get();
+
+        return view('pages.adminReports', ['openedReports' => $openedReports, 'closedReports' => $closedReports]);
     }
 
     public function show_helps() {

@@ -179,6 +179,13 @@ class User extends Authenticatable
                 ->where('user2_id', $this->id)->exists();
     }
 
+    public function blocks($user) {
+        DB::table('blocks')->insert([
+            'user1_id' => $this->id,
+            'user2_id' => $user->id
+        ]);
+    }
+
     public function country()
     {
         return $this->belongsTo(Country::class);

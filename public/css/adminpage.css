@@ -15,3 +15,18 @@ header.faq-header{
 header.faq-header button{
     align-self: center;
 }
+
+div.choices{
+    display: flex;
+    justify-content: center;
+}
+div.choices form{
+    margin: 0 1em;
+}
+
+div.choice-container strong{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1em;
+}

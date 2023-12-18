@@ -136,7 +136,7 @@ CREATE TABLE report (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
-    evaluater_id INT REFERENCES admin(user_id) NOT NULL,
+    evaluater_id INT REFERENCES admin(user_id),
     reporter_id INT REFERENCES users(id) NOT NULL,
     infractor_id INT REFERENCES users(id) NOT NULL,
     date TIMESTAMP NOT NULL CHECK (date <= now()),

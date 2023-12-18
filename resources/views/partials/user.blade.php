@@ -45,6 +45,8 @@
                             @else
                                 <li><a class="block-user dropdown-item" href="#"  data-id="{{Auth::user()->id}} "data-user-id="{{$user->id}}" onclick="changeBlockStatus(event)">Block</a></li>
                             @endif
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url('/report/user/'. $user->id) }}"> Report </a></li>
                         @endif
                 </ul>
             </div>
