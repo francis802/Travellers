@@ -10,6 +10,9 @@
       <th scope="col">Question</th>
       <th scope="col">Date</th>
       <th scope="col"></th>
+      @if (route('admin.helps') == url()->current())
+      <th scope="col"></th>
+      @endif
     </tr>
   </thead>
   <tbody>
@@ -22,7 +25,7 @@
                         @if (Auth::user()->profile_photo !== null)
                             <img src="{{ url($help->user->profile_photo) }}" alt="Profile Picture">
                         @else
-                        <img src="{{ url(man.jpg) }}" alt="Profile Picture">
+                        <img src="{{ url('man.jpg') }}" alt="Profile Picture">
                         @endif
                     </div>
                     <h2 id="user-username">&#64;{{ $help->user->username }}</h2>
@@ -36,7 +39,18 @@
             <td>
                 <a href="{{url('/help/'.$help->id)}}" class="btn btn-primary">View</a>
             </td>
-        </tr>
+
+        @if (route('admin.helps') == url()->current() && $help->answer != null)
+        <td>
+          <form action="{{url('/faq/create/')}}" method="POST">
+            @csrf
+            <input type="hidden" name="question" value="{{$help->title}}">
+            <input type="hidden" name="answer" value="{{$help->answer}}">
+            <button type="submit" class="btn btn-success">Create FAQ</button>
+          </form>
+        </td>
+        @endif
+      </tr>
     @endforeach
   </tbody>
 </table>
