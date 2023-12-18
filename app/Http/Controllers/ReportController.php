@@ -6,6 +6,7 @@ use App\Models\Report;
 use App\Models\User;
 use App\Models\Banned;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
@@ -20,9 +21,10 @@ class ReportController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(int $infractorId)
     {
-        //
+        $infractor = User::find($infractorId);
+        return view('pages.report', ['infractor' => $infractor]);
     }
 
     /**
@@ -30,7 +32,14 @@ class ReportController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $report = new Report();
+        $report->title = $request->title;
+        $report->description = $request->description;
+        $report->infractor_id = $request->infractor_id;
+        $report->reporter_id =Auth::user()->id;
+        $report->date = now();
+        $report->save();
+        return redirect('/user/'. $request->infractor_id);
     }
 
     /**

@@ -138,7 +138,7 @@ Route::get('faqs', [FAQController::class, 'showFAQs'])->name('faqs');
 Route::post('faq/create', [FAQController::class, 'store']);
 
 // Report
-Route::get('report/create', [ReportController::class, 'create']);
-Route::post('report/create', [ReportController::class, 'store']);
+Route::get('report/user/{id}', [ReportController::class, 'create']);
+Route::post('report/user/{id}', [ReportController::class, 'store']);
 Route::post('report/{id}/ban', [ReportController::class, 'ban_user']);
 Route::post('report/{id}/close', [ReportController::class, 'close_report']);
