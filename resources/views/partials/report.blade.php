@@ -16,11 +16,19 @@
         <p>{{$report->description}}</p>
         @if ($report->ban_infractor === true)
         <div class="choice-container">
-            <strong> <a href="{{ url('/user/'. $report->infractor->id) }}"> &#64;{{$report->infractor->username}}</a> &nbsp; has been banned. </strong>
+            Outcome: &nbsp;
+            <button type="submit" class="btn btn-danger">
+                <i class="fa-solid fa-ban"></i>
+                Banned
+            </button>
         <div>
         @elseif ($report->ban_infractor === false)
         <div class="choice-container">
-            <strong> <a href="{{ url('/user/'. $report->infractor->id) }}"> &#64;{{$report->infractor->username}}</a> &nbsp; has not been banned. </strong>
+            Outcome: &nbsp;
+            <button type="submit" class="btn btn-secondary">
+                <i class="fa-solid fa-check"></i>
+                Not Banned
+            </button>
         <div>
         @elseif ($report->ban_infractor === null)
         <div class="choice-container">
