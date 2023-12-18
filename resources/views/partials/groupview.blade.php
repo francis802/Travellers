@@ -15,7 +15,7 @@
                     <h3 id="user-name">{{ $group->country->name }}</h3>
                     <section id="user-infos">
                         <p class="infos-with-margin">{{ $group->description }}</p>
-                        <p class="infos-with-margin subgroups"><a href="">{{ count($subgroups) }} Subgroups</a></p>
+                        <p class="infos-with-margin subgroups"><a href="{{ url('/group/'.$group->id.'/subgroups') }}">{{ count($subgroups) }} Subgroups</a></p>
                         <p class="infos-with-margin members"><a href="{{ url('/group/'.$group->id.'/members') }}">{{ count($members) }} Members</a></p>
                     </section>
                 </section>

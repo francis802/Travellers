@@ -6,9 +6,12 @@
     height: 100%;
 }
 
-a:hover{
-    color:#85bcc7;
+p a, li a {
+    text-decoration: none;
+    color: inherit;
 }
+
+
 
 .side-bar-link, .side-bar-link:visited, .side-bar-link:hover{
     text-decoration: none;
