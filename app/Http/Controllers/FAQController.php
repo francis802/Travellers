@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FAQ;
 use Illuminate\Http\Request;
+use App\Models\Help;
 
 class FAQController extends Controller
 {
@@ -33,8 +34,11 @@ class FAQController extends Controller
         $faq->question = $request->question;
         $faq->answer = $request->answer;
         $faq->last_edited = date('Y-m-d H:i:s');
+        $help = Help::find($request->help_id);
+        $help->became_faq = true;
     
         $faq->save();
+        $help->save();
         return redirect()->route('faqs');
     }
 

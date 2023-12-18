@@ -120,6 +120,7 @@ CREATE TABLE common_help (
     description TEXT NOT NULL,
     date TIMESTAMP NOT NULL CHECK (date <= now()),
     answer TEXT,
+    became_faq BOOLEAN DEFAULT FALSE,
     user_id INT REFERENCES users(id) NOT NULL
 );
 

@@ -46,7 +46,8 @@
             @csrf
             <input type="hidden" name="question" value="{{$help->title}}">
             <input type="hidden" name="answer" value="{{$help->answer}}">
-            <button type="submit" class="btn btn-success">Create FAQ</button>
+            <input type="hidden" name="help_id" value="{{$help->id}}">
+            <button type="submit" class="btn btn-success {{$help->became_faq ? 'disabled':''}}">Create FAQ</button>
           </form>
         </td>
         @endif

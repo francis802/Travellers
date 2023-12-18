@@ -58,7 +58,7 @@ class HelpController extends Controller
         $help = Help::find($helpId);
         $help->answer = $request->answer;
         $help->save();
-        return redirect()->back();
+        return redirect()->route('admin.helps');
     }
 
     /**
