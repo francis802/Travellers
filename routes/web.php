@@ -118,6 +118,7 @@ Route::post('api/admin/group/{group_id}/banned/{user_id}', [AdminController::cla
 Route::get('group/create', [GroupController::class, 'create']);
 Route::post('group/create', [GroupController::class, 'store']);
 Route::get('group/{id}/members', [GroupController::class, 'listMembers']);
+Route::get('group/{id}/subgroups', [GroupController::class, 'listSubgroups']);
 Route::get('group/{id}/edit', [GroupController::class, 'edit']);
 Route::post('group/{id}/edit', [GroupController::class, 'update']);
 Route::get('group/{id}', [GroupController::class, 'show']);

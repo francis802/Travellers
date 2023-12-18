@@ -148,4 +148,11 @@ class GroupController extends Controller
 
         return response()->json(['user_id' => $user_id]);
     }
+
+    public function listSubgroups(int $id){
+        $group = Group::findOrFail($id);
+        $subgroups = $group->subgroups()->get();
+        
+        return view('pages.listSubgroups', ['subgroups' => $subgroups, 'group' => $group]);
+    }
 } 
