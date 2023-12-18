@@ -128,3 +128,4 @@ Route::get('helps', [HelpController::class, 'showHelps']);
 Route::get('help/create', [HelpController::class, 'create']);
 Route::post('help/create', [HelpController::class, 'store']);
 Route::get('help/{id}', [HelpController::class, 'show']);
+Route::post('help/{id}/answer', [HelpController::class, 'answer']);

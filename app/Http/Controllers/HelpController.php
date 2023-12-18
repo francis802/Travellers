@@ -44,17 +44,21 @@ class HelpController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Help $help)
+    public function show(int $helpId)
     {
-        //
+        $help = Help::find($helpId);
+        return view('pages.fullHelp', ['help' => $help]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Help $help)
+    public function answer(int $helpId, Request $request)
     {
-        //
+        $help = Help::find($helpId);
+        $help->answer = $request->answer;
+        $help->save();
+        return redirect()->back();
     }
 
     /**
