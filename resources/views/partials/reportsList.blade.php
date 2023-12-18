@@ -14,7 +14,7 @@
             <td scope="row">
                 <a href="{{ url('/user/'. $report->reporter->id) }}" class="profile-info">
                     <div id="profile-picture-sml">
-                        @if (Auth::user()->profile_photo !== null)
+                        @if ($report->reporter->profile_photo !== null)
                             <img src="{{ url($report->reporter->profile_photo) }}" alt="Profile Picture">
                         @else
                         <img src="{{ url('man.jpg') }}" alt="Profile Picture">

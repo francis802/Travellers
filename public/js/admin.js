@@ -28,6 +28,16 @@ function addEventListeners() {
     [].forEach.call(groupBannedSetters, function(bannedSetter) {
         bannedSetter.addEventListener('click', sendGroupBannedRequest);
     });
+
+    let groupAccepter = document.querySelectorAll('button.accept-group');
+    [].forEach.call(groupAccepter, function(accepter) {
+        accepter.addEventListener('click', acceptGroup);
+    });
+
+    let groupRejecter = document.querySelectorAll('button.reject-group');
+    [].forEach.call(groupRejecter, function(rejecter) {
+        rejecter.addEventListener('click', rejectGroup);
+    });
 }
 
 function encodeForAjax(data) {
@@ -128,7 +138,6 @@ function sendGroupOwnerRequest() {
 }
 
 function groupOwnerHandler() {
-    console.log(this.responseText);
     if (this.status != 200) window.location = '/';
     let resp = JSON.parse(this.responseText);
     let element = document.querySelector('.group-owner[user-id="' + resp.owner.user_id + '"][group-id="' + resp.owner.group_id + '"]');
@@ -258,6 +267,27 @@ function groupBannedHandler() {
             color.classList.remove('btn-secondary');
           });
     }
+}
+
+function acceptGroup(){
+    let group_id = this.closest('button.accept-group').getAttribute('data-id');
+    console.log('accept'+group_id);
+    sendAjaxRequest('post', '/api/admin/group/' + group_id + '/approval/', {decision: 'true'}, afterDecisionHandler);
+}
+
+function rejectGroup(){
+    let group_id = this.closest('button.reject-group').getAttribute('data-id');
+    console.log('reject'+group_id);
+    sendAjaxRequest('post', '/api/admin/group/' + group_id + '/approval/', {decision: 'false'}, afterDecisionHandler);
+}
+
+function afterDecisionHandler(){
+    console.log(this.responseText);
+    if (this.status != 200) window.location = '/';
+    let resp = JSON.parse(this.responseText);
+    let element = document.querySelector('#country-' + resp.group.id);
+    element.remove();
+    
 }
 
 addEventListeners();

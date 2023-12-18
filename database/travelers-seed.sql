@@ -1071,7 +1071,9 @@ VALUES
     (1, 29),
     (2, 30),
     (3, 31),
-    (4, 32);
+    (4, 32),
+    (6, 33),
+    (7, 34);
 
 INSERT INTO members (user_id, group_id)
 VALUES

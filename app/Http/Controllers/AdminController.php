@@ -31,8 +31,23 @@ class AdminController extends Controller
 
     public function show_groups() {
         $this->authorize('show', Admin::class);
-        $groups = Group::all();
+        $groups = Group::where('approved', null)->get();
         return view('pages.adminGroups', ['groups' => $groups]);
+    }
+
+    public function groupApproval(Request $request, int $groupId) {
+        $group = Group::find($groupId);
+        if($request->decision == 'true'){
+            $group->approved = true;
+            $group->save();
+        }
+        else if($request->decision == 'false'){
+            Owner::where('group_id', $group->id)->delete();
+            Member::where('group_id', $group->id)->delete();
+            BannedMember::where('group_id', $group->id)->delete();
+            $group->delete();
+        }
+        return response()->json(['group' => $group]);
     }
 
     public function show_reports() {
