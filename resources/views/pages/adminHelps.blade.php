@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('title', 'Home')
-@include('partials.bar')
+@include('partials.adminbar')
 @include('partials.helps')
 
 @section('content')
-    @yield('bar')
+    @yield('adminbar')
     @yield('helps')
 @endsection
