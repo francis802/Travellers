@@ -38,6 +38,10 @@ class Group extends Model
         return Group::select('groups.*')->where('groups.subgroup_id', '=', $this->id);
     }
 
+    public function parentGroup(){
+        return $this->belongsTo('App\Models\Group', 'subgroup_id');
+    }
+
     public function isMember(User $user){
         return $this->members()
                     ->where('user_id', $user->id)
