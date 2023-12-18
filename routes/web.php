@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\HelpController;
 
 
 /*
@@ -104,7 +105,7 @@ Route::get('admin', [AdminController::class, 'show']);
 Route::get('admin/users', [AdminController::class, 'show_users']);
 Route::get('admin/groups', [AdminController::class, 'show_groups']);
 Route::get('admin/reports', [AdminController::class, 'show_reports']);
-Route::get('admin/helps', [AdminController::class, 'show_helps']);
+Route::get('admin/helps', [AdminController::class, 'show_helps'])->name('admin.helps');
 Route::get('admin/unban-requests', [AdminController::class, 'show_unban_requests']);
 Route::post('api/admin/membership/{id}/admin', [AdminController::class, 'makeAdmin']);
 Route::post('api/admin/membership/{id}/user', [AdminController::class, 'makeUser']);
@@ -122,3 +123,10 @@ Route::get('group/{id}/subgroups', [GroupController::class, 'listSubgroups']);
 Route::get('group/{id}/edit', [GroupController::class, 'edit']);
 Route::post('group/{id}/edit', [GroupController::class, 'update']);
 Route::get('group/{id}', [GroupController::class, 'show']);
+
+// Help
+Route::get('helps', [HelpController::class, 'showHelps']);
+Route::get('help/create', [HelpController::class, 'create']);
+Route::post('help/create', [HelpController::class, 'store']);
+Route::get('help/{id}', [HelpController::class, 'show']);
+Route::post('help/{id}/answer', [HelpController::class, 'answer']);

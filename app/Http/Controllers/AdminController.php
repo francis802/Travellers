@@ -43,8 +43,9 @@ class AdminController extends Controller
 
     public function show_helps() {
         $this->authorize('show', Admin::class);
-        $helps = Help::all();
-        return view('pages.adminHelps', ['helps' => $helps]);
+        $openedHelps = Help::where('answer', null)->get();
+        $closedHelps = Help::where('answer', '!=', null)->get();
+        return view('pages.adminHelps', ['openedHelps' => $openedHelps, 'closedHelps' => $closedHelps]);
     }
 
     public function show_unban_requests() {

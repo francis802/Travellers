@@ -119,6 +119,7 @@ CREATE TABLE common_help (
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     date TIMESTAMP NOT NULL CHECK (date <= now()),
+    answer TEXT,
     user_id INT REFERENCES users(id) NOT NULL
 );
 
