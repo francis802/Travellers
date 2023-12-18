@@ -15,7 +15,7 @@
                     @endif
                 </a>
             </li>
-            <li><a href="{{url('/help/create/')}}" class="side-bar-link">Help</a></li>
+            <li><a href="{{url('/helps/')}}" class="side-bar-link">Help</a></li>
             <li><a href="#" class="side-bar-link">About Us</a></li>
             <li><a href="#" class="side-bar-link">Main Features</a></li>
             <li><a href="#" class="side-bar-link">Terms of Use and Privacy Policy</a></li>

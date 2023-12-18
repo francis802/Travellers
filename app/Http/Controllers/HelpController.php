@@ -11,9 +11,11 @@ class HelpController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function showHelps()
     {
-        //
+        $openedHelps = Auth::user()->helpsOpened()->get();
+        $closedHelps = Auth::user()->helpsClosed()->get();
+        return view('pages.helps', ['openedHelps' => $openedHelps, 'closedHelps' => $closedHelps]);
     }
 
     /**

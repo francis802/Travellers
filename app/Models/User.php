@@ -176,6 +176,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Country::class);
     }
+
+    public function helpsOpened() {
+        return Help::where('user_id', $this->id)->where('answer', null)->orderBy('date', 'desc');
+    }
+
+    public function helpsClosed() {
+        return Help::where('user_id', $this->id)->where('answer', '!=', null)->orderBy('date', 'desc');
+    }
     
 
 }
