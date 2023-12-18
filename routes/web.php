@@ -14,6 +14,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\HelpController;
 use App\Http\Controllers\FAQController;
+use App\Http\Controllers\ReportController;
 
 
 /*
@@ -135,3 +136,9 @@ Route::post('help/{id}/answer', [HelpController::class, 'answer']);
 // FAQ
 Route::get('faqs', [FAQController::class, 'showFAQs'])->name('faqs');
 Route::post('faq/create', [FAQController::class, 'store']);
+
+// Report
+Route::get('report/create', [ReportController::class, 'create']);
+Route::post('report/create', [ReportController::class, 'store']);
+Route::post('report/{id}/ban', [ReportController::class, 'ban_user']);
+Route::post('report/{id}/close', [ReportController::class, 'close_report']);

@@ -8,7 +8,7 @@
         <th scope="col">#</th>
     @endif
       <th scope="col">Question</th>
-      <th scope="col">Date</th>
+      <th scope="col">Time</th>
       <th scope="col"></th>
       @if (route('admin.helps') == url()->current())
       <th scope="col"></th>
@@ -21,7 +21,7 @@
         @if (route('admin.helps') == url()->current())
             <th scope="row">
                 <a href="{{ url('/user/'. $help->user->id) }}" class="profile-info">
-                    <div id="profile-picture">
+                    <div id="profile-picture-sml">
                         @if (Auth::user()->profile_photo !== null)
                             <img src="{{ url($help->user->profile_photo) }}" alt="Profile Picture">
                         @else
@@ -35,7 +35,7 @@
             <th scope="row">{{$loop->index + 1}}</th>
         @endif
             <td>{{$help->title}}</td>
-            <td>{{$help->date}}</td>
+            <td>{{$help->humanDate()}}</td>
             <td>
                 <a href="{{url('/help/'.$help->id)}}" class="btn btn-primary">View</a>
             </td>

@@ -39,3 +39,18 @@ html{
   letter-spacing:.01em;
   line-height:1.6
 }
+
+#profile-picture-sml {
+  width: 2em;
+  height: 2em;
+  border-radius: 10%;
+  overflow: hidden;
+  margin-right: 1rem;
+}
+
+#profile-picture-sml img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
