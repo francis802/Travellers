@@ -5,3 +5,13 @@
 .card.answer{
     margin-top: 1em;
 }
+
+header.faq-header{
+    margin-bottom: 1em;
+    display: flex;
+    justify-content: space-between;
+}
+
+header.faq-header button{
+    align-self: center;
+}

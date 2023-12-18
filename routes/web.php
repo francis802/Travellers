@@ -13,6 +13,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\HelpController;
+use App\Http\Controllers\FAQController;
 
 
 /*
@@ -130,3 +131,7 @@ Route::get('help/create', [HelpController::class, 'create']);
 Route::post('help/create', [HelpController::class, 'store']);
 Route::get('help/{id}', [HelpController::class, 'show']);
 Route::post('help/{id}/answer', [HelpController::class, 'answer']);
+
+// FAQ
+Route::get('faqs', [FAQController::class, 'showFAQs'])->name('faqs');
+Route::post('faq/create', [FAQController::class, 'store']);

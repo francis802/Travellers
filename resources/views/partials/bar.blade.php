@@ -17,7 +17,7 @@
             </li>
             <li><a href="{{url('/helps/')}}" class="side-bar-link">Help</a></li>
             <li><a href="#" class="side-bar-link">About Us</a></li>
-            <li><a href="#" class="side-bar-link">Main Features</a></li>
+            <li><a href="{{url('/faqs/')}}" class="side-bar-link">FAQ</a></li>
             <li><a href="#" class="side-bar-link">Terms of Use and Privacy Policy</a></li>
         </ul>
         <ul id="lower-sidebar">
