@@ -43,10 +43,6 @@
                         <p class="comment-date-info comment-info">{{ $comment->date }}</p>
                     </div>
                 </div>
-               
-                <script>
-                     highlightMentions('comment-id-{{ $comentario->id }}', '{{ $comment->author->id }}', '{{ $comentario->username }}');
-                </script>
             </li>
         @endforeach
     </ul>

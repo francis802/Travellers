@@ -8,6 +8,8 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\User;
+
 class CommentController extends Controller
 {
     /**
@@ -105,5 +107,24 @@ class CommentController extends Controller
         $likes = $comment->likes();
 
         return response()->json(['comment' => $comment, 'likes' => count($likes)]);
+    }
+
+
+    public function convertUsernamesToIds(int $id){
+
+        $comment = Comment::findOrFail($id);
+
+        $usernames = $comment->extractMentions();
+        $user_ids = [];
+        
+        foreach ($usernames as $username) {
+            $user = User::where('username', $username)->get();
+
+            if ($user) {
+                $user_ids[$username] = $user->id;
+            }
+        }
+
+        return response()->json($user_ids);
     }
 }
