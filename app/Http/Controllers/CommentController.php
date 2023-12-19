@@ -118,13 +118,13 @@ class CommentController extends Controller
         $user_ids = [];
         
         foreach ($usernames as $username) {
-            $user = User::where('username', $username)->get();
+            $user = User::where('username', $username)->first();
 
             if ($user) {
                 $user_ids[$username] = $user->id;
             }
         }
 
-        return response()->json($user_ids);
+        return response()->json(['user_ids' => $user_ids, 'commentId' => $id]);
     }
 }
