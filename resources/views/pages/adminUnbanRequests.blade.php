@@ -1,12 +1,21 @@
 @extends('layouts.app')
 @include('partials.adminbar')
-@include('partials.adminUnbanRequests')
+@include('partials.topbar')
 
 
 
 @section('content')
-    <section class="inner-content">
     @yield('adminbar')
-    @yield('adminUnbanRequests')
+    <section id="feed">
+        @yield('topbar')
+        <section id="buttons">
+            <button id="open-help-button" class="underline">Open Appeals</button>
+            <button id="close-help-button">Closed Appeals</button>
+        </section>
+
+        @include('partials.appealsList', ['appeals' => $openedAppeals, 'type' => 'open-help'])
+
+        @include('partials.appealsList', ['appeals' => $closedAppeals, 'type' => 'close-help'])
+
     </section>
 @endsection

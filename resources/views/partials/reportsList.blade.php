@@ -35,7 +35,7 @@
                     <h2 id="user-username">&#64;{{ $report->infractor->username }}</h2>
                 </a>
             </td>
-            <td>{{$report->humanDate()}}</td>
+            <td>{{$report->date->diffForHumans()}}</td>
             <td>
                 @include('partials.report', ['report' => $report])
             </td>

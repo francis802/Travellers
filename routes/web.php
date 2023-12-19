@@ -15,6 +15,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\HelpController;
 use App\Http\Controllers\FAQController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\BannedController;
 
 
 /*
@@ -143,3 +144,8 @@ Route::get('report/user/{id}', [ReportController::class, 'create']);
 Route::post('report/user/{id}', [ReportController::class, 'store']);
 Route::post('report/{id}/ban', [ReportController::class, 'ban_user']);
 Route::post('report/{id}/close', [ReportController::class, 'close_report']);
+
+// Banned
+Route::get('banned', [BannedController::class, 'banned'])->name('banned');
+Route::get('appeal-unban', [BannedController::class, 'appeal_unban']);
+Route::post('appeal-unban/create', [BannedController::class, 'submit_appeal_unban'])->name('submit_unban_appeal');

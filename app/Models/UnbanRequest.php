@@ -14,4 +14,13 @@ class UnbanRequest extends Model
     protected $table = 'unban_request';
 
     protected $fillable = ['title', 'description', 'date', 'accept_appeal'];
+
+    protected $casts = [
+        'date' => 'datetime',
+    ];
+
+    public function banned_user()
+    {
+        return $this->belongsTo(User::class, 'banned_user_id', 'id');
+    }
 }

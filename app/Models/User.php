@@ -198,6 +198,10 @@ class User extends Authenticatable
     public function helpsClosed() {
         return Help::where('user_id', $this->id)->where('answer', '!=', null)->orderBy('date', 'desc');
     }
+
+    public function reportsOnUser() {
+        return Report::where('infractor_id', $this->id)->where('ban_infractor', '!=', null)->orderBy('date', 'desc');
+    }
     
 
 }

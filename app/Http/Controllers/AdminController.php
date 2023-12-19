@@ -67,8 +67,9 @@ class AdminController extends Controller
 
     public function show_unban_requests() {
         $this->authorize('show', Admin::class);
-        $unban_requests = UnbanRequest::all();
-        return view('pages.adminUnbanRequests', ['unban_requests' => $unban_requests]);
+        $openedAppeals = UnbanRequest::where('accept_appeal', null)->get();
+        $closedAppeals = UnbanRequest::where('accept_appeal', '!=', null)->get();
+        return view('pages.adminUnbanRequests', ['openedAppeals' => $openedAppeals, 'closedAppeals' => $closedAppeals]);
     }
 
     public function makeAdmin($id) {
