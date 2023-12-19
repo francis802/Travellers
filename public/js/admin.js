@@ -38,6 +38,16 @@ function addEventListeners() {
     [].forEach.call(groupRejecter, function(rejecter) {
         rejecter.addEventListener('click', rejectGroup);
     });
+
+    let userUnbanner = document.querySelectorAll('button.unban-user');
+    [].forEach.call(userUnbanner, function(unbanner) {
+        unbanner.addEventListener('click', unbanUser);
+    });
+
+    let appealRejecter = document.querySelectorAll('button.reject-appeal');
+    [].forEach.call(appealRejecter, function(rejecter) {
+        rejecter.addEventListener('click', rejectAppeal);
+    });
 }
 
 function encodeForAjax(data) {
@@ -277,7 +287,6 @@ function acceptGroup(){
 
 function rejectGroup(){
     let group_id = this.closest('button.reject-group').getAttribute('data-id');
-    console.log('reject'+group_id);
     sendAjaxRequest('post', '/api/admin/group/' + group_id + '/approval/', {decision: 'false'}, afterDecisionHandler);
 }
 
@@ -287,7 +296,41 @@ function afterDecisionHandler(){
     let resp = JSON.parse(this.responseText);
     let element = document.querySelector('#country-' + resp.group.id);
     element.remove();
-    
 }
+
+function unbanUser(){
+    let appeal_id = this.closest('button.unban-user').getAttribute('data-id');
+    sendAjaxRequest('post', '/api/admin/appeal/' + appeal_id + '/evaluate-appeal/', {decision: 'true'}, afterUnbanHandler);
+}
+
+function rejectAppeal(){
+    let appeal_id = this.closest('button.reject-appeal').getAttribute('data-id');
+    sendAjaxRequest('post', '/api/admin/appeal/' + appeal_id + '/evaluate-appeal/', {decision: 'false'}, afterUnbanHandler);
+}
+
+function afterUnbanHandler(){
+    console.log(this.responseText);
+    if (this.status != 200) window.location = '/';
+    let resp = JSON.parse(this.responseText);
+    let element = document.querySelector('#appeal-' + resp.appeal.id);
+    let container = document.querySelector('.close-help');
+    container.prepend(element);
+    let cardFooter = element.querySelector('.card-footer');
+    let acceptAppeal = resp.appeal.accept_appeal;
+
+    if (acceptAppeal === true) {
+        cardFooter.innerHTML = `
+        Outcome: 
+        <button type="button" class="btn btn-success reject-appeal" disabled>User Unbanned</button>
+        `;
+    } else if (acceptAppeal === false) {
+        cardFooter.innerHTML = `
+        Outcome: 
+        <button type="button" class="btn btn-danger reject-appeal" disabled>Appeal Rejected</button>
+        `;
+    }
+}
+
+
 
 addEventListeners();

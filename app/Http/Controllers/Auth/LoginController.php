@@ -18,8 +18,10 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-        if (Auth::check()) {
+        if (Auth::check() && !Auth::user()->isBanned()) {
             return redirect('/home');
+        } else if (Auth::check() && Auth::user()->isBanned()) {
+            return redirect('/banned');
         } else {
             return view('auth.login');
         }
@@ -37,8 +39,12 @@ class LoginController extends Controller
  
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
- 
-            return redirect()->intended('home');
+            if (Auth::user()->isBanned()) {
+                return redirect('/banned');
+            }
+            else {
+                return redirect()->intended('home');
+            }
         }
  
         return back()->withErrors([

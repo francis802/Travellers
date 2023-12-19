@@ -25,10 +25,18 @@ function changeViewOpenHelp() {
     openButton.classList.add('underline');
     const closeButton = document.querySelector('#close-help-button');
     closeButton.classList.remove('underline');
-    const openHelp = document.querySelector('.open-help');
-    openHelp.style.display = 'table';
-    const closeHelp = document.querySelector('.close-help');
-    closeHelp.style.display = 'none';
+    let openHelp = document.querySelector('div.open-help');
+    let closeHelp = document.querySelector('div.close-help');
+    if(closeHelp == null){
+        openHelp = document.querySelector('table.open-help');
+        closeHelp = document.querySelector('table.close-help');
+        openHelp.style.display = 'table';
+        closeHelp.style.display = 'none';
+    }
+    else{
+        openHelp.style.display = 'block';
+        closeHelp.style.display = 'none';
+    }
 }
 
 function changeViewCloseHelp() {
@@ -39,10 +47,18 @@ function changeViewCloseHelp() {
     closeButton.classList.add('underline');
     const openButton = document.querySelector('#open-help-button');
     openButton.classList.remove('underline');
-    const openHelp = document.querySelector('.open-help');
-    openHelp.style.display = 'none';
-    const closeHelp = document.querySelector('.close-help');
-    closeHelp.style.display = 'table';
+    let openHelp = document.querySelector('div.open-help');
+    let closeHelp = document.querySelector('div.close-help');
+    if(openHelp == null){
+        openHelp = document.querySelector('table.open-help');
+        closeHelp = document.querySelector('table.close-help');
+        openHelp.style.display = 'none';
+        closeHelp.style.display = 'table';
+    }
+    else{
+        openHelp.style.display = 'none';
+        closeHelp.style.display = 'block';
+    }
 }
 
 addEventListeners();

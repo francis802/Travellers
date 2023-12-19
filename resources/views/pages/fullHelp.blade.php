@@ -17,7 +17,7 @@
         <p class="card-text">{{$help->description}}</p>
     </div>
     <div class="card-footer text-body-secondary">
-        {{$help->humanDate()}}
+        {{$help->date->diffForHumans()}}
     </div>
     </div>
     <div class="card answer">

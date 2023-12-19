@@ -35,7 +35,7 @@
             <th scope="row">{{$loop->index + 1}}</th>
         @endif
             <td>{{$help->title}}</td>
-            <td>{{$help->humanDate()}}</td>
+            <td>{{$help->date->diffForHumans()}}</td>
             <td>
                 <a href="{{url('/help/'.$help->id)}}" class="btn btn-primary">View</a>
             </td>
