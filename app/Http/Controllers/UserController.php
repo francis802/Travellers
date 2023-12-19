@@ -95,7 +95,7 @@ class UserController extends Controller
             }
 
             $user->save();
-            return redirect('user/'.$user->id);
+            return redirect('user/'.$user->id)->withSuccess('User updated successfully!');
         }
 
 
