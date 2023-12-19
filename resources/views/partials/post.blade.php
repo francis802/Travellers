@@ -1,3 +1,5 @@
+
+
 <div class="card mb-3" id="post-id-{{$post->id}}">
     <div class="card-header post-header">
         <div id="post-author">
@@ -9,18 +11,30 @@
                 @endif
             </a>
         </div>
-        <div id="edit-delete-post">
-            @if ($post->author->id == Auth::user()->id)
-                <a href="{{ url('/post/'.$post->id.'/edit') }}" class="post-edit">
-                    <img src="../pen.png" alt="Edit Post">
-                </a>
-            @endif
-            @if ($post->author->id == Auth::user()->id || Auth::user()->isAdmin())
-            <div class="post-delete" data-id="{{$post->id}}">
-                <img type="image" src="../trash-bin.png" alt="Delete Post">
-            </div>
-            @endif
+
+        <div id="edit-delete-post" class="btn-group dropstart">
+            <button type="button" class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false">...</button>
+            <ul class="dropdown-menu">
+                @if ($post->author->id == Auth::user()->id)
+                    <li>
+                        <a href="{{ url('/post/'.$post->id.'/edit') }}" class="post-edit dropdown-item">
+                            <img src="../pen.png" alt="Edit Post">
+                            Edit
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                @endif
+                @if ($post->author->id == Auth::user()->id || Auth::user()->isAdmin())
+                    <li>
+                        <div class="post-delete dropdown-item" data-id="{{$post->id}}">
+                            <img type="image" src="../trash-bin.png" alt="Delete Post">
+                            Delete
+                        </div>
+                    </li>
+                @endif
+            </ul>
         </div>
+        
     </div>
     <div class="card-body">
         <a href="{{url('/post/'.$post->id)}}">
@@ -29,7 +43,6 @@
             @endif
             <div class="post-body-text">
                 <p class="post-description">{{ $post->text }}</p>
-                
             </div>
         </a>
     </div>
@@ -49,11 +62,12 @@
                 </button>
                 <button class="share-post">
                     <h5>
-                    <i class="fa-solid fa-share-from-square fa-2x"></i>
+                    <i class="fa-regular fa-share-from-square fa-2x" style="color: #000000;"></i>
                     </h5>
                 </button>
             </ul>
         </div>
+
         @if(url()->current() == url('/post/'.$post->id))
             @include('partials.commentsection', ['post'=>$post])
         @endif

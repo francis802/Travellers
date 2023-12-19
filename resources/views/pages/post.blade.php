@@ -2,12 +2,18 @@
 
 @section('title', 'Home')
 @include('partials.bar')
-
+@include('partials.topbar')
 
 @section('content')
-    <section class="inner-content">
-        @yield('bar')
-        @include('partials.post')
-    </section>
     
+        @yield('bar')
+
+        @if(url()->current() == url('/post/'.$post->id))
+            <section id="feed">
+                @yield('topbar')
+                @include('partials.post')
+            </section>
+        @else
+            @include('partials.post')
+        @endif
 @endsection
