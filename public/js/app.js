@@ -71,10 +71,6 @@ function addEventListeners() {
   let postComment = document.querySelector('textarea#comment');
   if (postComment != null) {
     postComment.addEventListener('input', postButtonVisibility);
-    
-    [].forEach.call(postButtonShower, function(postComment) {
-      postComment.addEventListener('input', postButtonVisibility);
-    });
   }
 
   let followUser = document.querySelectorAll('.request-follow');
@@ -358,9 +354,9 @@ function addEventListeners() {
   function createComment(comment, name) {
     let new_comment = document.createElement('li');
     new_comment.classList.add('post-comment');
+    new_comment.classList.add('list-group-item');
     new_comment.id = 'comment-id-' + comment.id;
     let profile = location.protocol + '//' + location.host + '/user/' + comment.author_id;
-    console.log(profile);
     new_comment.innerHTML = `
     <div class="post-comment-author">
         <a href="`+ profile + `" class="post-comment-author-name">
@@ -383,7 +379,9 @@ function addEventListeners() {
         ` + 0 + `
         </h5>
       </button>
+      <div class="comment-date">
       <p class="comment-date">` + comment.date + `</p>
+      </div>
     </div>
     `;
   
