@@ -111,7 +111,7 @@ CREATE TABLE unban_request (
     description TEXT NOT NULL,
     date TIMESTAMP NOT NULL CHECK (date <= now()),
     accept_appeal BOOLEAN DEFAULT NULL,
-    banned_user_id INT REFERENCES banned(user_id)
+    banned_user_id INT REFERENCES users(id)
 );
 
 CREATE TABLE common_help (
@@ -970,10 +970,10 @@ VALUES
     ('You can change your password by clicking on the "Change Password" button on the top right corner of the page.', 'How can I change my password?', '2021-05-01 12:00:00', 2);
     
 
-INSERT INTO report (title, description, evaluater_id, reporter_id, infractor_id, date)
+INSERT INTO report (title, description, reporter_id, infractor_id, date)
 VALUES
-    ('Ban him now', 'He doesnt stop spamming my posts with mean comments!', 1, 4, 6, CURRENT_TIMESTAMP),
-    ('I hate him,', 'He stinks and hes a bad person', 1, 6, 4, CURRENT_TIMESTAMP);
+    ('Ban him now', 'He doesnt stop spamming my posts with mean comments!', 4, 6, CURRENT_TIMESTAMP),
+    ('I hate him,', 'He stinks and hes a bad person', 6, 4, CURRENT_TIMESTAMP);
 
 INSERT INTO requests (user1_id, user2_id)
 VALUES

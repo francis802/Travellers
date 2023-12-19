@@ -19,10 +19,22 @@
                     @include('partials.reportsOnUser', ['user' => $appeal->banned_user])
                     <p class="card-text"><small class="text-body-secondary">{{ $appeal->date->diffForHumans() }}</small></p>
                 </div>
+                @if ($appeal->accept_appeal === null)
                 <div class="card-footer text-body-secondary text-center">
-                    <button type="button" class="btn btn-success accept-group" data-id="{{$appeal->id}}">Accept</button>
-                    <button type="button" class="btn btn-danger reject-group" data-id="{{$appeal->id}}">Reject</button>
+                    <button type="button" class="btn btn-secondary unban-user" data-id="{{$appeal->id}}">Unban User</button>
+                    <button type="button" class="btn btn-danger reject-appeal" data-id="{{$appeal->id}}">Reject Appeal</button>
                 </div>
+                @elseif ($appeal->accept_appeal === true)
+                <div class="card-footer text-body-secondary text-center">
+                    Outcome: 
+                    <button type="button" class="btn btn-sucess reject-appeal" data-id="{{$appeal->id}}" disabled>User Unbanned</button>
+                </div>
+                @elseif ($appeal->accept_appeal === false)
+                <div class="card-footer text-body-secondary text-center">
+                    Outcome:
+                    <button type="button" class="btn btn-danger reject-appeal" data-id="{{$appeal->id}}" disabled>Appeal Rejected</button>
+                </div>
+                @endif
                 </div>
         @endforeach
 </div>
