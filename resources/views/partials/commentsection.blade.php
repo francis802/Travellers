@@ -1,13 +1,14 @@
 <div class="comment-section">
     <form class="comment-submit">
+        Add a comment
         <textarea name="comment" id="comment" cols="40" rows="1" placeholder="Write a comment..."></textarea>
-        <button class="comment-create" post-id="{{$post->id}}">Post</i></button>
+        <button class="comment-create" post-id="{{$post->id}}"><p class="button button-post">Post</p></i></button>
     </form>
-    <ul class="post-comments-list">
+    <ul class="post-comments-list list-group">
         @foreach ($post->comments->sortByDesc('date') as $comment)
-            <li class="post-comment" id="comment-id-{{$comment->id}}">
+            <li class="post-comment list-group-item" id="comment-id-{{$comment->id}}">
                 <div class="post-comment-author">
-                    <a href="{{ url('/user/'.$comment->author->id) }}" class="post-comment-author-name">
+                    <a href="{{ url('/user/'.$comment->author->id)}}" class="post-comment-author-name">
                         @if ($comment->author->is_deleted)
                             [Deleted User]
                         @else
@@ -30,15 +31,17 @@
                 <div class="comment-body">
                     <p class="comment-text">{{ $comment->text }}</p>
                     <button class="{{Auth::check() && Auth::user()->likedComment($comment->id) ? 'dislike-comment' : 'like-comment'}}" data-id="{{$comment->id}}">
-                    <h5 class="like-count">
-                    <i class="{{Auth::check() && Auth::user()->likedComment($comment->id) ? 'fa-solid fa-heart fa-1x' : 'fa-regular fa-heart fa-1x'}}" style="color: #cc0f0f;"></i>
-                    {{count($comment->likes())}}
-                    </h5>
-                </button>
-                    <p class="comment-date">{{ $comment->date }}</p>
-                    @if($comment->edited)
-                        <p class="comment-edited">Edited</p>
-                    @endif
+                        <h5 class="like-count">
+                        <i class="{{Auth::check() && Auth::user()->likedComment($comment->id) ? 'fa-solid fa-heart fa-1x' : 'fa-regular fa-heart fa-1x'}}" style="color: #cc0f0f;"></i>
+                        {{count($comment->likes())}}
+                        </h5>
+                    </button>
+                    <div class="comment-date">
+                        @if($comment->edited)
+                            <p class="comment-edited">Edited</p>
+                        @endif
+                        <p class="comment-date-info comment-info">{{ $comment->date }}</p>
+                    </div>
                 </div>
             </li>
         @endforeach

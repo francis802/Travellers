@@ -37,6 +37,7 @@
         <script type="text/javascript" src={{ url('js/app.js') }} defer></script>
         <script type="text/javascript" src={{ url('js/admin.js') }} defer></script>
         <script type="text/javascript" src={{ url('js/help.js') }} defer></script>
+        <script type="text/javascript" src={{ url('js/post.js') }} defer></script>
         <script type="text/javascript" src={{ url('js/user.js') }} defer></script>
     </head>
     <body>

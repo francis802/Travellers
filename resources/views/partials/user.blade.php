@@ -25,7 +25,27 @@
             </section>
         </section>
         <section id="profile-buttons-area">
-            @if (Auth::check() && Auth::user()->id == $user->id)
+            
+            
+            <div id="edit-delete-post" class="btn-group dropstart">
+            <button type="button" class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false">...</button>
+            <ul class="dropdown-menu">
+                @if(Auth::user()->id == $user->id)
+                            <li><a class="dropdown-item" href="{{ url('/user/edit') }}"> 
+                                    <img src="../pen.png" alt="Edit Post">
+                                    Edit
+                                </a>
+                            </li>
+                        @else
+                            @if($user->isBlocked(Auth::user()->id))
+                                <li><a class="blocked block-user dropdown-item" href="#"  data-id="{{Auth::user()->id}} "data-user-id="{{$user->id}}" onclick="changeBlockStatus(event)">Unblock</a></li>
+                            @else
+                                <li><a class="block-user dropdown-item" href="#"  data-id="{{Auth::user()->id}} "data-user-id="{{$user->id}}" onclick="changeBlockStatus(event)">Block</a></li>
+                            @endif
+                        @endif
+            </ul>
+        </div>
+@if (Auth::check() && Auth::user()->id == $user->id)
             <a class="button" href="{{ url('/logout') }}"> Logout </a>
             @elseif (Auth::check() && Auth::user()->follows($user->id))
             <button class="unfollow-user button" data-id="{{$user->id}}"> Unfollow </button>

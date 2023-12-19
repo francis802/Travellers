@@ -101,6 +101,7 @@ Route::post('api/comment/{id}/edit', [CommentController::class, 'update']);
 Route::delete('api/comment/{id}/delete', [CommentController::class, 'destroy']);
 Route::post('api/comment/{id}/like', [CommentController::class, 'like_comment']);
 Route::delete('api/comment/{id}/dislike', [CommentController::class, 'dislike_comment']);
+Route::get('/api/comment/{id}/Mentioned', [CommentController::class, 'convertUsernamesToIds']);
 
 
 // Admin

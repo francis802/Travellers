@@ -92,3 +92,10 @@ p {
 #user-posts {
     padding: 2em;
 }
+
+
+#more-settings-profile .btn-secondary{
+    background:transparent;
+    border: transparent;
+    color: black;
+  }
