@@ -31,14 +31,31 @@ class AdminController extends Controller
 
     public function show_groups() {
         $this->authorize('show', Admin::class);
-        $groups = Group::all();
+        $groups = Group::where('approved', null)->get();
         return view('pages.adminGroups', ['groups' => $groups]);
+    }
+
+    public function groupApproval(Request $request, int $groupId) {
+        $group = Group::find($groupId);
+        if($request->decision == 'true'){
+            $group->approved = true;
+            $group->save();
+        }
+        else if($request->decision == 'false'){
+            Owner::where('group_id', $group->id)->delete();
+            Member::where('group_id', $group->id)->delete();
+            BannedMember::where('group_id', $group->id)->delete();
+            $group->delete();
+        }
+        return response()->json(['group' => $group]);
     }
 
     public function show_reports() {
         $this->authorize('show', Admin::class);
-        $reports = Report::all();
-        return view('pages.adminReports', ['reports' => $reports]);
+        $openedReports = Report::where('ban_infractor', null)->get();
+        $closedReports = Report::where('ban_infractor', '!=', null)->get();
+
+        return view('pages.adminReports', ['openedReports' => $openedReports, 'closedReports' => $closedReports]);
     }
 
     public function show_helps() {
@@ -50,8 +67,24 @@ class AdminController extends Controller
 
     public function show_unban_requests() {
         $this->authorize('show', Admin::class);
-        $unban_requests = UnbanRequest::all();
-        return view('pages.adminUnbanRequests', ['unban_requests' => $unban_requests]);
+        $openedAppeals = UnbanRequest::where('accept_appeal', null)->get();
+        $closedAppeals = UnbanRequest::where('accept_appeal', '!=', null)->get();
+        return view('pages.adminUnbanRequests', ['openedAppeals' => $openedAppeals, 'closedAppeals' => $closedAppeals]);
+    }
+
+    public function appealEvaluation(Request $request, int $appealId) {
+        $appeal = UnbanRequest::find($appealId);
+        $banned = Banned::where('user_id', $appeal->banned_user->id)->first();
+        if($request->decision == 'true'){
+            $appeal->accept_appeal = true;
+            $banned->delete();
+            $appeal->save();
+        }
+        else if($request->decision == 'false'){
+            $appeal->accept_appeal = false;
+            $appeal->save();
+        }
+        return response()->json(['appeal' => $appeal]);
     }
 
     public function makeAdmin($id) {

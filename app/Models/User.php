@@ -179,6 +179,13 @@ class User extends Authenticatable
                 ->where('user2_id', $this->id)->exists();
     }
 
+    public function blocks($user) {
+        DB::table('blocks')->insert([
+            'user1_id' => $this->id,
+            'user2_id' => $user->id
+        ]);
+    }
+
     public function country()
     {
         return $this->belongsTo(Country::class);
@@ -190,6 +197,10 @@ class User extends Authenticatable
 
     public function helpsClosed() {
         return Help::where('user_id', $this->id)->where('answer', '!=', null)->orderBy('date', 'desc');
+    }
+
+    public function reportsOnUser() {
+        return Report::where('infractor_id', $this->id)->where('ban_infractor', '!=', null)->orderBy('date', 'desc');
     }
     
 

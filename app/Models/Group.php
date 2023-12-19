@@ -20,9 +20,11 @@ class Group extends Model
     protected $fillable = ['description', 'banner_pic', 'country_id'];
 
     
-    public function owners() {
-        return $this->hasMany('App\Models\GroupOwner');
+    public function owners()
+    {
+        return $this->belongsToMany(User::class, 'owner', 'group_id', 'user_id');
     }
+      
 
     public function members() {
         return $this->hasMany('App\Models\Member');
@@ -34,6 +36,10 @@ class Group extends Model
 
     public function subgroups(){
         return Group::select('groups.*')->where('groups.subgroup_id', '=', $this->id);
+    }
+
+    public function parentGroup(){
+        return $this->belongsTo('App\Models\Group', 'subgroup_id');
     }
 
     public function isMember(User $user){

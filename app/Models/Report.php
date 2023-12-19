@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use DateTime;
 
 class Report extends Model
 {
@@ -18,4 +19,20 @@ class Report extends Model
     protected $casts = [
         'date' => 'datetime',
     ];
+
+    public function infractor()
+    {
+        return $this->belongsTo(User::class, 'infractor_id', 'id');
+    }
+
+    public function reporter()
+    {
+        return $this->belongsTo(User::class, 'reporter_id', 'id');
+    }
+
+    public function evaluater()
+    {
+        return $this->belongsTo(Admin::class, 'evaluater_id', 'user_id');
+    }
+
 }
