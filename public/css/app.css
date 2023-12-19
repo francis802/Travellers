@@ -54,3 +54,21 @@ html{
   object-fit: cover;
   display: block;
 }
+
+.alert-success {
+  animation: fadeOut 2s ease-in-out 3s forwards; /* Adjust duration and delay as needed */
+}
+
+@keyframes fadeOut {
+  from {
+      opacity: 1;
+  }
+
+  to {
+      opacity: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+  }
+}

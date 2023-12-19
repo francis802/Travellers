@@ -46,7 +46,7 @@ class HelpController extends Controller
      */
     public function show(int $helpId)
     {
-        $help = Help::find($helpId);
+        $help = Help::findOrFail($helpId);
         return view('pages.fullHelp', ['help' => $help]);
     }
 

@@ -3,6 +3,11 @@
 @section('user')
 <section id="feed">
     @yield('topbar')
+    @if(session('success'))
+    <div class="alert alert-success" role="alert">
+    {{session('success')}}
+    </div>
+    @endif
     <section id="user-presentation">
         <div id="profile-picture">
                 @if ($user->profile_photo !== null)

@@ -11,7 +11,7 @@ class BannedController extends Controller
 {
     public function banned()
     {
-        $banned = Banned::find(Auth::user()->id);
+        $banned = Banned::findOrFail(Auth::user()->id);
         $time_since_ban = $banned->ban_date->diffForHumans();
         return view('pages.banned', ['banned' => $banned, 'time_since_ban' => $time_since_ban]);
     }

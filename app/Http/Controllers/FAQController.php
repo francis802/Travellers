@@ -34,7 +34,7 @@ class FAQController extends Controller
         $faq->question = $request->question;
         $faq->answer = $request->answer;
         $faq->last_edited = date('Y-m-d H:i:s');
-        $help = Help::find($request->help_id);
+        $help = Help::findOrFail($request->help_id);
         $help->became_faq = true;
     
         $faq->save();
