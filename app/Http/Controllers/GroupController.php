@@ -101,7 +101,7 @@ class GroupController extends Controller
     }
 
     public function join(int $group_id) {
-        $group = Group::find($group_id);
+        $group = Group::findOrFail($group_id);
 
         Member::insert([
             'user_id' => Auth::user()->id,
@@ -113,7 +113,7 @@ class GroupController extends Controller
     }
 
     public function leave(int $group_id) {
-        $group = Group::find($group_id);
+        $group = Group::findOrFail($group_id);
 
         Member::where('group_id', $group->id)
               ->where('user_id', Auth::user()->id)->delete();
@@ -125,7 +125,7 @@ class GroupController extends Controller
     }
 
     public function removeMember(int $group_id, int $user_id){
-        $group = Group::find($group_id);
+        $group = Group::findOrFail($group_id);
 
         Member::where('group_id', $group->id)
               ->where('user_id', $user_id)->delete();
@@ -136,7 +136,7 @@ class GroupController extends Controller
     }
 
     public function upgradeToOwner(int $group_id, int $user_id){
-        $group = Group::find($group_id);
+        $group = Group::findOrFail($group_id);
 
         Member::where('group_id', $group->id)
               ->where('user_id', $user_id)->delete();

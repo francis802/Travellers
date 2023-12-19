@@ -52,12 +52,12 @@ Route::get('/home', [HomeController::class, 'show'])->name('home');
 
 // User
 Route::get('user/edit', [UserController::class, 'edit'])->name('users.edit');
-Route::get('user/{id}/groups', [UserController::class, 'listGroups']);
-Route::get('user/{id}/followers', [UserController::class, 'followers']);
-Route::get('user/{id}/following', [UserController::class, 'following']);
+Route::get('user/{id}/groups', [UserController::class, 'listGroups'])->where('id', '[0-9]+');
+Route::get('user/{id}/followers', [UserController::class, 'followers'])->where('id', '[0-9]+');
+Route::get('user/{id}/following', [UserController::class, 'following'])->where('id', '[0-9]+');
 Route::post('user/edit', [UserController::class, 'update']);
-Route::get('user/{id}', [UserController::class, 'show'])->name('users');
-Route::delete('user/{id}/delete', [UserController::class, 'destroy'])->name('users.destroy');
+Route::get('user/{id}', [UserController::class, 'show'])->where('id', '[0-9]+')->name('users');
+Route::delete('user/{id}/delete', [UserController::class, 'destroy'])->where('id', '[0-9]+')->name('users.destroy');
 
 // Notifications
 Route::get('/notifications', [NotificationController::class, 'show']);
@@ -65,12 +65,12 @@ Route::get('/notifications', [NotificationController::class, 'show']);
 // Post
 Route::get('post/create', [PostController::class, 'create']);
 Route::post('post/create', [PostController::class, 'store']);
-Route::get('post/{id}', [PostController::class, 'show'])->name('post');
-Route::get('post/{id}/edit', [PostController::class, 'edit']);
-Route::post('post/{id}/edit', [PostController::class, 'update']);
+Route::get('post/{id}', [PostController::class, 'show'])->where('id', '[0-9]+')->name('post');
+Route::get('post/{id}/edit', [PostController::class, 'edit'])->where('id', '[0-9]+');
+Route::post('post/{id}/edit', [PostController::class, 'update'])->where('id', '[0-9]+');
 
 // API
-Route::delete('api/post/{id}/delete', [PostController::class, 'destroy']);
+Route::delete('api/post/{id}/delete', [PostController::class, 'destroy'])->where('id', '[0-9]+');
 
 // Search
 Route::get('/search', [SearchController::class, 'show'])->name('search');
@@ -80,28 +80,28 @@ Route::get('api/unseen-notifications', [NotificationController::class, 'unseenUp
 
 Route::get('api/user', [SearchController::class, 'show']);
 Route::get('api/userVerify', [UserController::class, 'userVerify']);
-Route::put('api/user/{id}/follow', [UserController::class, 'followUser']);
-Route::delete('api/user/{id}/unfollow', [UserController::class, 'unfollowUser']);
-Route::put('api/user/{id}/accept', [UserController::class, 'acceptUser']);
-Route::delete('api/user/{id}/decline', [UserController::class, 'declineUser']);
-Route::delete('api/user/{id}/remove', [UserController::class, 'removeFollower']);
-Route::put('api/user/block/{id}', [UserController::class, 'userBlock']);
-Route::delete('api/user/unblock/{id}', [UserController::class, 'userUnblock']);
+Route::put('api/user/{id}/follow', [UserController::class, 'followUser'])->where('id', '[0-9]+');
+Route::delete('api/user/{id}/unfollow', [UserController::class, 'unfollowUser'])->where('id', '[0-9]+');
+Route::put('api/user/{id}/accept', [UserController::class, 'acceptUser'])->where('id', '[0-9]+');
+Route::delete('api/user/{id}/decline', [UserController::class, 'declineUser'])->where('id', '[0-9]+');
+Route::delete('api/user/{id}/remove', [UserController::class, 'removeFollower'])->where('id', '[0-9]+');
+Route::put('api/user/block/{id}', [UserController::class, 'userBlock'])->where('id', '[0-9]+');
+Route::delete('api/user/unblock/{id}', [UserController::class, 'userUnblock'])->where('id', '[0-9]+');
 
-Route::put('api/group/{id}/join', [GroupController::class, 'join']);
-Route::delete('api/group/{id}/leave', [GroupController::class, 'leave']);
-Route::delete('api/group/{group_id}/remove/{user_id}', [GroupController::class, 'removeMember']);
-Route::delete('api/group/{group_id}/upgrade/{user_id}', [GroupController::class, 'upgradeToOwner']);
+Route::put('api/group/{id}/join', [GroupController::class, 'join'])->where('id', '[0-9]+');
+Route::delete('api/group/{id}/leave', [GroupController::class, 'leave'])->where('id', '[0-9]+');
+Route::delete('api/group/{group_id}/remove/{user_id}', [GroupController::class, 'removeMember'])->where('group_id', '[0-9]+')->where('user_id', '[0-9]+');
+Route::delete('api/group/{group_id}/upgrade/{user_id}', [GroupController::class, 'upgradeToOwner'])->where('group_id', '[0-9]+')->where('user_id', '[0-9]+');
 
-Route::post('api/post/{id}/like', [PostController::class, 'like_post']);
-Route::delete('api/post/{id}/dislike', [PostController::class, 'dislike_post']);
+Route::post('api/post/{id}/like', [PostController::class, 'like_post'])->where('id', '[0-9]+');
+Route::delete('api/post/{id}/dislike', [PostController::class, 'dislike_post'])->where('id', '[0-9]+');
 
 Route::put('api/comment/create', [CommentController::class, 'store']);
-Route::post('api/comment/{id}/edit', [CommentController::class, 'update']);
-Route::delete('api/comment/{id}/delete', [CommentController::class, 'destroy']);
-Route::post('api/comment/{id}/like', [CommentController::class, 'like_comment']);
-Route::delete('api/comment/{id}/dislike', [CommentController::class, 'dislike_comment']);
-Route::get('/api/comment/{id}/mentioned', [CommentController::class, 'convertUsernamesToIds']);
+Route::post('api/comment/{id}/edit', [CommentController::class, 'update'])->where('id', '[0-9]+');
+Route::delete('api/comment/{id}/delete', [CommentController::class, 'destroy'])->where('id', '[0-9]+');
+Route::post('api/comment/{id}/like', [CommentController::class, 'like_comment'])->where('id', '[0-9]+');
+Route::delete('api/comment/{id}/dislike', [CommentController::class, 'dislike_comment'])->where('id', '[0-9]+');
+Route::get('/api/comment/{id}/mentioned', [CommentController::class, 'convertUsernamesToIds'])->where('id', '[0-9]+');
 
 
 // Admin
@@ -111,41 +111,41 @@ Route::get('admin/groups', [AdminController::class, 'show_groups']);
 Route::get('admin/reports', [AdminController::class, 'show_reports']);
 Route::get('admin/helps', [AdminController::class, 'show_helps'])->name('admin.helps');
 Route::get('admin/unban-requests', [AdminController::class, 'show_unban_requests']);
-Route::post('api/admin/membership/{id}/admin', [AdminController::class, 'makeAdmin']);
-Route::post('api/admin/membership/{id}/user', [AdminController::class, 'makeUser']);
-Route::post('api/admin/membership/{id}/banned', [AdminController::class, 'makeBanned']);
-Route::post('api/admin/group/{group_id}/owner/{user_id}', [AdminController::class, 'groupMembershipOwner']);
-Route::post('api/admin/group/{group_id}/member/{user_id}', [AdminController::class, 'groupMembershipMember']);
-Route::post('api/admin/group/{group_id}/banned/{user_id}', [AdminController::class, 'groupMembershipBanned']);
-Route::post('api/admin/group/{group_id}/approval', [AdminController::class, 'groupApproval']);
-Route::post('api/admin/appeal/{appeal_id}/evaluate-appeal', [AdminController::class, 'appealEvaluation']);
+Route::post('api/admin/membership/{id}/admin', [AdminController::class, 'makeAdmin'])->where('id', '[0-9]+');
+Route::post('api/admin/membership/{id}/user', [AdminController::class, 'makeUser'])->where('id', '[0-9]+');
+Route::post('api/admin/membership/{id}/banned', [AdminController::class, 'makeBanned'])->where('id', '[0-9]+');
+Route::post('api/admin/group/{group_id}/owner/{user_id}', [AdminController::class, 'groupMembershipOwner'])->where('group_id', '[0-9]+')->where('user_id', '[0-9]+');
+Route::post('api/admin/group/{group_id}/member/{user_id}', [AdminController::class, 'groupMembershipMember'])->where('group_id', '[0-9]+')->where('user_id', '[0-9]+');
+Route::post('api/admin/group/{group_id}/banned/{user_id}', [AdminController::class, 'groupMembershipBanned'])->where('group_id', '[0-9]+')->where('user_id', '[0-9]+');
+Route::post('api/admin/group/{group_id}/approval', [AdminController::class, 'groupApproval'])->where('group_id', '[0-9]+');
+Route::post('api/admin/appeal/{appeal_id}/evaluate-appeal', [AdminController::class, 'appealEvaluation'])->where('appeal_id', '[0-9]+');
 
 
 // Group
 Route::get('group/create', [GroupController::class, 'create']);
 Route::post('group/create', [GroupController::class, 'store']);
-Route::get('group/{id}/members', [GroupController::class, 'listMembers']);
-Route::get('group/{id}/subgroups', [GroupController::class, 'listSubgroups']);
-Route::get('group/{id}/edit', [GroupController::class, 'edit']);
-Route::post('group/{id}/edit', [GroupController::class, 'update']);
-Route::get('group/{id}', [GroupController::class, 'show']);
+Route::get('group/{id}/members', [GroupController::class, 'listMembers'])->where('id', '[0-9]+');
+Route::get('group/{id}/subgroups', [GroupController::class, 'listSubgroups'])->where('id', '[0-9]+');
+Route::get('group/{id}/edit', [GroupController::class, 'edit'])->where('id', '[0-9]+');
+Route::post('group/{id}/edit', [GroupController::class, 'update'])->where('id', '[0-9]+');
+Route::get('group/{id}', [GroupController::class, 'show'])->where('id', '[0-9]+');
 
 // Help
 Route::get('helps', [HelpController::class, 'showHelps']);
 Route::get('help/create', [HelpController::class, 'create']);
 Route::post('help/create', [HelpController::class, 'store']);
-Route::get('help/{id}', [HelpController::class, 'show']);
-Route::post('help/{id}/answer', [HelpController::class, 'answer']);
+Route::get('help/{id}', [HelpController::class, 'show'])->where('id', '[0-9]+');
+Route::post('help/{id}/answer', [HelpController::class, 'answer'])->where('id', '[0-9]+');
 
 // FAQ
 Route::get('faqs', [FAQController::class, 'showFAQs'])->name('faqs');
 Route::post('faq/create', [FAQController::class, 'store']);
 
 // Report
-Route::get('report/user/{id}', [ReportController::class, 'create']);
-Route::post('report/user/{id}', [ReportController::class, 'store']);
-Route::post('report/{id}/ban', [ReportController::class, 'ban_user']);
-Route::post('report/{id}/close', [ReportController::class, 'close_report']);
+Route::get('report/user/{id}', [ReportController::class, 'create'])->where('id', '[0-9]+');
+Route::post('report/user/{id}', [ReportController::class, 'store'])->where('id', '[0-9]+');
+Route::post('report/{id}/ban', [ReportController::class, 'ban_user'])->where('id', '[0-9]+');
+Route::post('report/{id}/close', [ReportController::class, 'close_report'])->where('id', '[0-9]+');
 
 // Banned
 Route::get('banned', [BannedController::class, 'banned'])->name('banned');

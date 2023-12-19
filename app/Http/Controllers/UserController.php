@@ -38,7 +38,7 @@ class UserController extends Controller
      */
     public function show(int $id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         if(!$user) return redirect()->back();
         $followers = $user->getFollowers()->get();
         $following = $user->getFollowing()->get();
@@ -104,7 +104,7 @@ class UserController extends Controller
      */
     public function destroy(int $userId)
     {
-        $user = User::find($userId);
+        $user = User::findOrFail($userId);
         $this->authorize('delete', $user);
         $user->name = null;
         $user->username = null;
@@ -134,14 +134,14 @@ class UserController extends Controller
 
     public function listGroups(int $id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         $groups = $user->myGroups()->get();
         return view('pages.listGroups', ['groups' => $groups]);
     }
 
     public function followUser(int $id) 
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         
         if ($user->profile_private) {
             DB::table('requests')
@@ -159,7 +159,7 @@ class UserController extends Controller
 
     public function unfollowUser(int $id) 
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         
         if (Auth::user()->follows($id)) {
             DB::table('follows')
@@ -181,7 +181,7 @@ class UserController extends Controller
 
     public function acceptUser(int $id) 
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
         DB::table('follows')
         ->insert(['user1_id' => $id, 'user2_id' => Auth::user()->id]);
@@ -196,7 +196,7 @@ class UserController extends Controller
 
     public function declineUser(int $id) 
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
         DB::table('requests')
         ->where('user1_id', '=', $id)
@@ -208,21 +208,21 @@ class UserController extends Controller
 
     public function followers(int $id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         $followers = $user->getFollowers()->get();
         return view('pages.followers', ['followers' => $followers, 'user' => $user]);
     }
 
     public function following(int $id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         $following = $user->getFollowing()->get();
         return view('pages.following', ['following' => $following, 'user' => $user]);
     }
 
     public function removeFollower(int $id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         $followers = Auth::user()->getFollowers()->get();
 
         DB::table('follows')
@@ -234,7 +234,7 @@ class UserController extends Controller
     }
 
     public function userBlock(int $id){
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
         if (Auth::user()->follows($id)) {
             DB::table('follows')
@@ -257,7 +257,7 @@ class UserController extends Controller
     }
 
     public function userUnblock(int $id){
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
         DB::table('blocks')
         ->where('user1_id', '=', Auth::user()->id)

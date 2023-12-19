@@ -36,7 +36,7 @@ class AdminController extends Controller
     }
 
     public function groupApproval(Request $request, int $groupId) {
-        $group = Group::find($groupId);
+        $group = Group::findOrFail($groupId);
         if($request->decision == 'true'){
             $group->approved = true;
             $group->save();
@@ -73,7 +73,7 @@ class AdminController extends Controller
     }
 
     public function appealEvaluation(Request $request, int $appealId) {
-        $appeal = UnbanRequest::find($appealId);
+        $appeal = UnbanRequest::findOrFail($appealId);
         $banned = Banned::where('user_id', $appeal->banned_user->id)->first();
         if($request->decision == 'true'){
             $appeal->accept_appeal = true;
@@ -88,7 +88,7 @@ class AdminController extends Controller
     }
 
     public function makeAdmin($id) {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         $role = $user->isBanned() ? 'banned' : 'user';
         if($role == 'banned'){
             DB::table('banned')->where('user_id', $id)->delete();
@@ -101,7 +101,7 @@ class AdminController extends Controller
     }
 
     public function makeUser($id) {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         $role = $user->isAdmin() ? 'admin' : 'banned';
         if($role == 'admin'){
             Admin::where('user_id', $id)->delete();
@@ -114,7 +114,7 @@ class AdminController extends Controller
     }
 
     public function makeBanned($id) {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         $role = $user->isAdmin() ? 'admin' : 'user';
         if($role == 'admin'){
             Admin::where('user_id', $id)->delete();
@@ -128,7 +128,7 @@ class AdminController extends Controller
     }
 
     public function groupMembershipOwner(int $group_id, int $user_id) {
-        $user = User::find($user_id);
+        $user = User::findOrFail($user_id);
         $role = $user->isOwner($group_id) ? 'owner' : ($user->isBannedFrom($group_id) ? 'banned' :($user->isMember($group_id) ? 'member' : 'none'));
         $owner = new Owner();
         $owner->user_id = $user_id;
@@ -152,7 +152,7 @@ class AdminController extends Controller
     }
 
     public function groupMembershipMember(int $group_id, int $user_id) {
-        $user = User::find($user_id);
+        $user = User::findOrFail($user_id);
         $role = $user->isOwner($group_id) ? 'owner' : ($user->isBannedFrom($group_id) ? 'banned' : ($user->isMember($group_id) ? 'member' : 'none'));
         $member = new Member();
         $member->user_id = $user_id;
@@ -174,7 +174,7 @@ class AdminController extends Controller
     }
 
     public function groupMembershipBanned(int $group_id, int $user_id) {
-        $user = User::find($user_id);
+        $user = User::findOrFail($user_id);
         $role = $user->isOwner($group_id) ? 'owner' : ($user->isBannedFrom($group_id) ? 'banned' : ($user->isMember($group_id) ? 'member' : 'none'));
         $banned = new BannedMember();
         $banned->user_id = $user_id;

@@ -63,7 +63,7 @@ class CommentController extends Controller
      */
     public function update(Request $request, int $commentId)
     {
-        $comment = Comment::find($commentId);
+        $comment = Comment::findOrFail($commentId);
         $this->authorize('update', $comment);
         $comment->text = $request->text;
         $comment->date = date('Y-m-d H:i');
@@ -77,7 +77,7 @@ class CommentController extends Controller
      */
     public function destroy(int $commentId)
     {
-        $comment = Comment::find($commentId);
+        $comment = Comment::findOrFail($commentId);
         $this->authorize('delete', $comment);
         $comment->delete();
         return response()->json($comment);
@@ -85,7 +85,7 @@ class CommentController extends Controller
 
     public function like_comment(int $commentId)
     {
-        $comment = Comment::find($commentId);
+        $comment = Comment::findOrFail($commentId);
         
         DB::table('like_comment')
         ->insert(['comment_id' => $comment->id, 'user_id' => Auth::user()->id]);
@@ -97,7 +97,7 @@ class CommentController extends Controller
 
     public function dislike_comment(int $commentId)
     {
-        $comment = comment::find($commentId);
+        $comment = comment::findOrFail($commentId);
         
         DB::table('like_comment')
         ->where('comment_id', '=', $comment->id)

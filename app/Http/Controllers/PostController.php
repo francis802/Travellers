@@ -109,7 +109,7 @@ class PostController extends Controller
      */
     public function destroy(int $postId)
     {
-        $post = Post::find($postId);
+        $post = Post::findOrFail($postId);
         $this->authorize('delete', $post);
         
         ImageController::delete($post->id, "post");
@@ -122,7 +122,7 @@ class PostController extends Controller
 
     public function like_post(int $postId)
     {
-        $post = Post::find($postId);
+        $post = Post::findOrFail($postId);
         
         DB::table('like_post')
         ->insert(['post_id' => $post->id, 'user_id' => Auth::user()->id]);
@@ -134,7 +134,7 @@ class PostController extends Controller
 
     public function dislike_post(int $postId)
     {
-        $post = Post::find($postId);
+        $post = Post::findOrFail($postId);
         
         DB::table('like_post')
         ->where('post_id', '=', $post->id)

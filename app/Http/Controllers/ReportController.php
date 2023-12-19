@@ -25,7 +25,7 @@ class ReportController extends Controller
      */
     public function create(int $infractorId)
     {
-        $infractor = User::find($infractorId);
+        $infractor = User::findOrFail($infractorId);
         return view('pages.report', ['infractor' => $infractor]);
     }
 
@@ -41,8 +41,8 @@ class ReportController extends Controller
         $report->reporter_id =Auth::user()->id;
         $report->date = now();
         $report->save();
-        $reporter = User::find(Auth::user()->id);
-        $infractor = User::find($request->infractor_id);
+        $reporter = User::findOrFail(Auth::user()->id);
+        $infractor = User::findOrFail($request->infractor_id);
         if($reporter->follows($infractor->id)) {
             Follow::where('user1_id', $reporter->id)->where('user2_id', $infractor->id)->delete();
         }
@@ -83,7 +83,7 @@ class ReportController extends Controller
      */
     public function ban_user(int $reportId)
     {
-        $report = Report::find($reportId);
+        $report = Report::findOrFail($reportId);
         $report->ban_infractor = true;
         $banned = new Banned();
         $banned->user_id = $report->infractor_id;
@@ -98,7 +98,7 @@ class ReportController extends Controller
      */
     public function close_report(int $reportId)
     {
-        $report = Report::find($reportId);
+        $report = Report::findOrFail($reportId);
         $report->ban_infractor = false;
         $report->save();
         return redirect('/admin/reports');
