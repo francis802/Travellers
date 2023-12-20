@@ -17,7 +17,7 @@
                 <h2 id="user-username">&#64;{{ Auth::user()->username }}</h2>
             @endif
         </a>
-        <input id="search-input" type="text" placeholder="Search for users..." onkeydown="searchOnEnter(event)"> 
+        <input id="search-input" type="text" placeholder="Search..." onkeydown="searchOnEnter(event)"> 
     </section>
 
     <section id="buttons">
