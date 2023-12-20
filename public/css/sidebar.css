@@ -1,94 +1,3 @@
-#side-bar{
-    background-color: #CCCCCC;
-   
-    width: 13em;
-    position: sticky; /* CHANGE LATER */
-    height: 100%;
-}
-
-p a, li a {
-    text-decoration: none;
-    color: inherit;
-}
-
-.upper-links{
-    margin-bottom: 1em;
-}
-
-.lower-links{
-    margin-top: 1em;
-}
-
-.side-bar-link, .side-bar-link:visited, .side-bar-link:hover{
-    text-decoration: none;
-    color: black;
-}
-
-.side-bar-link .btn{
-    padding-left: 0;
-}
-
-.rights-text{
-    color:black;
-    font-size: x-small;
-}
-
-#upper-sidebar, #lower-sidebar{
-    list-style: none;
-}
- 
-#upper-sidebar{
-    margin-top: 2em;
-}
-
-#lower-sidebar{
-    position: absolute;
-    bottom: 0;
-    margin: 0;
-}
-
-#profile-buttons-area{
-    display: flex;
-}
-
-.name-link{
-    font-size: inherit;
-}
-
-.name-link:hover{
-    font-size: inherit;
-}
-
-
-.side-bar-icon{
-    width: 2em;
-}
-
-
-.notification-container{
-    position: relative;
-    display: inline-block;
-}
-
-#notification-count {
-    position: absolute;
-    font-size: x-small;
-}
-
-.more.btn{
-    border: none;
-}
-
-/*
-.side-bar-link:hover {
-    background-color:  blue;
-    border-radius: 10px;
-}
-*/
-
-
-/*----------------------------------------------------------------------------*/
-
 nav.menu-lateral{
     width: 3.5em;
     height: 100%;
@@ -148,4 +57,56 @@ nav.menu-lateral:hover{
 
 .icon > i{
     font-size: 1.5em;
+}
+
+@media (max-width: 500px) {
+    nav.menu-lateral{
+        width: 2.5em;
+        height: 100%;
+        background-color:  #CCCCCC;
+        padding: 0;
+        overflow: hidden;
+        transition: 0.5s;
+    }
+
+    nav.menu-lateral:hover{
+        height: 100%;
+        overflow: visible;
+        box-shadow: 0 3px 0 cornflowerblue;
+    }
+
+   
+
+    .ul-navbar{
+        height: 100%;
+        list-style: none;
+        padding: 0;
+    }
+
+    .menu-item{
+        transition: .2s;
+    }
+
+    .menu-item:hover{
+        background: cornflowerblue;
+    }
+
+    .bar-link{
+        color: white;
+        font-size: 15px;
+        padding: 20px 20%;
+        display: flex;
+        align-items: center;
+    }
+
+    .txt-link{
+        margin-left: 1.2em;
+        color: white;
+        font-weight: 400;
+    }
+
+    .icon > i{
+        font-size: 1.5em;
+    }
+    
 }
