@@ -27,6 +27,7 @@
                                 </label>
                                 <input type="file" id="image" name="image" accept="image/png, image/jpeg" style="display: none" onchange="displayImage(this)">
                         <textarea id="post-text" name="text" rows="10" cols="30" maxlength="256" autofocus>{{ $group->description }}</textarea>
+                        <input type="hidden" name="clicked_x" id="clicked_x" value="no">
                         <button class="button" type="submit">Upload Group</button>
                         </form>
                 </section>

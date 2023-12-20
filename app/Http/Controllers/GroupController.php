@@ -44,7 +44,7 @@ class GroupController extends Controller
         $group = Group::findOrFail($request->id);
         /*$this->authorize('delete', Auth::user(), $group);*/
       
-        ImageController::delete($group->id, 'groups');
+        ImageController::delete($group->id, 'group');
         $group->delete(); 
         return redirect('home')->with('success', 'Group successfully deleted');
 
@@ -76,10 +76,10 @@ class GroupController extends Controller
         $group->description = $request->text;
         $group->update();
         if (!isset($contentFound) && $_FILES["image"]["error"]) {
-            if($group->banner_pic !== null) {
-                ImageController::delete($group->id, 'groups');
+            if($group->banner_pic !== null && $request->clicked_x === "true") {
+                ImageController::delete($group->id, 'group');
+                $group->banner_pic = null;
             }
-            $group->banner_pic = null;
         }
         else {
             if($group->banner_pic === null) {

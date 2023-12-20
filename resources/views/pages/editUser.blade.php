@@ -67,12 +67,13 @@
                     @endif
                 </label>
                 <input type="file" id="image" name="image" accept="image/png, image/jpeg" style="display: none" onchange="displayImage(this)">
+                <input type="hidden" name="clicked_x" id="clicked_x" value="no">
             </section>
                 <section class="edit-page-final-buttons">
                     <button class="button" type="submit">Submit</button>
                 </section>
-                @include('partials.deleteAccount', ['user' => Auth::user()])
             </form>
+            @include('partials.deleteAccount', ['user' => Auth::user()])
         </section>
     </section> 
 @endsection
