@@ -23,6 +23,12 @@
                     </a>
                 </li>
                 <li class="menu-item">
+                    <a class="bar-link" href="{{ url('/messages') }}">
+                        <span class="icon"><i class="bi bi-messenger"></i></span>
+                        <span class="txt-link">Messages</span>
+                    </a>
+                </li>
+                <li class="menu-item">
                     <div id="last-link" class="bar-link btn-group dropend">
                         <span class="icon"><i class="bi bi-three-dots"></i></span>
                         <button type="button" class="txt-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
