@@ -87,11 +87,19 @@ class UserController extends Controller
             $user->save();
 
             if (!isset($contentFound) && $_FILES["image"]["error"]) {
-                $user->profile_photo = null;
+                if($user->profile_photo !== null && $request->clicked_x === "true") {
+                    ImageController::delete($user->id, 'pfp');
+                    $user->profile_photo = null;
+                }
             }
             else {
-                ImageController::create($user->id, $request, "pfp");
-                $user->profile_photo = "images/pfp/pfp-".$user->id.".".pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION);
+                if($user->profile_photo === null) {
+                    ImageController::create($user->id, $request, "pfp");
+                    $user->profile_photo = "images/pfp/pfp-".$user->id.".".pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION);
+                }
+                else{
+                    ImageController::update($user->id, $request, "pfp");
+                }
             }
 
             $user->save();

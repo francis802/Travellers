@@ -13,7 +13,7 @@
                 @if ($user->profile_photo !== null)
                     <img src="{{ url($user->profile_photo) }}">
                 @else
-                <img src="../man.jpg" alt="Profile Picture">
+                <img src="{{url('man.jpg')}}" alt="Profile Picture">
                 @endif
         </div>
         <section id="profile-text">

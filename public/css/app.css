@@ -74,6 +74,23 @@ html{
 }
 
 
+#preview-container-group {
+  max-width: 800px;
+  max-height: 450px;
+  overflow: hidden;
+}
+
+#preview-container-post {
+  max-width: 500px;
+  max-height: 500px;
+  overflow: hidden;
+}
+
+#preview-container-user {
+  max-width: 200px;
+  max-height: 200px;
+}
+
 #groups-list{
   margin:1em;
 }
@@ -97,13 +114,9 @@ html{
 .search-header{
   margin: 1em;
 }
-#preview-container {
-  max-width: 1600px;
-  max-height: 900px;
-  overflow: hidden;
-}
 
 #image-preview {
-  width: 100%;
+  display: block;
+  max-width: 100%;
   height: auto;
 }

@@ -42,7 +42,7 @@
                             <section class="follow-request-container" id="follow-request-id-{{$followRequestUser->id}}">
                                 <a href="{{ url('/user/'.$followRequestUser->id) }}" class="profile-info">
                                     <div id="profile-picture">
-                                        <img src="../man.jpg" alt="Profile Picture">
+                                        <img src="{{url('man.jpg')}}" alt="Profile Picture">
                                     </div>
                                     @if (Auth::check())
                                         <h2 id="user-username">&#64;{{ $followRequestUser->username }} wants to follow you!</h2>
