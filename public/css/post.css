@@ -111,6 +111,10 @@ a.post-edit{
     margin: 1em;
 }
 
+.post-view.card {
+    position: inherit;
+}
+
 .post-description {
     margin-top: 1em;
 }
