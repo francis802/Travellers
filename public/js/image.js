@@ -10,18 +10,16 @@ function displayImage(input) {
         var reader = new FileReader();
         reader.onload = function (e) {
             preview.src = e.target.result;
-            preview.style.display = 'block';
             closeButton.style.display = 'block';
             label.innerText = 'Change Photo';
-            container.style.height = 'auto';
         };
         reader.readAsDataURL(file);
     } else {
         // No file selected
-        preview.style.display = 'none';
+        let image = location.protocol + '//' + location.host + '/image-placeholder.jpg';
+        preview.src = image;
         closeButton.style.display = 'none';
         label.innerText = 'Select Photo';
-        container.style.height = '0';
     }
 }
 
@@ -32,9 +30,9 @@ function removeImage() {
     var container = document.getElementById('preview-container');
     var input = document.getElementById('image');
 
-    preview.style.display = 'none';
+    let image = location.protocol + '//' + location.host + '/image-placeholder.jpg';
+    preview.src = image;
     closeButton.style.display = 'none';
     label.innerText = 'Select Photo';
-    container.style.height = '0';
     input.value = ''; // Clear the file input
 }

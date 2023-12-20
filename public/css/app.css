@@ -74,8 +74,8 @@ html{
 }
 
 #preview-container {
-  max-width: 300px;
-  max-height: 200px;
+  max-width: 1600px;
+  max-height: 900px;
   overflow: hidden;
 }
 
