@@ -86,10 +86,10 @@ class PostController extends Controller
         $post->edited = true;
         $post->update();
         if (!isset($contentFound) && $_FILES["image"]["error"]) {
-            if($post->media !== null) {
+            if($post->media !== null && $request->clicked_x === "true") {
                 ImageController::delete($post->id, "post");
+                $post->media = null;
             }
-            $post->media = null;
         }
         else {
             if($post->media === null) {

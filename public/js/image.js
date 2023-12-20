@@ -1,7 +1,6 @@
 function displayImage(input) {
     var preview = document.getElementById('image-preview');
     var label = document.getElementById('file-label');
-    var container = document.getElementById('preview-container');
     var closeButton = document.getElementById('close-button');
 
     var file = input.files[0];
@@ -27,7 +26,7 @@ function removeImage() {
     var preview = document.getElementById('image-preview');
     var closeButton = document.getElementById('close-button');
     var label = document.getElementById('file-label');
-    var container = document.getElementById('preview-container');
+    var clicked_x = document.getElementById('clicked_x');
     var input = document.getElementById('image');
 
     let image = location.protocol + '//' + location.host + '/image-placeholder.jpg';
@@ -35,4 +34,5 @@ function removeImage() {
     closeButton.style.display = 'none';
     label.innerText = 'Select Photo';
     input.value = ''; // Clear the file input
+    clicked_x.value = 'true';
 }

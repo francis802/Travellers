@@ -8,7 +8,7 @@
                 @if ($group->banner_pic !== null)
                     <img src="{{ url($group->banner_pic) }}">
                 @else
-                    <img src="../man.jpg" alt="Profile Picture">
+                    <img src="{{url('man.jpg'}}" alt="Profile Picture">
                 @endif
             </div>
                 <section id="profile-text">
