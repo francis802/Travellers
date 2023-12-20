@@ -72,3 +72,27 @@ html{
       overflow: hidden;
   }
 }
+
+#groups-list{
+  margin:1em;
+}
+
+.card-text{
+  overflow: hidden;
+}
+
+#groups-list a{
+  text-decoration: none;
+}
+
+.fst-grp-header{
+  margin: 1em;
+  margin-bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.search-header{
+  margin: 1em;
+}
