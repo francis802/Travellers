@@ -107,8 +107,18 @@ a.post-edit{
     color: black;
 }
 
+.post-view{
+    margin: 1em;
+}
 
+.post-description {
+    margin-top: 1em;
+}
 
+.post-content{
+    text-decoration: none;
+    color: #000;
+}
 /*------------------------ POST CREATE -----------------------------*/
 
 .create-post-form{

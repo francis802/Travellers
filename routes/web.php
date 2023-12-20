@@ -48,6 +48,7 @@ Route::controller(RegisterController::class)->group(function () {
 
 // Home
 Route::get('/home', [HomeController::class, 'show'])->name('home');
+Route::get('/follow-first-group', [HomeController::class, 'followFirstGroup'])->name('followFirstGroup');
 
 
 // User

@@ -50,3 +50,7 @@ button.comment-create {
 .comment-info{
     margin: 0;
 }
+
+.mentioned-user{
+    color:  #007bff;
+}
