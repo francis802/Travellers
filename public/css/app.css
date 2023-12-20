@@ -73,6 +73,7 @@ html{
   }
 }
 
+
 #preview-container-group {
   max-width: 800px;
   max-height: 450px;
@@ -88,7 +89,30 @@ html{
 #preview-container-user {
   max-width: 200px;
   max-height: 200px;
+}
+
+#groups-list{
+  margin:1em;
+}
+
+.card-text{
   overflow: hidden;
+}
+
+#groups-list a{
+  text-decoration: none;
+}
+
+.fst-grp-header{
+  margin: 1em;
+  margin-bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.search-header{
+  margin: 1em;
 }
 
 #image-preview {
