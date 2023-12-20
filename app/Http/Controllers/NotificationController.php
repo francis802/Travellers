@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\Models\Admin;
 
 class NotificationController extends Controller 
 {
@@ -26,5 +28,12 @@ class NotificationController extends Controller
     {
         $unseenNotifications = Auth::user()->unseenNotifications();
         return response()->json($unseenNotifications);
+    }
+
+
+    public function ownedGroupsNotifications(int $id)
+    {
+        $ownedGroupsNotifications = Auth::user()->ownedGroupsNotifications()->get();
+        return view('pages.groupsNotifications', ['notifications' => $ownedGroupsNotifications]);
     }
 }

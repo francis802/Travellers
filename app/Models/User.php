@@ -22,6 +22,7 @@ use App\Models\Post;
 use App\Models\PostNotification;
 use App\Models\CommentNotification;
 use App\Models\FollowNotification;
+use App\Models\GroupNotification;
 
 use App\Models\Member;
 use App\Models\Owner;
@@ -104,6 +105,10 @@ class User extends Authenticatable
                 ->whereColumn('groups.id', 'members.group_id');
     }
 
+    public function isGroupOwner() {
+        return Owner::where('user_id', $this->id)->exists();
+    }
+
     public function ownedGroups() {
         return Group::select('groups.*')
                 ->join('owner', 'owner.group_id', '=', 'groups.id')
@@ -147,7 +152,8 @@ class User extends Authenticatable
         return FollowNotification::where('notified_id', $this->id)->orderBy('time', 'desc');
     }
 
-    public function ownwdGroupsNotifications() {
+    public function ownedGroupsNotifications() {
+        GroupNotification::where('notified_id', $this->id)->where('opened', false)->update(['opened' => true]);
         return GroupNotification::where('notified_id', $this->id)->orderBy('time', 'desc');
     }
 

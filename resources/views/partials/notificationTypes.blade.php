@@ -38,20 +38,17 @@
             @if($followRequestUsers->count() > 0)
                 <ul class="list-group list-group-flush">
                     @foreach($followRequestUsers as $followRequestUser)
-                        <li id="notification-list" class="list-group-item list-group-item-light">
+                        <li id="request-list" class="list-group-item list-group-item-light">
                             <section class="follow-request-container" id="follow-request-id-{{$followRequestUser->id}}">
                                 <a href="{{ url('/user/'.$followRequestUser->id) }}" class="profile-info">
-                                    <div id="profile-picture">
-                                        <img src="../man.jpg" alt="Profile Picture">
-                                    </div>
-                                    @if (Auth::check())
-                                        <h2 id="user-username">&#64;{{ $followRequestUser->username }} wants to follow you!</h2>
-                                    @endif
+                                    <div class="notification-info">
+                                        <img class="img-notification img-user" src="{{ url($followRequestUser->profile_photo) }}">
+                                        <p class="notification-text">&#64;{{ $followRequestUser->username }} wants to follow you!</h2>
+                                    </div>    
                                 </a>
-                                
                                 <div class="request-buttons">
-                                    <button class="accept-request button" data-id="{{$followRequestUser->id}}"> Accept </button>
-                                    <button class="decline-request button" data-id="{{$followRequestUser->id}}"> Decline </button>
+                                    <button type="button" class="accept-request btn btn-primary" data-id="{{$followRequestUser->id}}">Accept</button>
+                                    <button type="button" class="decline-request btn btn-primary" data-id="{{$followRequestUser->id}}">Decline</button>
                                 </div>
                             </section>
                         </li>
@@ -69,10 +66,10 @@
                 <ul class="list-group list-group-flush">
                 @foreach($allnotifications as $notification)
                     @if ($notification instanceof \App\Models\PostNotification)
-                        <a href="{{url('/post/'.$notification->post->id)}}" >
+                        <a class="link-notification" href="{{url('/post/'.$notification->post->id)}}" >
                             <li id="notification-list" class="list-group-item list-group-item-light">
                                 <div class="notification-info">
-                                    <img width="40em"  height="40em" src="{{ url($notification->senderUser->profile_photo) }}">
+                                    <img class="img-notification img-user" src="{{ url($notification->senderUser->profile_photo) }}">
                                     <p class="notification-text">{{$notification->senderUser->username}}
                                     @if($notification->notification_type == 'new_like')
                                         liked your post
@@ -82,16 +79,16 @@
                                     </p>
                                 </div>
                                 @if ($notification->post->media !== null)
-                                    <img width="40em" height="40em" src="{{ url($notification->post->media) }}">
+                                    <img class="img-notification" src="{{ url($notification->post->media) }}">
                                 @endif
                             </li>
                         </a>
                             
                     @elseif ($notification instanceof \App\Models\CommentNotification)
-                        <a href="{{url('/post/'.$notification->comment->post->id)}}" >
+                        <a class="link-notification" href="{{url('/post/'.$notification->comment->post->id)}}" >
                             <li id="notification-list" class="list-group-item list-group-item-light">
                                 <div class="notification-info">
-                                    <img width="40em"  height="40em" src="{{ url($notification->senderUser->profile_photo) }}">
+                                    <img class="img-notification img-user" src="{{ url($notification->senderUser->profile_photo) }}">
                                     <p class="notification-text">{{$notification->senderUser->username}}
                                     @if($notification->notification_type == 'mention_comment')
                                         mentioned you in a comment
@@ -103,7 +100,7 @@
                                     </p>
                                 </div>
                                 @if ($notification->comment->post->media !== null)
-                                    <img width="40em" height="40em" src="{{ url($notification->comment->post->media) }}">
+                                    <img class="img-notification" src="{{ url($notification->comment->post->media) }}">
                                 @endif
                                 
                             </li>
@@ -111,10 +108,10 @@
 
                     @elseif ($notification instanceof \App\Models\FollowNotification)
                         @if($notification->notification_type == 'follow_accept')
-                            <a href="{{url('/user/'.$notification->senderUser->id)}}">
+                            <a class="link-notification" href="{{url('/user/'.$notification->senderUser->id)}}">
                                 <li id="notification-list" class="list-group-item list-group-item-light">
                                     <div class="notification-info">
-                                        <img width="40em"  height="40em" src="{{ url($notification->senderUser->profile_photo) }}">
+                                        <img class="img-notification img-user" src="{{ url($notification->senderUser->profile_photo) }}">
                                         <p class="notification-text">{{$notification->senderUser->username}} accept you</p>
                                     </div>
                                 </li>
@@ -130,15 +127,6 @@
             @endif
         </section>
         
-        <section id="groups">
-        </section>
     </section>
-
-
-
-
-
-
-
 </section>
 @endsection

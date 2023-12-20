@@ -72,8 +72,7 @@ p a, li a {
 
 #notification-count {
     position: absolute;
-    top: 0;
-    left: -10%;
+    font-size: x-small;
 }
 
 .more.btn{

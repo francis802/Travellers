@@ -36,17 +36,25 @@
                         </ul>
                     </div>
                 </li>
+                @if(Auth::check() && Auth::user()->isGroupOwner())
+                    <li class="menu-item">
+                        <a class="bar-link" href="{{ url('/user/'.Auth::user()->id .'/ownedGroups')}}">
+                            <span class="icon"><i class="bi bi-collection"></i></span>
+                            <span class="txt-link">My Groups</span>
+                        </a>
+                    </li>
+                @endif
                 @if(Auth::check() && Auth::user()->isAdmin())
                     <li class="menu-item">
                         <a class="bar-link" href="{{ url('/admin/')}}">
-                            <span class="icon"><i class="bi bi-fingerprint"></i></i></span>
+                            <span class="icon"><i class="bi bi-fingerprint"></i></span>
                             <span class="txt-link">Admin Console</span>
                         </a>
                     </li>
                 @endif
                 <li class="menu-item">
                     <div id="last-link" class="bar-link btn-group dropend">
-                        <span class="icon"><i class="bi bi-patch-plus"></i></i></span>
+                        <span class="icon"><i class="bi bi-patch-plus"></i></span>
                         <button type="button" class="txt-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             Create
                         </button>
