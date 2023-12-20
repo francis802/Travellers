@@ -1,7 +1,6 @@
 function displayImage(input) {
     var preview = document.getElementById('image-preview');
     var label = document.getElementById('file-label');
-    var container = document.getElementById('preview-container');
     var closeButton = document.getElementById('close-button');
 
     var file = input.files[0];

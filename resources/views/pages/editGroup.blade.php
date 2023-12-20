@@ -10,7 +10,7 @@
                 <section class="create-post">
                         <form class="create-post-form" action="{{ url('/group/'.$group->id.'/edit') }}" method="post" enctype="multipart/form-data">
                         @csrf
-                        <div id="preview-container">
+                        <div id="preview-container-group">
                                 <div id="close-button" onclick="removeImage()" style="{{$group->banner_pic !== null ? 'block' : 'none'}}">&times;</div>
                                 @if ($group->banner_pic !== null)
                                 <img id="image-preview" src="{{url($group->banner_pic)}}" alt="Previous Image">
