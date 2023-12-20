@@ -95,6 +95,7 @@ Route::delete('api/group/{group_id}/upgrade/{user_id}', [GroupController::class,
 
 Route::post('api/post/{id}/like', [PostController::class, 'like_post'])->where('id', '[0-9]+');
 Route::delete('api/post/{id}/dislike', [PostController::class, 'dislike_post'])->where('id', '[0-9]+');
+Route::get('/api/post/{id}/mentioned', [PostController::class, 'convertUsernamesToIds'])->where('id', '[0-9]+');
 
 Route::put('api/comment/create', [CommentController::class, 'store']);
 Route::post('api/comment/{id}/edit', [CommentController::class, 'update'])->where('id', '[0-9]+');

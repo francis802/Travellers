@@ -146,4 +146,21 @@ class PostController extends Controller
         return response()->json(['post' => $post, 'likes' => count($likes)]);
     }
 
+    public function convertUsernamesToIds(int $id){
+        $post = Post::findOrFail($id);
+
+        $usernames = $post->extractMentions();
+        $user_ids = [];
+        
+        foreach ($usernames as $username) {
+            $user = User::where('username', $username)->first();
+
+            if ($user) {
+                $user_ids[$username] = $user->id;
+            }
+        }
+
+        return response()->json(['user_ids' => $user_ids, 'postId' => $id]);
+    }
+
 }
