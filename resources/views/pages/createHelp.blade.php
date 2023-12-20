@@ -2,11 +2,23 @@
 
 @section('title', 'Home')
 @include('partials.bar')
-@include('partials.createHelp')
+@include('partials.topbar')
 
 @section('content')
-        <section class="inner-content">
-                @yield('bar')
-                @yield('createHelp')
+        @yield('bar')
+        <section id="feed">
+                @yield('topbar')
+                <form method="post" action="{{ url('help/create/') }}" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                                <label for="title" class="form-label">Question</label>
+                                <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+                        <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" rows="3" name="description" id="description" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
         </section>
 @endsection
