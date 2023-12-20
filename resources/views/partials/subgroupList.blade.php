@@ -5,19 +5,31 @@
 <section id="feed">
     @yield('topbar')
     <section class="notifications-container" >
-        <h2>Subgroups</h2>
-        <ul class="list-group list-group-flush">
-        @foreach($subgroups as $subgroup)
-            <li class="list-group-item list-group-item-light">
-                <a href="{{ url('/group/'.$subgroup->id) }}">
-                    <div class="notification-info">
-                        <img width="40em" height="40em" src="{{ url($subgroup->banner_pic) }}">
-                        <p class="notification-text">{{$subgroup->country->name}}</p>
-                    </div>
-                </a>
-            </li>
-        @endforeach
-        </ul>
+            <section class="fst-grp-header">
+                <h2 class="fst-grp">Subgroups</h2>
+            </section>
+            @if($subgroups->isEmpty())
+                <p class="no-notifications">No subgroups yet...</p>
+            @else
+            <div id="groups-list"class="row row-cols-1 row-cols-md-3 g-4">
+                @foreach($subgroups as $subgroup)
+                        <a href="{{ url('/group/'.$subgroup->id) }}">
+                            <div class="col">
+                                <div class="card">
+                                <img src="{{ url($subgroup->banner_pic) }}" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{$subgroup->country->name}}</h5>
+                                    <p class="card-text">{{ $subgroup->description }}</p>
+                                </div>
+                                </div>
+                            </div>
+                        </a>
+                @endforeach
+            </div>
+            @endif
+    </section>
     </section>
 </section>
+
+
 @endsection

@@ -1,0 +1,25 @@
+.img-fluid.img-grp-banner {
+    height: 10em;
+    width: 100%;
+    object-fit: cover;
+}
+
+#group-presentation {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid cornflowerblue;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.group-info{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2em;
+}
+
+#group-infos{
+    display: flex;
+}

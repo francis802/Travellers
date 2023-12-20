@@ -64,3 +64,7 @@
 .link-notification{
     text-decoration: none;
 }
+
+.no-notifications{
+    margin-left: 1em;
+}
