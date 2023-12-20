@@ -72,3 +72,14 @@ html{
       overflow: hidden;
   }
 }
+
+#preview-container {
+  max-width: 300px;
+  max-height: 200px;
+  overflow: hidden;
+}
+
+#image-preview {
+  width: 100%;
+  height: auto;
+}
