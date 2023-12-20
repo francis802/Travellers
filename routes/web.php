@@ -16,6 +16,7 @@ use App\Http\Controllers\HelpController;
 use App\Http\Controllers\FAQController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\BannedController;
+use App\Http\Controllers\MessageController;
 
 
 /*
@@ -155,3 +156,10 @@ Route::post('report/{id}/close', [ReportController::class, 'close_report'])->whe
 Route::get('banned', [BannedController::class, 'banned'])->name('banned');
 Route::get('appeal-unban', [BannedController::class, 'appeal_unban']);
 Route::post('appeal-unban/create', [BannedController::class, 'submit_appeal_unban'])->name('submit_unban_appeal');
+
+// Messages
+Route::get('messages', [MessageController::class, 'showMessages']);
+Route::get('messages/user/{id}', [MessageController::class, 'showPrivateMessages'])->where('id', '[0-9]+');
+
+// API
+Route::post('api/message/user/{id}/send', [MessageController::class, 'sendMessage'])->where('id', '[0-9]+');
