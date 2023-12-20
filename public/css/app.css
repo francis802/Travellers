@@ -73,6 +73,7 @@ html{
   }
 }
 
+
 #groups-list{
   margin:1em;
 }
@@ -95,4 +96,14 @@ html{
 
 .search-header{
   margin: 1em;
+}
+#preview-container {
+  max-width: 1600px;
+  max-height: 900px;
+  overflow: hidden;
+}
+
+#image-preview {
+  width: 100%;
+  height: auto;
 }
