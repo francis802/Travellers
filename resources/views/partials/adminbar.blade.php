@@ -1,24 +1,66 @@
 @section('adminbar')
-    <section id="side-bar">
-        <ul id="upper-sidebar">
-            @if (Auth::check())
-            <li>
-                <a class="side-bar-link name-link" id="user={{Auth::user()->id}}" href="{{ url('/user/'.Auth::user()->id) }}">{{ Auth::user()->name }}</a>       
-            </li>
-            @endif
-            <li><a href="{{ url('/home/')}}" class="side-bar-link">Feed</a></li>
-            <li><a href="#" class="side-bar-link">Notifications</a></li>
-            <li><a href="{{ url('/admin/users/')}}" class="side-bar-link">Users</a></li>
-            <li><a href="{{ url('/admin/groups/')}}" class="side-bar-link">Groups</a></li>
-            <li><a href="{{ url('/admin/reports/')}}" class="side-bar-link">Reports</a></li>
-            <li><a href="{{ url('/admin/helps/')}}" class="side-bar-link">Help Requests</a></li>
-            <li><a href="{{ url('/admin/unban-requests/')}}" class="side-bar-link">Unban Requests</a></li>
-        </ul>
-        <ul id="lower-sidebar">
-            @if(Auth::check() && Auth::user()->isAdmin())
-                <li><a href="{{ url('/admin/')}}" class="side-bar-link" id="last-link">Admin Console</a></li>
-            @endif
-            <li><p class="rights-text">&copy; Travellers. All right reserved</p></li>
-        </ul>
-    </section>
+       <nav class="menu-lateral">
+            <ul class="ul-navbar">
+                <li class="menu-item">
+                    <a class="bar-link" href="{{url('/home/')}}">
+                        <span class="icon"><i class="bi bi-house"></i></span>
+                        <span class="txt-link">Home</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a  class="bar-link" href="{{ url('/user/'.Auth::user()->id) }}">
+                        <span class="icon"><i class="bi bi-person"></i></span>
+                        <span class="txt-link">Profile</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a  class="bar-link" href="#">
+                        @if(Auth::user()->unseenNotifications() > 0)
+                            <span id="notification-count" class="badge bg-primary rounded-pill">{{Auth::user()->unseenNotifications()}}</span>
+                        @endif
+                        <span class="icon"><i class="bi bi-bell"></i></span>
+                        <span class="txt-link">Notifications</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a  class="bar-link" href="{{ url('/admin/users/')}}">
+                        <span class="icon"><i class="bi bi-people"></i></span>
+                        <span class="txt-link">Users</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a  class="bar-link" href="{{ url('/admin/groups/')}}">
+                        <span class="icon"><i class="bi bi-collection"></i></span>
+                        <span class="txt-link">Groups</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a  class="bar-link" href="{{ url('/admin/reports/')}}">
+                        <span class="icon"><i class="bi bi-flag"></i></span>
+                        <span class="txt-link">Reports</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a  class="bar-link" href="{{ url('/admin/helps/')}}">
+                        <span class="icon"><i class="bi bi-patch-question"></i></span>
+                        <span class="txt-link">Help Requests</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a  class="bar-link" href="{{ url('/admin/unban-requests/')}}">
+                        <span class="icon"><i class="bi bi-ban"></i></span>
+                        <span class="txt-link">Unban Requests</span>
+                    </a>
+                </li>
+                @if(Auth::check() && Auth::user()->isAdmin())
+                    <li class="menu-item">
+                        <a class="bar-link" href="{{ url('/admin/')}}">
+                            <span class="icon"><i class="bi bi-fingerprint"></i></i></span>
+                            <span class="txt-link">Admin Console</span>
+                        </a>
+                    </li>
+                @endif
+                
+            </ul>
+        </nav>
 @endsection

@@ -18,7 +18,7 @@
                 @if ($post->author->id == Auth::user()->id)
                     <li>
                         <a href="{{ url('/post/'.$post->id.'/edit') }}" class="post-edit dropdown-item">
-                            <img src="../pen.png" alt="Edit Post">
+                            <i class="bi bi-pencil"></i>
                             Edit
                         </a>
                     </li>
@@ -27,7 +27,7 @@
                 @if ($post->author->id == Auth::user()->id || Auth::user()->isAdmin())
                     <li>
                         <div class="post-delete dropdown-item" data-id="{{$post->id}}">
-                            <img type="image" src="../trash-bin.png" alt="Delete Post">
+                            <i class="bi bi-trash3"></i>
                             Delete
                         </div>
                     </li>

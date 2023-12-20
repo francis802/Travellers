@@ -7,7 +7,7 @@
             </li>
             @endif
             <li><a href="{{ url('/home/')}}" class="side-bar-link">Feed</a></li>
-            <li><a href="#" class="side-bar-link">Notifications</a></li>
+            <li><a href="{{ url('/admin/notifications/')}}" class="side-bar-link">Notifications</a></li>
             <li><a href="{{ url('/admin/users/')}}" class="side-bar-link">Users</a></li>
             <li><a href="{{ url('/admin/groups/')}}" class="side-bar-link">Groups</a></li>
             <li><a href="{{ url('/admin/reports/')}}" class="side-bar-link">Reports</a></li>

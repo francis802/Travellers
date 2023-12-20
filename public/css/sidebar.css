@@ -11,12 +11,21 @@ p a, li a {
     color: inherit;
 }
 
+.upper-links{
+    margin-bottom: 1em;
+}
 
+.lower-links{
+    margin-top: 1em;
+}
 
 .side-bar-link, .side-bar-link:visited, .side-bar-link:hover{
     text-decoration: none;
     color: black;
-    font-size: smaller;
+}
+
+.side-bar-link .btn{
+    padding-left: 0;
 }
 
 .rights-text{
@@ -51,3 +60,93 @@ p a, li a {
 }
 
 
+.side-bar-icon{
+    width: 2em;
+}
+
+
+.notification-container{
+    position: relative;
+    display: inline-block;
+}
+
+#notification-count {
+    position: absolute;
+    top: 0;
+    left: -10%;
+}
+
+.more.btn{
+    border: none;
+}
+
+/*
+.side-bar-link:hover {
+    background-color:  blue;
+    border-radius: 10px;
+}
+*/
+
+
+/*----------------------------------------------------------------------------*/
+
+nav.menu-lateral{
+    width: 3.5em;
+    height: 100%;
+    background-color:  #CCCCCC;
+    padding: 40px 0 40px 0.5%;
+    overflow: hidden;
+    transition: 0.5s;
+}
+
+nav.menu-lateral:hover{
+    width: 13em;
+    overflow: visible;
+    box-shadow: 3px 0 0 cornflowerblue;
+}
+
+.btnb-expand{
+    width: 100%;
+    padding-left: 5px;
+
+}
+
+.btnb-expand > i{
+   color: white;
+   font-size: 1.5em;
+   cursor: pointer;
+
+}
+
+
+.ul-navbar{
+    height: 100%;
+    list-style: none;
+    padding: 0;
+}
+
+.menu-item{
+    transition: .2s;
+}
+
+.menu-item:hover{
+    background: cornflowerblue;
+}
+
+.bar-link{
+    color: white;
+    font-size: 20px;
+    padding: 20px 4%;
+    display: flex;
+    align-items: center;
+}
+
+.txt-link{
+    margin-left: 1.2em;
+    color: white;
+    font-weight: 400;
+}
+
+.icon > i{
+    font-size: 1.5em;
+}

@@ -1,32 +1,61 @@
 @section('bar')
-    <nav id="side-bar">
-        <ul id="upper-sidebar">
-            @if (Auth::check())
-                <li>
-                    <a href="{{ url('/user/'.Auth::user()->id) }}" class="side-bar-link">Profile</a>       
+        <nav class="menu-lateral">
+            <ul class="ul-navbar">
+                <li class="menu-item">
+                    <a class="bar-link" href="{{url('/home/')}}">
+                        <span class="icon"><i class="bi bi-house"></i></span>
+                        <span class="txt-link">Home</span>
+                    </a>
                 </li>
-            @endif
-            <li><a href="{{url('/home/')}}" class="side-bar-link">Feed</a></li>
-            <li>
-                <a href="{{url('/notifications/')}}" class="side-bar-link">
-                    Notifications 
-                    @if(Auth::user()->unseenNotifications() > 0)
-                        <span id="notification-count" class="badge bg-primary rounded-pill">{{Auth::user()->unseenNotifications()}}</span>
-                    @endif
-                </a>
-            </li>
-            <li><a href="{{url('/helps/')}}" class="side-bar-link">Help</a></li>
-            <li><a href="#" class="side-bar-link">About Us</a></li>
-            <li><a href="{{url('/faqs/')}}" class="side-bar-link">FAQ</a></li>
-            <li><a href="#" class="side-bar-link">Terms of Use and Privacy Policy</a></li>
-        </ul>
-        <ul id="lower-sidebar">
-            <li><a href="{{ url('/post/create/')}}" class="side-bar-link" id="last-link">Create Post</a></li>
-            <li><a href="{{ url('/group/create/')}}" class="side-bar-link" id="last-link">Create Group</a></li>
-            @if(Auth::check() && Auth::user()->isAdmin())
-                <li><a href="{{ url('/admin/')}}" class="side-bar-link" id="last-link">Admin Console</a></li>
-            @endif
-            <li><p class="rights-text">&copy; Travellers. All right reserved</p></li>
-        </ul>
-</nav>
+                <li class="menu-item">
+                    <a  class="bar-link" href="{{ url('/user/'.Auth::user()->id) }}">
+                        <span class="icon"><i class="bi bi-person"></i></span>
+                        <span class="txt-link">Profile</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a  class="bar-link" href="{{url('/notifications/')}}">
+                        @if(Auth::user()->unseenNotifications() > 0)
+                            <span id="notification-count" class="badge bg-primary rounded-pill">{{Auth::user()->unseenNotifications()}}</span>
+                        @endif
+                        <span class="icon"><i class="bi bi-bell"></i></span>
+                        <span class="txt-link">Notifications</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <div id="last-link" class="bar-link btn-group dropend">
+                        <span class="icon"><i class="bi bi-three-dots"></i></span>
+                        <button type="button" class="txt-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            More
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li ><a href="{{url('/helps/')}}" class="dropdown-item" >Help</a></li>
+                            <li><a href="#" class="dropdown-item">About Us</a></li>
+                            <li><a href="{{url('/faqs/')}}" class="dropdown-item">FAQ</a></li>
+                            <li><a href="#" class="dropdown-item">Terms of Use and Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                </li>
+                @if(Auth::check() && Auth::user()->isAdmin())
+                    <li class="menu-item">
+                        <a class="bar-link" href="{{ url('/admin/')}}">
+                            <span class="icon"><i class="bi bi-fingerprint"></i></i></span>
+                            <span class="txt-link">Admin Console</span>
+                        </a>
+                    </li>
+                @endif
+                <li class="menu-item">
+                    <div id="last-link" class="bar-link btn-group dropend">
+                        <span class="icon"><i class="bi bi-patch-plus"></i></i></span>
+                        <button type="button" class="txt-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Create
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url('/post/create/')}}" class="dropdown-item" id="last-link">New Post</a></li>
+                            <li><a href="{{ url('/group/create/')}}" class="dropdown-item" id="last-link">New Group</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </nav>
 @endsection
