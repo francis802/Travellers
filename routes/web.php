@@ -54,6 +54,7 @@ Route::get('/follow-first-group', [HomeController::class, 'followFirstGroup'])->
 // User
 Route::get('user/edit', [UserController::class, 'edit'])->name('users.edit');
 Route::get('user/{id}/groups', [UserController::class, 'listGroups'])->where('id', '[0-9]+');
+Route::get('user/{id}/ownedGroups', [NotificationController::class, 'ownedGroupsNotifications'])->where('id', '[0-9]+');
 Route::get('user/{id}/followers', [UserController::class, 'followers'])->where('id', '[0-9]+');
 Route::get('user/{id}/following', [UserController::class, 'following'])->where('id', '[0-9]+');
 Route::post('user/edit', [UserController::class, 'update']);
@@ -113,6 +114,7 @@ Route::get('admin/groups', [AdminController::class, 'show_groups']);
 Route::get('admin/reports', [AdminController::class, 'show_reports']);
 Route::get('admin/helps', [AdminController::class, 'show_helps'])->name('admin.helps');
 Route::get('admin/unban-requests', [AdminController::class, 'show_unban_requests']);
+Route::get('admin/notifications', [AdminController::class, 'notifications']);
 Route::post('api/admin/membership/{id}/admin', [AdminController::class, 'makeAdmin'])->where('id', '[0-9]+');
 Route::post('api/admin/membership/{id}/user', [AdminController::class, 'makeUser'])->where('id', '[0-9]+');
 Route::post('api/admin/membership/{id}/banned', [AdminController::class, 'makeBanned'])->where('id', '[0-9]+');

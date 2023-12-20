@@ -20,14 +20,18 @@
     justify-content: space-between;
 }
 
+.request-list{
+    margin: 0.2em;
+}
+
 .notifications-container{
     padding: 2em;
 }
 
 .follow-request-container{
     display: flex;
-   
     align-items: center;
+    justify-content: space-between;
 }
 
 .request-buttons {
@@ -37,9 +41,26 @@
 
 .notification-text{
     margin-bottom: 0;
+    margin-left: 1em;
+    font-size: large;
 }
 
 .notification-info{
     display: flex;
     align-items: center;
+}
+
+.img-notification{
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    
+}
+
+.img-notification.img-user{
+    border-radius: 50%;
+}
+
+.link-notification{
+    text-decoration: none;
 }
