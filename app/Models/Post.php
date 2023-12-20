@@ -85,4 +85,9 @@ class Post extends Model
     {
         return $this->hasMany(PostNotification::class, 'post_id');
     }
+
+    public function extractMentions(){
+        preg_match_all('/@([\w.]+)/', $this->text, $matches);
+        return $matches[1] ?? [];
+    }
 }

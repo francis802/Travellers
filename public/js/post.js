@@ -357,7 +357,7 @@ function convertUsernamesToLinks() {
         Object.keys(userIds).forEach(username => {
             const userId = userIds[username];
             const mentionRegex = new RegExp(`@`+username+`\\b`, 'g');
-            const replacement = `<a href="/user/`+ userId +`">@`+username+`</a>`;
+            const replacement = `<a class="mentioned-user" href="/user/`+ userId +`">@`+username+`</a>`;
             commentElement.innerHTML = commentElement.innerHTML.replace(mentionRegex, replacement);
         });
 
@@ -393,6 +393,42 @@ function parseMentions(){
         }
     });
 }
+
+function parsePostMentions(){
+  document.querySelectorAll('.post-view').forEach(commentElement => {
+      const idAttribute = commentElement.getAttribute('id');
+      const postId = idAttribute.match(/post-id-(\d+)/);
+      if (postId) {
+          sendAjaxRequest('get', '/api/post/' + postId[1] + '/mentioned', null, postMentionsToLinks);
+      }
+  });
+}
+
+function postMentionsToLinks() {
+  if (this.status === 200) {
+      const resp = JSON.parse(this.responseText); // { 'username': user_id, ... }
+      const userIds = resp.user_ids;
+      const postId = resp.postId;
+
+      const postElement = document.getElementById(`post-id-` + postId);
+      const postDescription = postElement.querySelector('.post-description');
+
+      // Substituir menções por links
+      Object.keys(userIds).forEach(username => {
+          const userId = userIds[username];
+          const mentionRegex = new RegExp(`@`+username+`\\b`, 'g');
+          const replacement = `<a class="mentioned-user" href="/user/`+ userId +`">@`+username+`</a>`;
+          postDescription.innerHTML = postDescription.innerHTML.replace(mentionRegex, replacement);
+      });
+
+
+  } else {
+      console.log(this.responseText);
+      console.error('Erro na solicitação Ajax:', this.status);
+  }
+}
+
+parsePostMentions();
 
 parseMentions();
 

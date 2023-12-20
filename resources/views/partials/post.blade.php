@@ -1,6 +1,6 @@
 
 
-<div class="card mb-3" id="post-id-{{$post->id}}">
+<div class="post-view card mb-3" id="post-id-{{$post->id}}">
     <div class="card-header post-header">
         <div id="post-author">
             <a href="{{ url('/user/'.$post->author->id) }}" class="post-author-name">
@@ -37,14 +37,25 @@
         
     </div>
     <div class="card-body">
-        <a href="{{url('/post/'.$post->id)}}">
-            @if ($post->media !== null)
-                <img src="../images/post/post-{{$post->id}}.jpg"  alt="{{ $post->text }}" class="card-img-top">
-            @endif
-            <div class="post-body-text">
-                <p class="post-description">{{ $post->text }}</p>
+        @if(url()->current() == url('/post/'.$post->id))
+            <div class="post-content">
+                @if ($post->media !== null)
+                    <img src="../images/post/post-{{$post->id}}.jpg"  alt="{{ $post->text }}" class="card-img-top">
+                @endif
+                <div class="post-body-text">
+                    <p class="post-description">{{ $post->text }}</p>
+                </div>
             </div>
-        </a>
+        @else
+            <a class="post-content" href="{{url('/post/'.$post->id)}}">
+                @if ($post->media !== null)
+                    <img src="../images/post/post-{{$post->id}}.jpg"  alt="{{ $post->text }}" class="card-img-top">
+                @endif
+                <div class="post-body-text">
+                    <p class="post-description">{{ $post->text }}</p>
+                </div>
+            </a>
+        @endif
     </div>
         <div class="card-footer">
             <ul class="post-footer-links">
