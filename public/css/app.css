@@ -142,3 +142,16 @@ html{
     font-size: x-large;
     font-weight: 400;
 }
+
+
+ol{
+  list-style-type: lower-alpha;
+}
+
+.divider{
+  padding-left: 2em;
+}
+
+.h2-terms{
+  margin-top: 1em;
+}
