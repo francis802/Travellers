@@ -13,6 +13,7 @@ use App\Models\Banned;
 use App\Models\BannedMember;
 use App\Models\Owner;
 use App\Models\Member;
+use App\Models\Country;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
@@ -45,7 +46,8 @@ class AdminController extends Controller
             Owner::where('group_id', $group->id)->delete();
             Member::where('group_id', $group->id)->delete();
             BannedMember::where('group_id', $group->id)->delete();
-            $group->delete();
+            $country = Country::where('id', $group->country_id)->first();
+            $country->delete();
         }
         return response()->json(['group' => $group]);
     }

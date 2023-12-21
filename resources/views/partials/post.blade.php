@@ -40,7 +40,7 @@
         @if(url()->current() == url('/post/'.$post->id))
             <div class="post-content">
                 @if ($post->media !== null)
-                    <img src="../images/post/post-{{$post->id}}.jpg"  alt="{{ $post->text }}" class="card-img-top">
+                    <img src="{{url($post->media)}}"  alt="{{ $post->text }}" class="card-img-top">
                 @endif
                 <div class="post-body-text">
                     <p class="post-description">{{ $post->text }}</p>
