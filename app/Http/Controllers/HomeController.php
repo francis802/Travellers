@@ -6,7 +6,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\User;
+
+use App\Models\Group;
+
 use App\Models\Message;
+
 
 
 class HomeController extends Controller
@@ -26,6 +30,14 @@ class HomeController extends Controller
         $publicPosts = Post::publicPosts()->get();
         $followingPosts = Auth::user()->followingPosts()->get();
         return view('pages.home', ['publicPosts' => $publicPosts, 'followingPosts' => $followingPosts, 'sharedUsers' => $sharedUsers]);
+    }
+
+    public function followFirstGroup() {
+        // Obtém os 12 grupos com mais membros
+        $groups = Group::withCount('members')->orderByDesc('members_count')->take(12)->get();
+
+        // Retorna a view com os grupos
+        return view('pages.followFirstGroup', ['groups' => $groups]);
     }
 
 }
