@@ -50,7 +50,8 @@ Route::controller(RegisterController::class)->group(function () {
 // Home
 Route::get('/home', [HomeController::class, 'show'])->name('home');
 Route::get('/follow-first-group', [HomeController::class, 'followFirstGroup'])->name('followFirstGroup');
-
+Route::get('/about', [HomeController::class, 'aboutUs'])->name('aboutUs');
+Route::get('/terms', [HomeController::class, 'termsOfUse'])->name('termsOfUse');
 
 // User
 Route::get('user/edit', [UserController::class, 'edit'])->name('users.edit');

@@ -142,3 +142,37 @@ html{
     font-size: x-large;
     font-weight: 400;
 }
+
+
+ol{
+  list-style-type: lower-alpha;
+}
+
+.divider{
+  padding-left: 2em;
+  padding-top: 1em;
+}
+
+.h2-terms{
+  margin-top: 1em;
+}
+
+.text-break.sp-p{
+  white-space: unset;
+}
+
+.img-thumbnail.about-img{
+  width: 150px; 
+  height: 150px;
+  object-fit: cover;
+}
+
+.person-container {
+  text-align: center;
+}
+
+.container-md.photos-about{
+  display: flex;
+    justify-content: space-evenly;
+}
+

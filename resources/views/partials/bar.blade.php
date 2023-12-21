@@ -36,9 +36,9 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li ><a href="{{url('/helps/')}}" class="dropdown-item" >Help</a></li>
-                            <li><a href="#" class="dropdown-item">About Us</a></li>
                             <li><a href="{{url('/faqs/')}}" class="dropdown-item">FAQ</a></li>
-                            <li><a href="#" class="dropdown-item">Terms of Use and Privacy Policy</a></li>
+                            <li><a href="{{url('/about')}}" class="dropdown-item">About Us</a></li>
+                            <li><a href="{{url('/terms')}}" class="dropdown-item">Terms of Use and Privacy Policy</a></li>
                         </ul>
                     </div>
                 </li>

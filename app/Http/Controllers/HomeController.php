@@ -40,4 +40,12 @@ class HomeController extends Controller
         return view('pages.followFirstGroup', ['groups' => $groups]);
     }
 
+    public function aboutUs() {
+        return view('pages.aboutUs');
+    }
+
+    public function termsOfUse() {
+        return view('pages.termsOfUse');
+    }
+
 }
