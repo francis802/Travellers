@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Message;
 
 
 class PostController extends Controller
@@ -56,9 +57,19 @@ class PostController extends Controller
      */
     public function show(int $postId)
     {
+        $messengers = Message::recentMessengers();
+        $sharedUsers = User::whereIn('id', array_keys($messengers))->get();
+        $sharedUsers = $sharedUsers->reverse();
+        $allUsers = User::all();
+        foreach ($allUsers as $user) {
+            if (!isset($recentMessagers[$user->id])) {
+                $sharedUsers = $sharedUsers->merge([$user->id => $user]);
+            }
+        }
         $post = Post::findOrFail($postId);
         return view('pages.post', [
             'post' => $post,
+            'sharedUsers' => $sharedUsers
         ]);
     }
 
@@ -114,7 +125,7 @@ class PostController extends Controller
         
         ImageController::delete($post->id, "post");
         $post->delete();
-        if(url()->previous() == url().'post/'.$post->id) {
+        if(url()->previous() == url('post/'.$post->id)) {
             return redirect('home/')->with('success', 'Post successfully deleted');
         }
         else return response()->json($post);

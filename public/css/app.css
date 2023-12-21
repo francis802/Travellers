@@ -55,7 +55,16 @@ html{
   display: block;
 }
 
-.alert-success {
+#success-alert.alert-success {
+  position: fixed;
+  top: 35%; /* Adjust the distance from the top as needed */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px; /* Adjust the width as needed */
+  text-align: center;
+  padding: 15px;
+  border-radius: 5px;
+  z-index: 10000; /* Make sure it's on top of everything */
   animation: fadeOut 2s ease-in-out 3s forwards; /* Adjust duration and delay as needed */
 }
 

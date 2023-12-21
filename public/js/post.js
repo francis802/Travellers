@@ -43,6 +43,11 @@ function addEventListeners() {
     if (postComment != null) {
       postComment.addEventListener('input', postButtonVisibility);
     }
+
+    let postSharer = document.querySelectorAll('.post-share');
+    [].forEach.call(postSharer, function(share) {
+      share.addEventListener('click', sendSharePostRequest);
+    });
 }
 
   
@@ -84,6 +89,24 @@ function postButtonVisibility() {
     let element = document.querySelector('#post-id-' + post.id );
     element.style.display = 'none';
     element.remove();
+    var modal = document.getElementById('delete-post-popup-' + post.id);
+
+    if (modal) {
+    modal.classList.remove('show');
+
+    document.body.classList.remove('modal-open');
+
+    var modalBackdrop = document.querySelector('.modal-backdrop');
+    if (modalBackdrop) {
+        modalBackdrop.remove();
+    }
+
+    // Remove inline styles from body
+    document.body.removeAttribute('style');
+
+    // Remove the modal from the DOM
+    modal.parentNode.removeChild(modal);
+    }
   }
 
   function sendCreateCommentRequest(event) {
@@ -425,6 +448,32 @@ function postMentionsToLinks() {
   } else {
       console.log(this.responseText);
       console.error('Erro na solicitação Ajax:', this.status);
+  }
+}
+
+function sendSharePostRequest(event) {
+  let post_id = this.closest('.post-share').getAttribute('post-id');
+  let user_id = this.closest('.post-share').getAttribute('user-id');
+  let post_url = location.protocol + '//' + location.host + '/post/' + post_id;
+  sendAjaxRequest('put', '/api/post/share/user/' + user_id , {post_url: post_url}, postSharedHandler);
+
+  event.preventDefault();
+}
+
+function postSharedHandler() {
+  console.log(this.responseText);
+  if (this.status != 200) window.location = '/';
+  let resp = JSON.parse(this.responseText);
+  if(resp.success){
+    var alertDiv = document.createElement('div');
+    
+    alertDiv.classList.add('alert', 'alert-success');
+    alertDiv.setAttribute('role', 'alert');
+    alertDiv.setAttribute('id', 'success-alert');
+    
+    alertDiv.textContent = 'Post Shared Successfully!';
+
+    document.body.appendChild(alertDiv);
   }
 }
 

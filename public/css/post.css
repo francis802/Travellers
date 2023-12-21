@@ -154,4 +154,8 @@ a.post-edit{
     color: black;
 }
 
-
+div.post-share:hover{
+    background-color: #CCCCCC;
+    border-radius: 1em;
+    cursor: pointer;
+}

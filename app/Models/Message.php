@@ -31,7 +31,7 @@ class Message extends Model
         return $this->belongsTo(User::class, 'receiver_id');
     }
 
-    static function recentMessagers()
+    static function recentMessengers()
     {
         $user = Auth::user();
         $messages = Message::where('sender_id', $user->id)->orWhere('receiver_id', $user->id)->orderBy('time', 'desc')->get();
@@ -39,7 +39,7 @@ class Message extends Model
         foreach ($messages as $message) {
             $otherUserId = ($message->sender_id == $user->id) ? $message->receiver_id : $message->sender_id;
             if (!isset($recentMessagers[$otherUserId])) {
-                $recentMessagers = [$otherUserId => []] + $recentMessagers;
+                $recentMessagers =  $recentMessagers + [$otherUserId => []];
             }
             $recentMessagers[$otherUserId][] = $message;
         }
