@@ -4,20 +4,22 @@
 
 <section id="feed">
     @yield('topbar')
+    <section class="notifications-container" >
+    <section id="notifications">
+        <h2 class="followers"> Following </h2>
     @if (count($following) > 0)
-    <h2> Following ({{count($following)}}) </h2>
         @foreach($following as $following_user)
-        <section id="user-bar">
-            <a href="{{ url('/user/'.$following_user->id) }}" class="profile-info">
+        <section class="ff-bar" id="user-bar-id-{{$following_user->id}}">
+            <a href="{{ url('/user/'.$following_user->id) }}" class="ff-info">
                 <div id="profile-picture">
                     @if ($following_user->profile_photo !== null)
-                        <img src="{{ url($following_user->profile_photo) }}" alt="Profile Picture">
+                        <img class="img-notification img-user" src="{{ url($following_user->profile_photo) }}" alt="Profile Picture">
                     @else
-                    <img src="{{url('man.jpg')}}" alt="Profile Picture">
+                    <img class="img-notification img-user" src="{{url('man.jpg')}}" alt="Profile Picture">
                     @endif
                 </div>
                 @if (Auth::check())
-                    <h2 id="user-username">
+                    <h2 class="ff-username">
                         @if ($following_user->is_deleted)
                             [Deleted User]
                         @else
@@ -35,5 +37,6 @@
         <h2> &#64{{$user->username}} doesn't follow anyone. </h2>
     @endif
 </section>
-
+</section>
+</section>
 @endsection

@@ -5,7 +5,7 @@
 <section id="feed">
     @yield('topbar')
     <section id="user-bar">
-        <a href="{{ url('/user/'.Auth::user()->id) }}" class="profile-info">
+        <a href="{{ url('/user/'.Auth::user()->id) }}" class="profile-info home-view">
             <div id="profile-picture">
                 @if (Auth::user()->profile_photo !== null)
                     <img src="{{ url(Auth::user()->profile_photo) }}" alt="Profile Picture">
@@ -14,7 +14,7 @@
                 @endif
             </div>
             @if (Auth::check())
-                <h2 id="user-username">&#64;{{ Auth::user()->username }}</h2>
+                <h2 id="user-username" class="home-view">&#64;{{ Auth::user()->username }}</h2>
             @endif
         </a>
         <input id="search-input" type="text" placeholder="Search..." onkeydown="searchOnEnter(event)"> 
