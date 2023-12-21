@@ -20,7 +20,7 @@ function sendMessage(event) {
 function sendMessageHandler() {
     if (this.status != 200) window.location = '/';
     let message_obj = JSON.parse(this.responseText);
-    let message = createMessage(message_obj.message);
+    let message = createMyMessage(message_obj.message);
     var message_section = document.querySelector("section.message-view");
     if (message_section.lastChild) {
         message_section.insertBefore(message, message_section.lastChild);
@@ -31,7 +31,7 @@ function sendMessageHandler() {
     scrollToBottom();
 }
 
-function createMessage(message) {
+function createMyMessage(message) {
     let new_message = document.createElement('div');
     new_message.classList.add('card');
     new_message.classList.add('my-msg');
@@ -39,10 +39,19 @@ function createMessage(message) {
     return new_message;
 }
 
+function createOtherMessage(message) {
+  let new_message = document.createElement('div');
+  new_message.classList.add('card');
+  new_message.classList.add('other-msg');
+  new_message.innerHTML = `<div class="card-body">` + message.content +`</div>`;
+  return new_message;
+}
+
 function updateMessages() {
   const messageView = document.querySelector('section.message-view');
   if (!messageView) return;
   const userId = messageView.getAttribute('logged-user');
+  const senderId = messageView.getAttribute('other-user');
   if (!userId) return;
   const pusherAppKey = "c3503c276e27ad2b1bab";
   const pusherCluster = "eu";
@@ -53,7 +62,17 @@ function updateMessages() {
 
   const channel = pusher.subscribe('user.' + userId);
   channel.bind('message.sent', function(data) {
-    console.log(`New notification: ${data.message}`);
+    console.log(data);
+    if (data.message.sender_id == senderId) {
+      console.log('same user');
+      const message = createOtherMessage(data.message);
+      if (messageView.lastChild) {
+        messageView.insertBefore(message, messageView.lastChild);
+      } else {
+        messageView.appendChild(message);
+      }
+      scrollToBottom();
+    }
   });
 }
 

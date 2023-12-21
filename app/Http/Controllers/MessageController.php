@@ -46,7 +46,7 @@ class MessageController extends Controller
         $message->content = $request->text;
         $message->sender_id = Auth::user()->id;
         $message->receiver_id = $request->user_id;
-        $message->time = date('Y-m-d H:i');
+        $message->time = now();
         $message->save();
 
         $user = User::findOrFail($request->user_id);
