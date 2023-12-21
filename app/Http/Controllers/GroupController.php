@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Post;
 use App\Models\Member;
 use App\Models\Owner;
+use App\Models\Admin;
 
 class GroupController extends Controller
 {
@@ -19,6 +20,8 @@ class GroupController extends Controller
     }
 
     public function store(Request $request){
+
+        DB::beginTransaction();
         $group = new Group();
         $group->description = $request->text;
         $group->save();
@@ -37,7 +40,20 @@ class GroupController extends Controller
         }
 
         $group->save();
-        return redirect('group/'.$group->id)->with('success', 'Post successfully created');
+
+        $admins = Admin::all();
+        foreach($admins as $admin){
+            DB::table('group_creation_notification')->insert([
+                'time' => now(),
+                'group_id' => $group->id,
+                'notified_id' => $admin->id,
+                'sender_id' => Auth::user()->id
+            ]);
+        }
+
+        DB::commit();
+        
+        return redirect('group/'.$group->id)->with('success', 'Post created! Wait for approval of an admin...');
     }
 
     public function delete(Request $request){
