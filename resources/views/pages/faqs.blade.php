@@ -8,10 +8,11 @@
     @yield('bar')
     <section id="feed">
     @yield('topbar')
+    <section class="notifications-container" >
     <header class="faq-header">
-        <h1>Frequently Asked Questions (FAQs)</h1>
+        <h2>Frequently Asked Questions (FAQs)</h2>
         @if(Auth::user()->isAdmin())
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addFaqModal">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFaqModal">
                 <i class="fa-solid fa-plus"></i> Add FAQ
             </button>
         @endif
@@ -58,7 +59,7 @@
             </div>
         </div>
     </div>
-
+    </section>
     </section>
     
 @endsection
