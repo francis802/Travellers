@@ -129,3 +129,16 @@ html{
   max-width: 100%;
   height: auto;
 }
+
+.profile-info.home-view, .profile-info.home-view:hover, .profile-info.home-view:visited{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1em;
+}
+
+#user-username.home-view{
+    margin: 0;
+    font-size: x-large;
+    font-weight: 400;
+}

@@ -9,6 +9,7 @@
             <section class="create-post">
                         <form class="create-post-form" action="{{ url('/post/'.$post->id.'/edit') }}" method="post" enctype="multipart/form-data">
                         @csrf
+                        <h2>Edit Post</h2>
                         <div id="preview-container-post">
                                 <div id="close-button" onclick="removeImage()" style="{{$post->media !== null ? 'block' : 'none'}}">&times;</div>
                                 @if ($post->media !== null)
