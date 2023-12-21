@@ -144,7 +144,7 @@ Route::post('help/{id}/answer', [HelpController::class, 'answer'])->where('id', 
 
 // FAQ
 Route::get('faqs', [FAQController::class, 'showFAQs'])->name('faqs');
-Route::post('faq/create', [FAQController::class, 'store']);
+Route::post('faq/create', [FAQController::class, 'store'])->name('addFaq');
 
 // Report
 Route::get('report/user/{id}', [ReportController::class, 'create'])->where('id', '[0-9]+');

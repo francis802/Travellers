@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\FAQ;
 use Illuminate\Http\Request;
 use App\Models\Help;
+use Illuminate\Support\Facades\DB;
 
 class FAQController extends Controller
 {
@@ -31,14 +32,17 @@ class FAQController extends Controller
     public function store(Request $request)
     {
         $faq = new FAQ();
-        $faq->question = $request->question;
-        $faq->answer = $request->answer;
+        $faq->question = $request->input('newQuestion');
+        $faq->answer = $request->input('newAnswer');
         $faq->last_edited = date('Y-m-d H:i:s');
-        $help = Help::findOrFail($request->help_id);
-        $help->became_faq = true;
+        if ($request->help_id) {
+            $help = Help::findOrFail($request->help_id);
+            $help->became_faq = true;
+            $help->save();
+        }
     
         $faq->save();
-        $help->save();
+
         return redirect()->route('faqs');
     }
 
