@@ -7,6 +7,8 @@ use App\Models\Message;
 use Illuminate\Http\Request;
 use App\Models\User;
 
+use App\Events\MessageEvent;
+
 class MessageController extends Controller
 {
     /**
@@ -46,6 +48,10 @@ class MessageController extends Controller
         $message->receiver_id = $request->user_id;
         $message->time = date('Y-m-d H:i');
         $message->save();
+
+        $user = User::findOrFail($request->user_id);
+
+        broadcast(new MessageEvent($message, $user));
 
         return response()->json(['message'=>$message]);
     

@@ -16,7 +16,7 @@
                 </a>
             </section>
 
-            <section class="message-view">
+            <section class="message-view" logged-user="{{Auth::user()->id}}">
                 @if(count($messages) !== 0)
                     @foreach($messages as $message)
                         @if($message->sender_id == Auth::user()->id)

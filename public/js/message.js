@@ -39,6 +39,24 @@ function createMessage(message) {
     return new_message;
 }
 
+function updateMessages() {
+  const messageView = document.querySelector('section.message-view');
+  if (!messageView) return;
+  const userId = messageView.getAttribute('logged-user');
+  if (!userId) return;
+  const pusherAppKey = "c3503c276e27ad2b1bab";
+  const pusherCluster = "eu";
+  const pusher = new Pusher(pusherAppKey, {
+    cluster: pusherCluster,
+    encrypted: true
+  });
+
+  const channel = pusher.subscribe('user.' + userId);
+  channel.bind('message.sent', function(data) {
+    console.log(`New notification: ${data.message}`);
+  });
+}
+
 
   function scrollToBottom() {
     let messagesContainer = document.querySelector('.message-view');
@@ -50,3 +68,5 @@ function createMessage(message) {
     });
 
   addEventListeners();
+
+  updateMessages();
