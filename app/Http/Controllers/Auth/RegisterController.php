@@ -43,12 +43,11 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password),
             'country_id' => $request->country
         ]);
-
         $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);
        
         $request->session()->regenerate();
-        return redirect()->route('home')
+        return redirect()->route('followFirstGroup')
             ->withSuccess('You have successfully registered & logged in!');
     }
 }

@@ -18,7 +18,7 @@
       <input id="username" type="text" name="username" value="{{ old('username') }}" class="form-control"  required autofocus>
       
       <label for="country">Country</label>
-      <select id="country" name="country" class="form-select form-select-sm" aria-label="Select your country">
+      <select id="country" name="country" class="form-select form-select-sm" required aria-label="Select your country">
         @foreach($countries as $country)
             <option value="{{ $country->id }}">{{ $country->name }}</option>
         @endforeach
