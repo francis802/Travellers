@@ -21,7 +21,7 @@
                             </a></p>
                         </section>
                     </section>
-                    <section id="profile-buttons-area">
+                    <section id="group-buttons-area">
                             @if(Auth::user()->isAdmin())
                                 <a type="button" class="btn btn-primary" href="{{ url('/group/'.$group->id.'/edit') }}"> Edit </a>
                             @endif

@@ -2,7 +2,7 @@
     <form class="comment-submit">
         Add a comment
         <textarea name="comment" id="comment" cols="40" rows="1" placeholder="Write a comment..."></textarea>
-        <button class="comment-create" post-id="{{$post->id}}"><p class="button button-post">Post</p></i></button>
+        <button class="comment-create" post-id="{{$post->id}}"><p class="btn btn-primary button-post">Post</p></i></button>
     </form>
     <ul class="post-comments-list list-group">
         @foreach ($post->comments->sortByDesc('date') as $comment)
