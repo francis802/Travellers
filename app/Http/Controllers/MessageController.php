@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -38,9 +39,17 @@ class MessageController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function sendMessage(Request $request, int $userId)
+    public function sendMessage(Request $request)
     {
-        //
+        $message = new Message();
+        $message->content = $request->text;
+        $message->sender_id = Auth::user()->id;
+        $message->receiver_id = $request->user_id;
+        $message->time = date('Y-m-d H:i');
+        $message->save();
+
+        return response()->json(['message'=>$message]);
+    
     }
 
     public function sharePost(Request $request, int $userId)
