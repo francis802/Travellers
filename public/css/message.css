@@ -1,0 +1,69 @@
+.card.other-msg{
+    background-color: var(--bs-border-color);
+    margin-bottom: 0.5em;
+    width: fit-content;
+    text-align: left;
+    margin-right: auto; /* Isso empurra a mensagem para a esquerda */
+}
+
+.card.my-msg{
+    background-color: var(--bs-primary);
+    margin-bottom: 0.5em;
+    width: fit-content;
+    text-align: right;
+    margin-left: auto; /* Isso empurra a mensagem para a direita */
+    color: white;
+}
+
+
+.msg-top-link{
+    text-decoration: none;
+    color: white;
+    margin-right: 1em;
+}
+.msg-top-link i{
+    font-size: 1.5em;
+    color: var(--bs-primary);
+}
+
+.user-chat-info{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 1em;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    background-color: #333;
+    max-height: 6em;
+}
+
+.msg-top-txt{
+    margin:0;
+}
+
+.send-msg-form{
+    display: flex;
+    justify-content: flex-start;
+    
+    background: transparent;
+}
+
+.message-input{
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    padding-left: 5em;
+    padding-right: 5em;
+    background: transparent;
+}
+
+.message-view{
+    margin-top: 6em; /* Ajuste conforme a altura do cabeçalho */
+    padding: 20px;
+    max-height: calc(100vh - 120px);  /*Altura máxima, ajuste conforme necessário */
+    overflow-y: auto; /* Adiciona uma barra de rolagem vertical se necessário */
+    padding-bottom: 3em;
+}
+
