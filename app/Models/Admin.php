@@ -71,6 +71,6 @@ class Admin extends Model
 
         $total_unseen = $report_count + $help_count + $appeal_count + $group_creation_count;
 
-        return $help_count;
+        return $total_unseen;
     }
 }
