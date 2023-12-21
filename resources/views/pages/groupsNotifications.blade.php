@@ -15,7 +15,9 @@
                                 <a href="{{url('/group/'.$notification->group->id)}}" >
                                     <li id="notification-list" class="list-group-item list-group-item-light">
                                         <div class="notification-info">
-                                        
+                                            @if($notification->senderUser != null)
+                                                <p class="notification-sender">{{$notification->senderUser->name}}</p>
+                                            @endif
                                             <p class="notification-text">
                                                 
                                                 @if($notification->notification_type == 'group_join')
@@ -27,6 +29,7 @@
                                                 @elseif($notification->notification_type == 'group_owner')
                                                     is a new owner of your group
                                                 @endif
+                                                {{$notification->notification_type}}
                                                 {{$notification->group->country->name}}
                                             </p>
                                         </div>

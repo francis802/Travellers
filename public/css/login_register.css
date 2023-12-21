@@ -3,6 +3,7 @@
 .login-register-form{
     display: grid;
     max-width:fit-content;
+    font-size: xx-small;
 }
 
 .login-register{
@@ -10,6 +11,7 @@
     align-content: center;
     justify-items: center;
     align-items: center;
+    width: 100%;
 }
 
 #email, #password, #username, #name, #password-confirm, #country{
@@ -18,11 +20,14 @@
     outline: none;
 }
 
+.form-text.hit{
+    font-size: small;
+}
 #cont{
     display: flex;
     height: 100vh;
-    align-content: center;
     justify-content: center;
+    width: 100%;
 }
 
 
@@ -50,9 +55,11 @@ label{
     display: flex;
     flex-direction: row;
     margin-top: 1rem;
+    justify-content: space-evenly;
 }
 
 .success, .error{
     font-size: small;
     color: cornflowerblue;
+    margin-top: 1em;
 }

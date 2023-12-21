@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 use App\Models\User;
+use App\Models\Country;
 
 class RegisterController extends Controller
 {
@@ -20,7 +21,8 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm(): View
     {
-        return view('auth.register');
+        $countries = Country::all();
+        return view('auth.register', ['countries' => $countries]);
     }
 
     /**
@@ -38,14 +40,13 @@ class RegisterController extends Controller
             'name' => $request->name,
             'username' => $request->username,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
-            
+            'password' => Hash::make($request->password),
+            'country_id' => $request->country
         ]);
+
         $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);
-        DB::table('members')->insert(
-            ['user_id' => Auth::user()->id, 'group_id' => 1] //This is just for the vertical prototype, will change on the final version
-        );
+       
         $request->session()->regenerate();
         return redirect()->route('home')
             ->withSuccess('You have successfully registered & logged in!');
