@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Help;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use App\Models\Admin;
+use App\Events\AdminNotificationEvent;
 
 class HelpController extends Controller
 {
@@ -38,6 +41,11 @@ class HelpController extends Controller
         $help->date = date('Y-m-d H:i:s');
 
         $help->save();
+        $admins = Admin::all();
+        foreach ($admins as $admin) {
+            $user = User::findOrFail($admin->user_id);
+            broadcast(new AdminNotificationEvent($user));
+        }
         return redirect()->route('home');
     }
 
