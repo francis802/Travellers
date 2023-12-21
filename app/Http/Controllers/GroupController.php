@@ -12,6 +12,7 @@ use App\Models\Member;
 use App\Models\Owner;
 use App\Models\Admin;
 use App\Models\Country;
+use App\Models\Message;
 
 class GroupController extends Controller
 {
@@ -84,11 +85,21 @@ class GroupController extends Controller
             return redirect()->back();
         }
 
+        $messengers = Message::recentMessengers();
+        $sharedUsers = User::whereIn('id', array_keys($messengers))->get();
+        $sharedUsers = $sharedUsers->reverse();
+        $allUsers = User::all();
+        foreach ($allUsers as $user) {
+            if (!isset($recentMessagers[$user->id])) {
+                $sharedUsers = $sharedUsers->merge([$user->id => $user]);
+            }
+        }
+
         $posts = $group->posts()->get();
         $subgroups = $group->subgroups()->get();
         $members = $group->members()->get();
 
-        return view('pages.group', ['group' => $group, 'posts' => $posts, 'subgroups' => $subgroups, 'members' => $members]); 
+        return view('pages.group', ['group' => $group, 'posts' => $posts, 'subgroups' => $subgroups, 'members' => $members, 'sharedUsers' => $sharedUsers]); 
     }
     
     public function edit(int $groupId){

@@ -59,7 +59,7 @@
     </div>
         <div class="card-footer">
             <ul class="post-footer-links">
-                <button class="{{Auth::check() && Auth::user()->likedPost($post->id) ? 'dislike-post' : 'like-post'}}" data-id="{{$post->id}}">
+                <button  class="{{Auth::check() && Auth::user()->likedPost($post->id) ? 'dislike-post' : 'like-post'}}" data-id="{{$post->id}}">
                     <h5 class="like-count">
                     <i class="{{Auth::check() && Auth::user()->likedPost($post->id) ? 'fa-solid fa-heart fa-2x' : 'fa-regular fa-heart fa-2x'}}" style="color: #cc0f0f;"></i>
                     {{count($post->likes())}}

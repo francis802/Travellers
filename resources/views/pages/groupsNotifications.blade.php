@@ -6,20 +6,22 @@
         @yield('bar')
         <section id="feed">
             @yield('topbar')
-            <section class="notification-container">
+            <section class="notifications-container">
                 <section id="notifications">
                     <h2>Notifications</h2>
                     @if($notifications->count() > 0)
                         <ul class="list-group list-group-flush">
                         @foreach($notifications as $notification)
-                                <a href="{{url('/group/'.$notification->group->id)}}" >
+                                <a class="link-notification" href="{{url('/group/'.$notification->group->id)}}" >
                                     <li id="notification-list" class="list-group-item list-group-item-light">
                                         <div class="notification-info">
                                             @if($notification->senderUser != null)
-                                                <p class="notification-sender">{{$notification->senderUser->name}}</p>
+                                                <img class="img-notification img-user" src="{{ url($notification->senderUser->profile_photo) }}">
                                             @endif
                                             <p class="notification-text">
-                                                
+                                                @if($notification->senderUser != null)
+                                                    {{$notification->senderUser->username}}
+                                                @endif
                                                 @if($notification->notification_type == 'group_join')
                                                     joined your group 
                                                 @elseif($notification->notification_type == 'group_leave')
@@ -27,9 +29,9 @@
                                                 @elseif($notification->notification_type == 'group_ban')
                                                     was banned from your group
                                                 @elseif($notification->notification_type == 'group_owner')
-                                                    is a new owner of your group
+                                                    New owner on group
                                                 @endif
-                                                {{$notification->notification_type}}
+                                                
                                                 {{$notification->group->country->name}}
                                             </p>
                                         </div>

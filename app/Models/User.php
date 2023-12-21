@@ -23,6 +23,8 @@ use App\Models\PostNotification;
 use App\Models\CommentNotification;
 use App\Models\FollowNotification;
 use App\Models\GroupNotification;
+use App\Models\Message;
+use App\Models\MessageNotification;
 
 use App\Models\Member;
 use App\Models\Owner;
@@ -161,6 +163,8 @@ class User extends Authenticatable
         return GroupNotification::where('notified_id', $this->id)->orderBy('time', 'desc');
     }
 
+   
+
     public function unseenNotifications(){
         $follow_count = FollowNotification::where('notified_id', $this->id)->where('opened', false)->count();
         $comment_count = CommentNotification::where('notified_id', $this->id)->where('opened', false)->count();
@@ -170,6 +174,14 @@ class User extends Authenticatable
         $total_unseen = $follow_count + $comment_count + $post_count;
 
         return $total_unseen;
+    }
+
+    public function unseenGroupNotifications(){
+        return GroupNotification::where('notified_id', $this->id)->where('opened', false)->count();
+    }
+
+    public function unseenMessages(){
+        return MessageNotification::where('notified_id', $this->id)->where('opened', false)->count();
     }
     
     public function isOwner($group_id) {

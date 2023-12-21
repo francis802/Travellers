@@ -16,7 +16,11 @@
                         <a href="{{ url('/group/'.$subgroup->id) }}">
                             <div class="col">
                                 <div class="card">
-                                <img src="{{ url($subgroup->banner_pic) }}" class="card-img-top">
+                                @if($subgroup->banner_pic != null)
+                                    <img src="{{ url($subgroup->banner_pic) }}" class="card-img-top">
+                                @else
+                                    <img src="{{ url('../defaultBanner.png') }}" class="card-img-top">
+                                @endif
                                 <div class="card-body">
                                     <h5 class="card-title">{{$subgroup->country->name}}</h5>
                                     <p class="card-text">{{ $subgroup->description }}</p>
