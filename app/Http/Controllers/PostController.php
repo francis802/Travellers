@@ -8,7 +8,8 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Message;
-
+use App\Models\Tag;
+use App\Models\PostTag;
 
 class PostController extends Controller
 {
@@ -39,6 +40,7 @@ class PostController extends Controller
         $post->author_id = Auth::user()->id;
         $post->group_id = $request->group_id;
         $post->text = $request->text;
+        $postDescription = $request->text;
         $post->date = date('Y-m-d H:i');
         $post->save();
         if (!isset($contentFound) && $_FILES["image"]["error"]) {
@@ -49,6 +51,26 @@ class PostController extends Controller
             $post->media = "images/post/post-".$post->id.".".pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION);
         }
         $post->save();
+
+        // Parse text to get the tags
+        $pattern = '/#(\w+)/';
+        preg_match_all($pattern, $postDescription, $matches);
+        $hashtags = $matches[1];
+        foreach ($hashtags as $hashtag) {
+            $tag = new Tag();
+            if(Tag::where('hashtag', $hashtag)->first() == null){
+                $tag->hashtag = $hashtag;
+                $tag->save();
+            }
+            else {
+                $tag = Tag::where('hashtag', $hashtag)->first();
+            }
+            PostTag::create([
+                'post_id' => $post->id,
+                'tag_id' => $tag->id
+            ]);
+        }
+
         return redirect('post/'.$post->id)->with('success', 'Post successfully created');
     }
 

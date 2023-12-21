@@ -13,22 +13,22 @@
                         <div id="preview-container-group">
                                 <div id="close-button" onclick="removeImage()" style="{{$group->banner_pic !== null ? 'block' : 'none'}}">&times;</div>
                                 @if ($group->banner_pic !== null)
-                                <img id="image-preview" src="{{url($group->banner_pic)}}" alt="Previous Image">
+                                        <img id="image-preview" class="img-fluid" src="{{url($group->banner_pic)}}" alt="Previous Image">
                                 @else
-                                <img id="image-preview" src="{{asset('image-placeholder.jpg')}}" alt="Previous Image">
+                                        <img id="image-preview" class="img-fluid" src="{{asset('image-placeholder.jpg')}}" alt="Previous Image">
                                 @endif
                         </div>
-                        <label for="image" id="file-label">
+                        <label class="btn btn-secondary" for="image" id="file-label">
                                 @if ($group->banner_pic !== null)
-                                Change Photo
+                                        Change Photo
                                 @else
-                                Select Photo
+                                        Select Photo
                                 @endif
                                 </label>
                                 <input type="file" id="image" name="image" accept="image/png, image/jpeg" style="display: none" onchange="displayImage(this)">
-                        <textarea id="post-text" name="text" rows="10" cols="30" maxlength="256" autofocus>{{ $group->description }}</textarea>
+                        <textarea id="post-text" name="text" rows="5" cols="50" maxlength="256" autofocus>{{ $group->description }}</textarea>
                         <input type="hidden" name="clicked_x" id="clicked_x" value="no">
-                        <button class="button" type="submit">Upload Group</button>
+                        <button class="btn btn-primary" type="submit">Upload Group</button>
                         </form>
                 </section>
         </section>

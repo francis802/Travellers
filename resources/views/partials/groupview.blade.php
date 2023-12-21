@@ -6,8 +6,6 @@
         <section id="group-presentation"> 
                 @if ($group->banner_pic !== null)
                     <img src="{{ url($group->banner_pic) }}" class="img-fluid img-grp-banner" alt="...">
-                @else
-                    <img src="{{url('man.jpg')}}" alt="Profile Picture">
                 @endif
                 
                 <div class="group-info">
@@ -23,7 +21,7 @@
                             </a></p>
                         </section>
                     </section>
-                    <section id="profile-buttons-area">
+                    <section id="group-buttons-area">
                             @if(Auth::user()->isAdmin())
                                 <a type="button" class="btn btn-primary" href="{{ url('/group/'.$group->id.'/edit') }}"> Edit </a>
                             @endif

@@ -35,4 +35,9 @@ class Report extends Model
         return $this->belongsTo(Admin::class, 'evaluater_id', 'user_id');
     }
 
+    public function notifications()
+    {
+        return $this->hasMany(ReportNotification::class, 'report_id');
+    }
+
 }

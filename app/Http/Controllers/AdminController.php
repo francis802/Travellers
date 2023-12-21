@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Models\User; 
@@ -197,5 +198,20 @@ class AdminController extends Controller
             $banned->save();
         }
         return response()->json(['banned' => $banned, 'role' => $role]);
+    }
+
+    public function notifications(){
+        $admin = Admin::where('user_id', Auth::user()->id)->first();
+
+        $appeals_notification = $admin->getAppealNotifications();
+        $group_creation_notification = $admin->getGroupCreationNotifications();
+        $reports_notification = $admin->getReportNotifications();
+        $helps_notification = $admin->getHelpNotifications();   
+
+        $combinedCollection = collect($appeals_notification)->merge($reports_notification)->merge($helps_notification)->merge($group_creation_notification);
+        $allnotifications = $combinedCollection->sortByDesc('time')->values();
+
+        $unseenNotifications = $admin->unseenNotifications();
+        return view('pages.adminNotifications', ['appeals_notification' => $appeals_notification, 'group_creation_notification' => $group_creation_notification, 'reports_notification' => $reports_notification, 'helps_notification' => $helps_notification, 'unseenNotifications' => $unseenNotifications , 'allnotifications' => $allnotifications]);
     }
 }
