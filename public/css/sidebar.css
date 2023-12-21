@@ -26,6 +26,12 @@ nav.menu-lateral:hover{
 
 }
 
+#notification-count{
+    position:absolute;
+    font-size: 10px;
+    margin-bottom: 20px;
+    margin-left: 5px;
+}
 
 .ul-navbar{
     height: 100%;
