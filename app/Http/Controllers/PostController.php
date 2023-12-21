@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Message;
 use App\Models\Tag;
 use App\Models\PostTag;
+use App\Events\UserNotificationEvent;
 
 class PostController extends Controller
 {
@@ -161,6 +162,9 @@ class PostController extends Controller
         ->insert(['post_id' => $post->id, 'user_id' => Auth::user()->id]);
 
         $likes = $post->likes();
+
+        $user = User::findOrFail($post->author_id);
+        broadcast(new UserNotificationEvent($user));
         
         return response()->json(['post' => $post, 'likes' => count($likes)]);
     }

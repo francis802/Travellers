@@ -12,6 +12,16 @@
     justify-items: center;
     align-items: center;
     width: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+}
+
+@media (max-width: 1600px){
+    .login-register{
+        width: 50%;
+        background-color: rgba(255, 255, 255, 0.479);
+        
+    }
 }
 
 #email, #password, #username, #name, #password-confirm, #country{
@@ -28,6 +38,14 @@
     height: 100vh;
     justify-content: center;
     width: 100%;
+    background-image: url('../earth.jpg'); /* Substitua 'path/to/your/image.jpg' pelo caminho da sua imagem */
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 

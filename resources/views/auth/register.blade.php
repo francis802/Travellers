@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<section id="cont">
 <section class="login-register">
     <section class="logo">
         <img src="../logo.png" width=10% alt="Traveller Logo">
@@ -66,5 +67,6 @@
         </span>
       @endif
   </form>
+</section>
 </section>
 @endsection
