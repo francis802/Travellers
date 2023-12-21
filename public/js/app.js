@@ -319,6 +319,17 @@ function sendAjaxRequest(method, url, data, handler) {
   }
   }
 
+  function recoverPassword() {
+    const email = document.querySelector("#recoverEmail").value;
+    if (email == "") {
+      alert("Empty email. Please try again.")
+      return;
+    }
+    document.querySelector("#recoverAttemp").value = email;
+    sendAjaxRequest('post', '/sendEmail', {email: email});
+    document.querySelector("#recover").hidden = true;
+    document.querySelector("#recoverPassword").hidden = false;
+  }
 
 
 addEventListeners();
