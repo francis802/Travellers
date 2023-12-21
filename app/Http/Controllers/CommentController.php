@@ -95,6 +95,10 @@ class CommentController extends Controller
         ->insert(['comment_id' => $comment->id, 'user_id' => Auth::user()->id]);
 
         $likes = $comment->likes();
+
+        $post = Post::findOrFail($comment->post_id);
+        $user = User::findOrFail($post->author_id);
+        broadcast(new UserNotificationEvent($user));
         
         return response()->json(['comment' => $comment, 'likes' => count($likes)]);
     }

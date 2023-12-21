@@ -14,6 +14,7 @@ use App\Models\Admin;
 use App\Models\Country;
 use App\Models\Message;
 use App\Events\AdminNotificationEvent;
+use App\Events\GroupOwnerNotificationEvent;
 
 class GroupController extends Controller
 {
@@ -155,6 +156,14 @@ class GroupController extends Controller
         ]);
 
         $members = $group->members()->get();
+
+        $owners = $group->owners()->get();
+
+        foreach($owners as $owner){
+            $user = User::findOrFail($owner->id);
+            broadcast(new GroupOwnerNotificationEvent($user));
+        }
+        
         return response()->json(['group' => $group, 'members' => $members]);
     }
 
@@ -166,6 +175,23 @@ class GroupController extends Controller
     
 
         $members = $group->members()->get();
+
+        $owners = $group->owners()->get();
+
+        foreach($owners as $owner){
+            $user = User::findOrFail($owner->id);
+            broadcast(new GroupOwnerNotificationEvent($user));
+            DB::table('group_notification')->insert([
+                'time' => now(),
+                'group_id' => $group->id,
+                'notified_id' => $admin->id,
+                'sender_id' => Auth::user()->id,
+                'notification_type' => 'group_leave'
+            ]);
+        }
+
+        
+
         return response()->json(['group' => $group, 'members' => $members]);
         
     }
@@ -191,6 +217,9 @@ class GroupController extends Controller
             'user_id' => $user_id,
             'group_id' => $group->id,
         ]);
+
+        $user = User::findOrFail($user_id);
+        broadcast(new GroupOwnerNotificationEvent($user));
 
         return response()->json(['user_id' => $user_id]);
     }
