@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
@@ -42,9 +43,15 @@ class MessageController extends Controller
         //
     }
 
-    public function sharePost(int $userId, int $postId)
+    public function sharePost(Request $request, int $userId)
     {
-        //
+        $message = new Message();
+        $message->sender_id = Auth::user()->id;
+        $message->receiver_id = $userId;
+        $message->content = $request->post_url;
+        $message->time = now();
+        $message->save();
+        return response()->json(['success' => 'Post shared successfully!']);
     }
 
 }

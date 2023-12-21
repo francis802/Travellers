@@ -24,14 +24,14 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     <div class="modal-body">
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="row row-cols-1 row-cols-2 g-4">
     @foreach ($sharedUsers as $user)
     <div class="col">
-        <div class="card">
-        <img src="..." class="card-img-top" alt="...">
+        <div class="card post-share" post-id="{{$post->id}}" user-id="{{$user->id}}">
+        <img src="{{$user->profile_photo != null ? url($user->profile_photo) : asset('man.jpg')}}" class="img-fluid rounded-start" alt="{{$user->name}} Profile Photo" style="max-width: 240px; max-height: 240px;">
         <div class="card-body">
-            <h5 class="card-title">{{$user->username}}</h5>
-            <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            <h5 class="card-title">{{$user->name}}</h5>
+            <p class="card-text">{{$user->username}}</p>
         </div>
         </div>
     </div>
