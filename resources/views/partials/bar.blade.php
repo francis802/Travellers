@@ -45,6 +45,9 @@
                 @if(Auth::check() && Auth::user()->isGroupOwner())
                     <li class="menu-item">
                         <a class="bar-link" href="{{ url('/user/'.Auth::user()->id .'/ownedGroups')}}">
+                            @if(Auth::user()->unseenGroupNotifications() > 0)
+                                <span id="notification-count" class="badge bg-primary rounded-pill">{{Auth::user()->unseenGroupNotifications()}}</span>
+                            @endif
                             <span class="icon"><i class="bi bi-collection"></i></span>
                             <span class="txt-link">My Groups</span>
                         </a>
