@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Follow;
 use App\Models\FollowRequest;
+use App\Models\Admin;
+use App\Events\UserNotificationEvent;
 
 class ReportController extends Controller
 {
@@ -57,6 +59,13 @@ class ReportController extends Controller
         }
         if(!$infractor->isBlocked($reporter->id)) {
             $reporter->blocks($infractor);
+        }
+
+        $admins = Admin::all();
+
+        foreach ($admins as $admin) {
+            $user = User::findOrFail($admin->user_id);
+            broadcast(new UserNotificationEvent($user));
         }
         
         return redirect('/user/'. $request->infractor_id);

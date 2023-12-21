@@ -13,6 +13,7 @@ use App\Models\Owner;
 use App\Models\Admin;
 use App\Models\Country;
 use App\Models\Message;
+use App\Events\AdminNotificationEvent;
 
 class GroupController extends Controller
 {
@@ -64,6 +65,12 @@ class GroupController extends Controller
         }
 
         DB::commit();
+
+        $allAdmins = Admin::all();
+        foreach ($allAdmins as $admin) {
+            $user = User::findOrFail($admin->user_id);
+            broadcast(new AdminNotificationEvent($user));
+        }
         
         return redirect('group/'.$group->id)->with('success', 'Post created! Wait for approval of an admin...');
     }

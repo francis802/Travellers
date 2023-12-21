@@ -1,5 +1,5 @@
 @section('adminbar')
-       <nav class="menu-lateral">
+       <nav class="menu-lateral" logged-user="{{Auth::user()->id}}">
             <ul class="ul-navbar">
                 <li class="menu-item">
                     <a class="bar-link" href="{{url('/home/')}}">
@@ -16,7 +16,7 @@
                 <li class="menu-item">
                     <a  class="bar-link" href="{{ url('/admin/notifications/')}}">
                         @if(Auth::user()->getAdmin->unseenNotifications() > 0)
-                            <span id="notification-count" class="badge bg-primary rounded-pill">{{Auth::user()->getAdmin->unseenNotifications()}}</span>
+                            <span id="notification-count" class="badge bg-primary rounded-pill admin-notifs">{{Auth::user()->getAdmin->unseenNotifications()}}</span>
                         @endif
                         <span class="icon"><i class="bi bi-bell"></i></span>
                         <span class="txt-link">Notifications</span>
