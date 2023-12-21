@@ -59,6 +59,9 @@
             @foreach($fyPosts->sortByDesc('date') as $post)
                 @include('partials.post')
             @endforeach
+            @if ($fyPosts->count() == 0)
+                <h4> No posts here. Join some groups! </h4>
+            @endif
         </ul>
     </section>
 
@@ -67,6 +70,9 @@
             @foreach($followingPosts->sortByDesc('date') as $post)
                 @include('partials.post')
             @endforeach
+            @if ($followingPosts->count() == 0)
+                <h4> No posts here. Follow more people! </h4>
+            @endif
         </ul>
     </section>
     
