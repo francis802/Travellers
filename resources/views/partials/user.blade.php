@@ -12,9 +12,9 @@
         <section class="profile-info">
             <div id="profile-picture">
                     @if ($user->profile_photo !== null)
-                        <img src="{{ url($user->profile_photo) }}">
+                        <img class="img-notification img-user" src="{{ url($user->profile_photo) }}">
                     @else
-                    <img src="{{url('man.jpg')}}" alt="Profile Picture">
+                    <img class="img-notification img-user" src="{{url('man.jpg')}}" alt="Profile Picture">
                     @endif
             </div>
             <section id="profile-text">
@@ -32,15 +32,11 @@
             </section>
         </section>
         <section id="profile-buttons-area">
-            <div id="edit-delete-post" class="btn-group dropstart">
+            <div id="edit-delete-post" class="btn-group dropstart profile-btns">
                 <button type="button" class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false">...</button>
                 <ul class="dropdown-menu">
                             @if(Auth::user()->id == $user->id)
-                                <li><a class="dropdown-item" href="{{ url('/user/edit') }}"> 
-                                        <img src="../pen.png" alt="Edit Post">
-                                        Edit
-                                    </a>
-                                </li>
+                                <li><a class="dropdown-item" href="{{ url('/user/edit') }}"> Edit</a></li>
                             @else
                                 @if($user->isBlocked(Auth::user()->id))
                                     <li><a class="blocked block-user dropdown-item" href="#"  data-id="{{Auth::user()->id}} "data-user-id="{{$user->id}}" onclick="changeBlockStatus(event)">Unblock</a></li>
@@ -53,13 +49,13 @@
                 </ul>
             </div>
             @if (Auth::check() && Auth::user()->id == $user->id)
-                <a class="button" href="{{ url('/logout') }}"> Logout </a>
+                <a class="btn btn-primary" href="{{ url('/logout') }}"> Logout </a>
             @elseif (Auth::check() && Auth::user()->follows($user->id))
-                <button class="unfollow-user button" data-id="{{$user->id}}"> Unfollow </button>
+                <button class="unfollow-user btn btn-primary" data-id="{{$user->id}}"> Unfollow </button>
             @elseif (Auth::check() && Auth::user()->requestFollowing($user->id))
-                <button class="unfollow-user button" data-id="{{$user->id}}"> Requested </button>
+                <button class="unfollow-user btn btn-primary" data-id="{{$user->id}}"> Requested </button>
             @else
-                <button class="request-follow button" data-id="{{$user->id}}"> Follow </button>
+                <button class="request-follow btn btn-primary" data-id="{{$user->id}}"> Follow </button>
             @endif
             
         </section>

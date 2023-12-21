@@ -14,9 +14,9 @@
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a  class="bar-link" href="#">
-                        @if(Auth::user()->unseenNotifications() > 0)
-                            <span id="notification-count" class="badge bg-primary rounded-pill">{{Auth::user()->unseenNotifications()}}</span>
+                    <a  class="bar-link" href="{{ url('/admin/notifications/')}}">
+                        @if(Auth::user()->getAdmin->unseenNotifications() > 0)
+                            <span id="notification-count" class="badge bg-primary rounded-pill">{{Auth::user()->getAdmin->unseenNotifications()}}</span>
                         @endif
                         <span class="icon"><i class="bi bi-bell"></i></span>
                         <span class="txt-link">Notifications</span>

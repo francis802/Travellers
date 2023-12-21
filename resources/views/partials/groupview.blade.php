@@ -6,8 +6,6 @@
         <section id="group-presentation"> 
                 @if ($group->banner_pic !== null)
                     <img src="{{ url($group->banner_pic) }}" class="img-fluid img-grp-banner" alt="...">
-                @else
-                    <img src="{{url('man.jpg')}}" alt="Profile Picture">
                 @endif
                 
                 <div class="group-info">

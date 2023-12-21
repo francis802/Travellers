@@ -23,4 +23,9 @@ class UnbanRequest extends Model
     {
         return $this->belongsTo(User::class, 'banned_user_id', 'id');
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(AppealNotification::class, 'unban_request_id');
+    }
 }

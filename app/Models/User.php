@@ -53,6 +53,10 @@ class User extends Authenticatable
         return count($this->hasOne('App\Models\Admin', 'user_id')->get());
     }
 
+    public function getAdmin() {
+        return $this->hasOne('App\Models\Admin', 'user_id');
+    }
+
     public function isBanned() {
         return count($this->hasOne('App\Models\Banned', 'user_id')->get());
     }
