@@ -27,9 +27,9 @@ class HomeController extends Controller
                 $sharedUsers = $sharedUsers->merge([$user->id => $user]);
             }
         }
-        $publicPosts = Post::publicPosts()->get();
+        $fyPosts = Post::fyPosts()->get();
         $followingPosts = Auth::user()->followingPosts()->get();
-        return view('pages.home', ['publicPosts' => $publicPosts, 'followingPosts' => $followingPosts, 'sharedUsers' => $sharedUsers]);
+        return view('pages.home', ['fyPosts' => $fyPosts, 'followingPosts' => $followingPosts, 'sharedUsers' => $sharedUsers]);
     }
 
     public function followFirstGroup() {

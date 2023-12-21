@@ -331,10 +331,11 @@ function sendAjaxRequest(method, url, data, handler) {
       return;
     }
     document.querySelector("#recoverAttemp").value = email;
-    sendAjaxRequest('post', '/sendEmail', {email: email});
-    document.querySelector("#recover").hidden = true;
-    document.querySelector("#recoverPassword").hidden = false;
+    sendAjaxRequest('post', '/sendEmail', {email: email}, recoverPasswordHandler);
   }
 
+  function recoverPasswordHandler() {
+    console.log("Mail sent");
+  }
 
 addEventListeners();

@@ -49,10 +49,8 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 Route::get('/recovery', [RecoveryController::class, 'show']);
-Route::post('sendEmail', [RecoveryController::class, 'sendEmail'])->name('sendEmail');
+Route::post('/sendEmail', [RecoveryController::class, 'sendEmail'])->name('sendEmail');
 Route::post('recoverPassword', [RecoveryController::class, 'recoverPassword'])->name('recoverPassword');
-Route::post('/send', [MailController::class, 'send']);
-
 
 // Home
 Route::get('/home', [HomeController::class, 'show'])->name('home');
