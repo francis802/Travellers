@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    Login | Travellers
+@endsection
+
 @section('content')
 <section id="cont">
 <section class="login-register">

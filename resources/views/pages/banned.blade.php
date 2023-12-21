@@ -1,6 +1,10 @@
 @extends('layouts.app')
 @include('partials.topbar')
 
+@section('title')
+    Banned | Travellers
+@endsection
+
 @section('content')
     <section id="feed">
         @yield('topbar')

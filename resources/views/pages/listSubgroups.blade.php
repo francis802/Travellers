@@ -1,6 +1,9 @@
 @extends('layouts.app')
 @include('partials.bar')
 
+@section('title')
+    Subgroups | Travellers
+@endsection
 
 @section('content')
 

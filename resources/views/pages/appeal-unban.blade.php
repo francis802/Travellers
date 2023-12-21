@@ -1,6 +1,10 @@
 @extends('layouts.app')
 @include('partials.topbar')
 
+@section('title')
+    Appeal Unban | Travellers
+@endsection
+
 @section('content')
     <section id="feed">
         @yield('topbar')

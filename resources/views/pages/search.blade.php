@@ -2,6 +2,9 @@
 @include('partials.bar')
 @include('partials.results')
 
+@section('title')
+    Search | Travellers
+@endsection
 
 @section('content')
     
