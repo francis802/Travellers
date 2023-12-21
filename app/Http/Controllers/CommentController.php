@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Post;
+use App\Events\UserNotificationEvent;
 
 use App\Models\User;
 
@@ -39,6 +41,8 @@ class CommentController extends Controller
         $comment->text = $request->text;
         $comment->date = date('Y-m-d H:i');
         $comment->save();
+        $post = Post::findOrFail($request->post_id);
+        broadcast(new UserNotificationEvent($post->author));
         return response()->json(['comment'=>$comment, 'author'=>Auth::user()->name]);
     }
 

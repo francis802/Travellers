@@ -16,7 +16,7 @@ class UserNotificationEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $notified_user;
+    public $user;
     public $type;
 
     /**
