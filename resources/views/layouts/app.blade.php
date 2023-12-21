@@ -40,6 +40,7 @@
         <script type="text/javascript" src={{ url('js/post.js') }} defer></script>
         <script type="text/javascript" src={{ url('js/user.js') }} defer></script>
         <script type="text/javascript" src={{ url('js/image.js') }} defer></script>
+        <script type="text/javascript" src={{ url('js/search.js') }} defer></script>
     </head>
     <body>
         <main>

@@ -1,7 +1,7 @@
 @include('partials.topbar')
 
 @section('results')
-    <section  id="feed">
+    <section  id="results">
         @yield('topbar')
         <section id="results">
             <section id="search-results-header" class="search-header">
@@ -14,27 +14,18 @@
                 <button id="postsButton" onclick="toggleSearchButton('postsButton', 'posts')">Posts</button>
             </section>
 
-            <script>
-                function toggleSearchButton(buttonId, sectionId) {
-                    const buttons = document.querySelectorAll('#buttons button');
-                    buttons.forEach(button => {
-                        button.classList.remove('underline');
-                    });
-                    const selectedButton = document.getElementById(buttonId);
-                    selectedButton.classList.add('underline');
+            <button id="select-date-range" onclick="toggleDateRange()">[Select Date Range]</button>
 
-                    document.getElementById('user-bar').style.display = 'none';
-                    document.getElementById('groups').style.display = 'none';
-                    document.getElementById('posts').style.display = 'none';
+            <section id="date-range">
+                <input type="hidden" name="query-result" value="{{$input}}">
+                <label for="start-date">Start Date:</label>
+                <input type="date" id="start-date" name="start-date">
 
-                    document.getElementById(sectionId).style.display = 'flex';
-                }
+                <label for="end-date">End Date:</label>
+                <input type="date" id="end-date" name="end-date">
 
-                document.addEventListener('DOMContentLoaded', function () {
-                    document.getElementById('groups').style.display = 'none';
-                    document.getElementById('posts').style.display = 'none';
-                });
-            </script>
+                <button type="button" id="apply-date-range" onclick="applyDateRange()">Apply Date Range</button>
+            </section>
 
             <section id="user-bar">
             @if($userResults->count() > 0)
@@ -68,12 +59,13 @@
             </section>
 
             <section id="posts">
-            @if($postResults->count() > 0)
+            @if(count($postResults) > 0)
             <ul id="user-post-list">
                 @foreach($postResults as $post)
                     @include('partials.post', ['post' => $post])
                 @endforeach
             </ul>
+            </section>
             @else
                 <p>No posts found.</p>
             @endif                                                   
