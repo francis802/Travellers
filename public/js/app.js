@@ -63,6 +63,11 @@ function addEventListeners() {
   [].forEach.call(leaveGroup, function(leave) {
   leave.addEventListener('click', leaveGroupRequest);
   });
+
+  let addFAQ = document.querySelectorAll('.request-follow');
+  [].forEach.call(followUser, function(follow) {
+  follow.addEventListener('click', sendFollowRequest);
+  });
 }
 
 function encodeForAjax(data) {
