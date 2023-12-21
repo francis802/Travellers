@@ -44,6 +44,7 @@
         <script type="text/javascript" src={{ url('js/image.js') }} defer></script>
         <script type="text/javascript" src={{ url('js/search.js') }} defer></script>
         <script type="text/javascript" src={{ url('js/message.js') }} defer></script>
+        <script type="text/javascript" src={{ url('js/faq.js') }} defer></script>
     </head>
     <body>
         <main>

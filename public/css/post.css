@@ -125,16 +125,17 @@ a.post-edit{
 }
 /*------------------------ POST CREATE -----------------------------*/
 
-.create-post-form{
-    display: grid;
-    max-width:fit-content;
+label.btn{
+    margin-bottom: 1em;
 }
 
-.create-post{
-    display: grid;
-    align-content: center;
-    justify-items: center;
+.create-post-form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    margin-top: 3em;
 }
 
 
