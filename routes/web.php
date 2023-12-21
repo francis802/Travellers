@@ -163,3 +163,5 @@ Route::get('messages/user/{id}', [MessageController::class, 'showPrivateMessages
 
 // API
 Route::put('api/message/send', [MessageController::class, 'sendMessage']);
+Route::put('/api/post/share/user/{id}', [MessageController::class, 'sharePost'])->where('id', '[0-9]+');
+

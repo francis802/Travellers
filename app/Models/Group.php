@@ -65,6 +65,10 @@ class Group extends Model
     public function notifications(){
         return $this->hasMany(GroupNotification::class, 'group_id');
     }
+
+    static public function getParentGroups(){
+        return Group::select('groups.*')->where('groups.subgroup_id', '=', null);
+    }
     
     
 }

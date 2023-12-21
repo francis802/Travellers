@@ -14,8 +14,9 @@ class MessageController extends Controller
      */
     public function showMessages()
     {
-        $messagers = Message::recentMessagers();
-        return view('pages.messages', ['messagers' => $messagers]);
+        $messengers = Message::recentMessengers();
+        $users = User::whereIn('id', array_keys($messengers))->get();
+        return view('pages.messages', ['messengers' => $messengers, 'users' => $users]);
     }
 
     /**
@@ -24,7 +25,13 @@ class MessageController extends Controller
     public function showPrivateMessages(int $userId)
     {
         $user = User::findOrFail($userId);
-        $messages = Message::where('sender_id', $user->id)->orWhere('receiver_id', $user->id)->orderBy('time', 'asc')->get();
+        $messagesA = Message::where('sender_id', $user->id)
+            ->where('receiver_id', Auth::user()->id)
+            ->orderBy('time', 'asc')->get();
+        $messagesB = Message::where('sender_id', Auth::user()->id)
+            ->where('receiver_id', $user->id)
+            ->orderBy('time', 'asc')->get();
+        $messages = $messagesA->merge($messagesB)->sortBy('time');
         return view('pages.messagesUser', ['messages' => $messages, 'user' => $user]);
     }
 
@@ -42,6 +49,17 @@ class MessageController extends Controller
 
         return response()->json(['message'=>$message]);
     
+    }
+
+    public function sharePost(Request $request, int $userId)
+    {
+        $message = new Message();
+        $message->sender_id = Auth::user()->id;
+        $message->receiver_id = $userId;
+        $message->content = $request->post_url;
+        $message->time = now();
+        $message->save();
+        return response()->json(['success' => 'Post shared successfully!']);
     }
 
 }

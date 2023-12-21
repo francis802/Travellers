@@ -17,7 +17,7 @@
                 <h2 id="user-username">&#64;{{ Auth::user()->username }}</h2>
             @endif
         </a>
-        <input id="search-input" type="text" placeholder="Search for users..." onkeydown="searchOnEnter(event)"> 
+        <input id="search-input" type="text" placeholder="Search..." onkeydown="searchOnEnter(event)"> 
     </section>
 
     <section id="buttons">
@@ -57,7 +57,7 @@
     <section id="fy-posts">
         <ul id="user-post-list">
             @foreach($publicPosts->sortByDesc('date') as $post)
-                @include('partials.post', ['post' => $post])
+                @include('partials.post')
             @endforeach
         </ul>
     </section>
@@ -65,7 +65,7 @@
     <section id="following-posts">
         <ul id="user-post-list">
             @foreach($followingPosts->sortByDesc('date') as $post)
-                @include('partials.post', ['post' => $post])
+                @include('partials.post')
             @endforeach
         </ul>
     </section>

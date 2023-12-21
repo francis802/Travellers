@@ -13,7 +13,6 @@ DROP TABLE IF EXISTS new_message_notification CASCADE;
 DROP TABLE IF EXISTS comment_notification CASCADE;
 DROP TABLE IF EXISTS post_notification CASCADE;
 DROP TABLE IF EXISTS group_notification CASCADE;
-DROP TABLE IF EXISTS group_invitation CASCADE;
 DROP TABLE IF EXISTS banned_member CASCADE;
 DROP TABLE IF EXISTS members CASCADE;
 DROP TABLE IF EXISTS owner CASCADE;
@@ -49,10 +48,8 @@ DROP FUNCTION IF EXISTS tag_search_update CASCADE;
 DROP FUNCTION IF EXISTS verify_group_post CASCADE;
 DROP FUNCTION IF EXISTS group_owner CASCADE;
 DROP FUNCTION IF EXISTS verify_priv_follow_request CASCADE;
-DROP FUNCTION IF EXISTS verify_group_invite CASCADE;
 DROP FUNCTION IF EXISTS follow_request_notification CASCADE;
 DROP FUNCTION IF EXISTS follow_accept_notification CASCADE;
-DROP FUNCTION IF EXISTS group_invite_notification CASCADE;
 DROP FUNCTION IF EXISTS group_join_notification CASCADE;
 /*DROP FUNCTION IF EXISTS group_leave_notification CASCADE;*/
 DROP FUNCTION IF EXISTS group_ban_notification CASCADE;
@@ -63,7 +60,6 @@ DROP FUNCTION IF EXISTS like_comment_notification CASCADE;
 DROP FUNCTION IF EXISTS mention_comment_notification CASCADE;
 DROP FUNCTION IF EXISTS like_post_notification CASCADE;
 DROP FUNCTION IF EXISTS mention_description_notification CASCADE;
-/*DROP FUNCTION IF EXISTS group_creation_notification CASCADE;*/
 DROP FUNCTION IF EXISTS common_help_notification CASCADE;
 DROP FUNCTION IF EXISTS appeal_notification CASCADE;
 DROP FUNCTION IF EXISTS report_notification CASCADE;
@@ -73,7 +69,7 @@ DROP FUNCTION IF EXISTS report_notification CASCADE;
 
 CREATE TYPE comment_notification_types AS ENUM('mention_comment', 'liked_comment', 'new_comment');
 CREATE TYPE post_notification_types AS ENUM('new_like', 'mention_description');
-CREATE TYPE group_notification_types AS ENUM('group_invite', 'group_join', 'group_leave', 'group_ban', 'group_owner');
+CREATE TYPE group_notification_types AS ENUM('group_join', 'group_leave', 'group_ban', 'group_owner');
 CREATE TYPE follow_notification_types AS ENUM('follow_request', 'follow_accept');
 
 -- Create tables
@@ -232,12 +228,6 @@ CREATE TABLE members (
 );
 
 CREATE TABLE banned_member (
-    user_id INT REFERENCES users(id) NOT NULL,
-    group_id INT REFERENCES groups(id) NOT NULL,
-    PRIMARY KEY (user_id, group_id)
-);
-
-CREATE TABLE group_invitation (
     user_id INT REFERENCES users(id) NOT NULL,
     group_id INT REFERENCES groups(id) NOT NULL,
     PRIMARY KEY (user_id, group_id)
@@ -504,26 +494,6 @@ CREATE TRIGGER verify_priv_follow_request
     FOR EACH ROW
     EXECUTE PROCEDURE verify_priv_follow_request();
 
--- TRIGGER09
--- Users cannot be invited to join a group they are already a part of (BR13)
-
-CREATE FUNCTION verify_group_invite() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    IF EXISTS 
-        (SELECT * FROM members WHERE NEW.user_id = user_id AND NEW.group_id = group_id) THEN
-            RAISE EXCEPTION 'Users cannot be invited to join a group they are already a part of';
-    END IF;
-    RETURN NEW;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER verify_group_invite
-    BEFORE INSERT ON group_invitation
-    FOR EACH ROW
-    EXECUTE PROCEDURE verify_group_invite();
-
 ------------------------------------- NEW TRIGGERS -------------------------------------
 
 -- TRIGGER NOTIFICATION 1
@@ -558,22 +528,6 @@ AFTER INSERT ON follows
 FOR EACH ROW
 EXECUTE FUNCTION follow_accept_notification();
 
--- TRIGGER NOTIFICATION 3
-CREATE FUNCTION group_invite_notification() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    INSERT INTO group_notification (time, notified_id, group_id, notification_type)
-    VALUES (CURRENT_TIMESTAMP, NEW.user_id, NEW.group_id, 'group_invite');
-    RETURN NEW;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER group_invite_notification
-AFTER INSERT ON group_invitation
-FOR EACH ROW
-EXECUTE FUNCTION group_invite_notification();
-
 -- TRIGGER NOTIFICATION 4
 CREATE FUNCTION group_join_notification() RETURNS TRIGGER AS
 $BODY$
@@ -596,7 +550,7 @@ AFTER INSERT ON members
 FOR EACH ROW
 EXECUTE FUNCTION group_join_notification();
 
-/*
+/* !!!!!!!!!!!!!!!!!!!!!!TRANSACTION!!!!!!!!!!!!!!!!!!!!!!!!!!!
 -- TRIGGER NOTIFICATION 5 (Should we notify the user who left or the owner?)
 CREATE FUNCTION group_leave_notification() RETURNS TRIGGER AS
 $BODY$
@@ -765,31 +719,6 @@ AFTER INSERT ON post
 FOR EACH ROW
 EXECUTE FUNCTION mention_description_notification();
 
-/* THIS MUST BE TRANSACTION
--- TRIGGER NOTIFICATION 14
-CREATE FUNCTION group_creation_notification() RETURNS TRIGGER AS
-$BODY$
-DECLARE
-    admin_id INT;
-BEGIN
-    SELECT owner.user_id AS owner_id FROM owner WHERE owner.group_id = NEW.id;
-    FOR admin_id IN SELECT user_id FROM admin
-    LOOP
-        INSERT INTO group_creation_notification (time, notified_id, sender_id, group_id)
-        VALUES (CURRENT_TIMESTAMP, admin_id, owner_id, NEW.id);
-    END LOOP;
-
-    RETURN NEW;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-
-CREATE TRIGGER group_creation_notification
-AFTER INSERT ON groups
-FOR EACH ROW
-EXECUTE FUNCTION group_creation_notification();
-*/
 
 -- TRIGGER NOTIFICATION 15
 CREATE FUNCTION common_help_notification() RETURNS TRIGGER AS
@@ -856,6 +785,12 @@ CREATE TRIGGER report_notification
 AFTER INSERT ON report
 FOR EACH ROW
 EXECUTE FUNCTION report_notification();
+
+
+
+
+
+
 
 INSERT INTO country (name, city_id) VALUES 
     ('Portugal', NULL),
@@ -1108,23 +1043,6 @@ VALUES
     (15, 31),
     (16, 32);
 
-INSERT INTO group_invitation (user_id, group_id)
-VALUES
-    (1, 5),
-    (1, 6),
-    (5, 20),
-    (7, 12),
-    (9, 14),
-    (11, 16),
-    (13, 18),
-    (15, 20),
-    (16, 22),
-    (15, 24),
-    (12, 26),
-    (9, 28),
-    (3, 30),
-    (1, 32);
-
 INSERT INTO banned_member (user_id, group_id)
 VALUES
     (10, 31),
@@ -1286,18 +1204,18 @@ VALUES
 
 INSERT INTO message (time, content, sender_id, receiver_id)
 VALUES
-    ('2021-05-01 12:00:00', 'Hello! Welcome to the app!', 1, 2),
-    ('2021-05-01 13:00:00', 'Hello! Welcome to the app!', 1, 3),
-    ('2021-05-01 14:00:00', 'Hello! Welcome to the app!', 1, 4),
-    ('2021-05-01 15:00:00', 'Hi! Thankss', 2, 1),
-    ('2021-05-01 16:00:00', 'Heyhey, glad to be here :)', 2, 3),
-    ('2021-05-01 17:00:00', 'Whatsapp dude?', 2, 4),
-    ('2021-05-01 18:00:00', 'txs', 3, 1),
-    ('2021-05-01 19:00:00', 'hi.', 3, 2),
-    ('2021-05-01 20:00:00', 'wyd', 3, 4),
-    ('2021-05-01 21:00:00', 'Thanks fellow traveller!', 4, 1),
-    ('2021-05-01 22:00:00', 'Im incredible bro, and you?', 4, 2),
-    ('2021-05-01 23:00:00', 'pull up', 4, 3);
+    ('2023-12-20 12:00:00', 'Hello! Welcome to the app!', 1, 2),
+    ('2023-12-20 13:00:00', 'Hello! Welcome to the app!', 1, 3),
+    ('2023-12-20 14:00:00', 'Hello! Welcome to the app!', 1, 4),
+    ('2023-12-20 15:00:00', 'Hi! Thankss', 2, 1),
+    ('2023-12-20 16:00:00', 'Heyhey, glad to be here :)', 2, 3),
+    ('2023-12-20 17:00:00', 'Whatsapp dude?', 2, 4),
+    ('2023-12-20 18:00:00', 'txs', 3, 1),
+    ('2023-12-20 19:00:00', 'hi.', 3, 2),
+    ('2023-12-20 20:00:00', 'wyd', 3, 4),
+    ('2023-12-20 21:00:00', 'Thanks fellow traveller!', 4, 1),
+    ('2023-12-20 22:00:00', 'Im incredible bro, and you?', 4, 2),
+    ('2023-12-20 23:00:00', 'pull up', 4, 3);
 
 INSERT INTO comments (text, date, post_id, author_id)
 VALUES
