@@ -9,6 +9,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;   
+use App\Http\Controllers\Auth\RecoveryController;   
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\FAQController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\BannedController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\MailController;
 
 
 /*
@@ -46,6 +48,9 @@ Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'register');
 });
 
+Route::get('/recovery', [RecoveryController::class, 'show']);
+Route::post('/sendEmail', [RecoveryController::class, 'sendEmail'])->name('sendEmail');
+Route::post('recoverPassword', [RecoveryController::class, 'recoverPassword'])->name('recoverPassword');
 
 // Home
 Route::get('/home', [HomeController::class, 'show'])->name('home');

@@ -7,11 +7,22 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\Post;
+use App\Models\Message;
 
 
 class SearchController extends Controller
 {
     public function show(Request $request) {
+        $messengers = Message::recentMessengers();
+        $sharedUsers = User::whereIn('id', array_keys($messengers))->get();
+        $sharedUsers = $sharedUsers->reverse();
+        $allUsers = User::all();
+        foreach ($allUsers as $user) {
+            if (!isset($recentMessagers[$user->id])) {
+                $sharedUsers = $sharedUsers->merge([$user->id => $user]);
+            }
+        }
+
         $input = $request->input('query');
         $searchQuery = $request->input('query') ? $request->input('query').':*' : "*";
 
@@ -43,8 +54,6 @@ class SearchController extends Controller
             $postResults = $temp;
         }
 
-        return view('pages.search', compact('input', 'userResults', 'groupResults', 'postResults'))->render();
+        return view('pages.search', compact('input', 'userResults', 'groupResults', 'postResults', 'sharedUsers'))->render();
     }
-
-    
 }

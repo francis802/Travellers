@@ -56,7 +56,7 @@
     
     <section id="fy-posts">
         <ul id="user-post-list">
-            @foreach($publicPosts->sortByDesc('date') as $post)
+            @foreach($fyPosts->sortByDesc('date') as $post)
                 @include('partials.post')
             @endforeach
         </ul>

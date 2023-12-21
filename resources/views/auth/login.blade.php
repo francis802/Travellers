@@ -40,6 +40,9 @@
                 {{ session('success') }}
             </p>
      @endif
+
+     <a href="{{ url('/recovery/') }}">Forgot your password?</a>
+</section>
 </section>
 </section>
 @endsection
