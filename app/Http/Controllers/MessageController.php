@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
@@ -26,13 +25,13 @@ class MessageController extends Controller
     public function showPrivateMessages(int $userId)
     {
         $user = User::findOrFail($userId);
-        $messages = Message::where(function ($query) use ($user, $userId) {
-            $query->where('sender_id', $user->id)
-                ->where('receiver_id', $userId);
-        })->orWhere(function ($query) use ($user, $userId) {
-            $query->where('sender_id', $userId)
-                ->where('receiver_id', $user->id);
-        })->orderBy('time', 'asc')->get();
+        $messagesA = Message::where('sender_id', $user->id)
+            ->where('receiver_id', Auth::user()->id)
+            ->orderBy('time', 'asc')->get();
+        $messagesB = Message::where('sender_id', Auth::user()->id)
+            ->where('receiver_id', $user->id)
+            ->orderBy('time', 'asc')->get();
+        $messages = $messagesA->merge($messagesB)->sortBy('time');
         return view('pages.messagesUser', ['messages' => $messages, 'user' => $user]);
     }
 
