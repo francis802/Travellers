@@ -184,7 +184,7 @@ class GroupController extends Controller
             DB::table('group_notification')->insert([
                 'time' => now(),
                 'group_id' => $group->id,
-                'notified_id' => $admin->id,
+                'notified_id' => $owner->id,
                 'sender_id' => Auth::user()->id,
                 'notification_type' => 'group_leave'
             ]);
