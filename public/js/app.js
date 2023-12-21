@@ -324,6 +324,49 @@ function sendAjaxRequest(method, url, data, handler) {
   }
   }
 
+  function userNotification(){
+    const sidebar = document.querySelector('section.message-view');
+    if (!sidebar) return;
+    const userId = messageView.getAttribute('logged-user');
+    const pusherAppKey = "c3503c276e27ad2b1bab";
+    const pusherCluster = "eu";
+    const pusher = new Pusher(pusherAppKey, {
+      cluster: pusherCluster,
+      encrypted: true
+    });
+
+    const channel = pusher.subscribe('user.' + userId);
+    channel.bind('new.user.notification', function(data) {
+      const notif_bubble = document.querySelector('#notification-count.user-notifs');
+      let notifs = notif_bubble.textContent;
+      let new_notifs = parseInt(notifs) + 1;
+      notif_bubble.textContent = new_notifs;
+    });
+  }
+
+  function ownerNotification(){
+    const sidebar = document.querySelector('section.message-view');
+    if (!sidebar) return;
+    const userId = messageView.getAttribute('logged-user');
+    const pusherAppKey = "c3503c276e27ad2b1bab";
+    const pusherCluster = "eu";
+    const pusher = new Pusher(pusherAppKey, {
+      cluster: pusherCluster,
+      encrypted: true
+    });
+
+    const channel = pusher.subscribe('user.' + userId);
+    channel.bind('new.owner.notification', function(data) {
+      const notif_bubble = document.querySelector('#notification-count.owner-notifs');
+      let notifs = notif_bubble.textContent;
+      let new_notifs = parseInt(notifs) + 1;
+      notif_bubble.textContent = new_notifs;
+    });
+  }
 
 
 addEventListeners();
+
+userNotification();
+
+ownerNotification();

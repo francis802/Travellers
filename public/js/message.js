@@ -52,7 +52,6 @@ function updateMessages() {
   if (!messageView) return;
   const userId = messageView.getAttribute('logged-user');
   const senderId = messageView.getAttribute('other-user');
-  if (!userId) return;
   const pusherAppKey = "c3503c276e27ad2b1bab";
   const pusherCluster = "eu";
   const pusher = new Pusher(pusherAppKey, {

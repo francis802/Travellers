@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Message;
 
+use App\Events\UserNotificationEvent;
+
 class UserController extends Controller
 {
     
@@ -148,6 +150,8 @@ class UserController extends Controller
             ->insert(['user1_id' => Auth::user()->id, 'user2_id' => $id]);
         }
 
+        broadcast(new UserNotificationEvent($user));
+
         $followers = $user->getFollowers()->get();
 
         return response()->json(['user' => $user, 'followers' => count($followers)]);
@@ -186,6 +190,8 @@ class UserController extends Controller
         ->where('user1_id', '=', $id)
         ->where('user2_id', '=', Auth::user()->id)
         ->delete();
+
+        broadcast(new UserNotificationEvent($user));
 
         return response()->json(['user' => $user]);
     }

@@ -6,6 +6,9 @@ use App\Models\Banned;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UnbanRequest;
+use App\Models\Admin;
+use App\Models\User;
+use App\Events\AdminNotificationEvent;
 
 class BannedController extends Controller
 {
@@ -30,6 +33,12 @@ class BannedController extends Controller
         $unbanRequest->description = $request->description;
         $unbanRequest->date = now();
         $unbanRequest->save();
+
+        $admins = Admin::all();
+        foreach ($admins as $admin) {
+            $user = User::findOrFail($admin->user_id);
+            broadcast(new AdminNotificationEvent($user));
+        }
 
         return redirect('/banned');
     }

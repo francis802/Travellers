@@ -1,5 +1,5 @@
 @section('bar')
-        <nav class="menu-lateral">
+        <nav class="menu-lateral" logged-user="{{Auth::user()->id}}">
             <ul class="ul-navbar">
                 <li class="menu-item">
                     <a class="bar-link" href="{{url('/home/')}}">
@@ -16,7 +16,7 @@
                 <li class="menu-item">
                     <a  class="bar-link" href="{{url('/notifications/')}}">
                         @if(Auth::user()->unseenNotifications() > 0)
-                            <span id="notification-count" class="badge bg-primary rounded-pill">{{Auth::user()->unseenNotifications()}}</span>
+                            <span id="notification-count" class="badge bg-primary rounded-pill user-notifs">{{Auth::user()->unseenNotifications()}}</span>
                         @endif
                         <span class="icon"><i class="bi bi-bell"></i></span>
                         <span class="txt-link">Notifications</span>
@@ -46,7 +46,7 @@
                     <li class="menu-item">
                         <a class="bar-link" href="{{ url('/user/'.Auth::user()->id .'/ownedGroups')}}">
                             @if(Auth::user()->unseenGroupNotifications() > 0)
-                                <span id="notification-count" class="badge bg-primary rounded-pill">{{Auth::user()->unseenGroupNotifications()}}</span>
+                                <span id="notification-count" class="badge bg-primary rounded-pill owner-notifs">{{Auth::user()->unseenGroupNotifications()}}</span>
                             @endif
                             <span class="icon"><i class="bi bi-collection"></i></span>
                             <span class="txt-link">My Groups</span>
