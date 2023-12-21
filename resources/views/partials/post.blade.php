@@ -1,4 +1,4 @@
-
+@include('partials.postPopups', ['post'=>$post])
 
 <div class="post-view card mb-3" id="post-id-{{$post->id}}">
     <div class="card-header post-header">
@@ -26,7 +26,7 @@
                 @endif
                 @if ($post->author->id == Auth::user()->id || Auth::user()->isAdmin())
                     <li>
-                        <div class="post-delete dropdown-item" data-id="{{$post->id}}">
+                        <div class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete-post-popup-{{$post->id}}">
                             <i class="bi bi-trash3"></i>
                             Delete
                         </div>

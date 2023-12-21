@@ -84,6 +84,24 @@ function postButtonVisibility() {
     let element = document.querySelector('#post-id-' + post.id );
     element.style.display = 'none';
     element.remove();
+    var modal = document.getElementById('delete-post-popup-' + post.id);
+
+    if (modal) {
+    modal.classList.remove('show');
+
+    document.body.classList.remove('modal-open');
+
+    var modalBackdrop = document.querySelector('.modal-backdrop');
+    if (modalBackdrop) {
+        modalBackdrop.remove();
+    }
+
+    // Remove inline styles from body
+    document.body.removeAttribute('style');
+
+    // Remove the modal from the DOM
+    modal.parentNode.removeChild(modal);
+    }
   }
 
   function sendCreateCommentRequest(event) {

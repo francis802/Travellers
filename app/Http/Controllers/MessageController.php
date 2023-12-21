@@ -14,7 +14,8 @@ class MessageController extends Controller
     public function showMessages()
     {
         $messagers = Message::recentMessagers();
-        return view('pages.messages', ['messagers' => $messagers]);
+        $users = User::whereIn('id', array_keys($messagers))->get();
+        return view('pages.messages', ['messagers' => $messagers, 'users' => $users]);
     }
 
     /**
@@ -23,7 +24,13 @@ class MessageController extends Controller
     public function showPrivateMessages(int $userId)
     {
         $user = User::findOrFail($userId);
-        $messages = Message::where('sender_id', $user->id)->orWhere('receiver_id', $user->id)->orderBy('time', 'asc')->get();
+        $messages = Message::where(function ($query) use ($user, $userId) {
+            $query->where('sender_id', $user->id)
+                ->where('receiver_id', $userId);
+        })->orWhere(function ($query) use ($user, $userId) {
+            $query->where('sender_id', $userId)
+                ->where('receiver_id', $user->id);
+        })->orderBy('time', 'asc')->get();
         return view('pages.messagesUser', ['messages' => $messages, 'user' => $user]);
     }
 
@@ -31,6 +38,11 @@ class MessageController extends Controller
      * Store a newly created resource in storage.
      */
     public function sendMessage(Request $request, int $userId)
+    {
+        //
+    }
+
+    public function sharePost(int $userId, int $postId)
     {
         //
     }

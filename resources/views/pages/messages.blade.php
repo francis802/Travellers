@@ -9,6 +9,19 @@
         @yield('bar')
         <section id="feed">
                 @yield('topbar')
+                @foreach ($messagers as $userId => $userMessages)
+                <a class="link-notification" href="{{url('/messages/user/'.$userId)}}" >
+                    <li id="notification-list" class="list-group-item list-group-item-light">
+                        <div class="notification-info">
+                            <img class="img-notification img-user" src="{{ url($users->find($userId)->profile_photo) }}">
+                            <p class="notification-text">{{$users->find($userId)->username}}
+                            {{$userMessages[0]->content}}
+                            </p>
+                        </div>
+                        {{$userMessages[0]->time->diffForHumans()}}
+                    </li>
+                </a>
+                @endforeach
 
         </section>
    

@@ -114,7 +114,7 @@ class PostController extends Controller
         
         ImageController::delete($post->id, "post");
         $post->delete();
-        if(url()->previous() == url().'post/'.$post->id) {
+        if(url()->previous() == url('post/'.$post->id)) {
             return redirect('home/')->with('success', 'Post successfully deleted');
         }
         else return response()->json($post);

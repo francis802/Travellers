@@ -39,7 +39,7 @@ class Message extends Model
         foreach ($messages as $message) {
             $otherUserId = ($message->sender_id == $user->id) ? $message->receiver_id : $message->sender_id;
             if (!isset($recentMessagers[$otherUserId])) {
-                $recentMessagers = [$otherUserId => []] + $recentMessagers;
+                $recentMessagers =  $recentMessagers + [$otherUserId => []];
             }
             $recentMessagers[$otherUserId][] = $message;
         }

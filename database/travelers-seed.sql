@@ -1286,18 +1286,18 @@ VALUES
 
 INSERT INTO message (time, content, sender_id, receiver_id)
 VALUES
-    ('2021-05-01 12:00:00', 'Hello! Welcome to the app!', 1, 2),
-    ('2021-05-01 13:00:00', 'Hello! Welcome to the app!', 1, 3),
-    ('2021-05-01 14:00:00', 'Hello! Welcome to the app!', 1, 4),
-    ('2021-05-01 15:00:00', 'Hi! Thankss', 2, 1),
-    ('2021-05-01 16:00:00', 'Heyhey, glad to be here :)', 2, 3),
-    ('2021-05-01 17:00:00', 'Whatsapp dude?', 2, 4),
-    ('2021-05-01 18:00:00', 'txs', 3, 1),
-    ('2021-05-01 19:00:00', 'hi.', 3, 2),
-    ('2021-05-01 20:00:00', 'wyd', 3, 4),
-    ('2021-05-01 21:00:00', 'Thanks fellow traveller!', 4, 1),
-    ('2021-05-01 22:00:00', 'Im incredible bro, and you?', 4, 2),
-    ('2021-05-01 23:00:00', 'pull up', 4, 3);
+    ('2023-12-20 12:00:00', 'Hello! Welcome to the app!', 1, 2),
+    ('2023-12-20 13:00:00', 'Hello! Welcome to the app!', 1, 3),
+    ('2023-12-20 14:00:00', 'Hello! Welcome to the app!', 1, 4),
+    ('2023-12-20 15:00:00', 'Hi! Thankss', 2, 1),
+    ('2023-12-20 16:00:00', 'Heyhey, glad to be here :)', 2, 3),
+    ('2023-12-20 17:00:00', 'Whatsapp dude?', 2, 4),
+    ('2023-12-20 18:00:00', 'txs', 3, 1),
+    ('2023-12-20 19:00:00', 'hi.', 3, 2),
+    ('2023-12-20 20:00:00', 'wyd', 3, 4),
+    ('2023-12-20 21:00:00', 'Thanks fellow traveller!', 4, 1),
+    ('2023-12-20 22:00:00', 'Im incredible bro, and you?', 4, 2),
+    ('2023-12-20 23:00:00', 'pull up', 4, 3);
 
 INSERT INTO comments (text, date, post_id, author_id)
 VALUES
