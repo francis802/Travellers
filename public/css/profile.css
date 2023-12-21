@@ -1,13 +1,16 @@
-#profile-buttons-area > .button {
-    width: 5em;
-    font-size: small;
-    margin-left: 1rem;
+ #profile-buttons-area{
+    display: flex;
+    align-items: baseline;
+ }
+
+ #profile-buttons-area #edit-delete-post{
+    margin-right: 1em;
+    font-size: larger;
 }
 
-#profile-buttons-area button {
-    width: 5em;
-    font-size: small;
-    margin-left: 1rem;
+
+.profile-btns .btn{
+    font-size: xx-large;
 }
 
 #profile-picture {
@@ -41,6 +44,7 @@
 
 #user-name {
     margin: 0;
+    margin-bottom: 0.5em;
     font-size: x-large;
 }
 
@@ -48,6 +52,12 @@
     font-size: large;
     font-weight: 100;
     margin: 0;
+    margin-bottom: 1em;
+}
+
+.infos-with-margin a{
+    text-decoration: none;
+    color: black;
 }
 
 

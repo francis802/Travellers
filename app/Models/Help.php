@@ -26,4 +26,8 @@ class Help extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function notifications()
+    {
+        return $this->hasMany(HelpNotification::class, 'common_help_id');
+    }
 }

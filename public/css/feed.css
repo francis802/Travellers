@@ -15,8 +15,8 @@
     text-decoration: none;
     color: black;
     font-size: large;
-    display: flex; /* Added flex container for profile info */
-    align-items: center; /* Center items vertically within the flex container */
+    display: flex;
+    align-items: flex-start;
 }
 
 #user-bar input[type="text"] {
