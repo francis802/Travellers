@@ -13,9 +13,9 @@ class MessageController extends Controller
      */
     public function showMessages()
     {
-        $messagers = Message::recentMessagers();
-        $users = User::whereIn('id', array_keys($messagers))->get();
-        return view('pages.messages', ['messagers' => $messagers, 'users' => $users]);
+        $messengers = Message::recentMessengers();
+        $users = User::whereIn('id', array_keys($messengers))->get();
+        return view('pages.messages', ['messengers' => $messengers, 'users' => $users]);
     }
 
     /**

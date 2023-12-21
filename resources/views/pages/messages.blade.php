@@ -9,7 +9,8 @@
         @yield('bar')
         <section id="feed">
                 @yield('topbar')
-                @foreach ($messagers as $userId => $userMessages)
+                <ul class="list-group list-group-flush">
+                @foreach ($messengers as $userId => $userMessages)
                 <a class="link-notification" href="{{url('/messages/user/'.$userId)}}" >
                     <li id="notification-list" class="list-group-item list-group-item-light">
                         <div class="notification-info">
@@ -22,6 +23,7 @@
                     </li>
                 </a>
                 @endforeach
+                </ul>
 
         </section>
    

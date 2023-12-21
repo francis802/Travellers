@@ -57,7 +57,7 @@
     <section id="fy-posts">
         <ul id="user-post-list">
             @foreach($publicPosts->sortByDesc('date') as $post)
-                @include('partials.post', ['post' => $post])
+                @include('partials.post')
             @endforeach
         </ul>
     </section>
@@ -65,7 +65,7 @@
     <section id="following-posts">
         <ul id="user-post-list">
             @foreach($followingPosts->sortByDesc('date') as $post)
-                @include('partials.post', ['post' => $post])
+                @include('partials.post')
             @endforeach
         </ul>
     </section>

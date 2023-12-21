@@ -31,7 +31,7 @@ class Message extends Model
         return $this->belongsTo(User::class, 'receiver_id');
     }
 
-    static function recentMessagers()
+    static function recentMessengers()
     {
         $user = Auth::user();
         $messages = Message::where('sender_id', $user->id)->orWhere('receiver_id', $user->id)->orderBy('time', 'desc')->get();
