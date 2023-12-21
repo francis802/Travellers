@@ -10,6 +10,7 @@
                 <section class="create-post">
                         <form class="create-post-form" action="{{ url('/group/'.$group->id.'/edit') }}" method="post" enctype="multipart/form-data">
                         @csrf
+                        <h2>Edit Post</h2>
                         <div id="preview-container-group">
                                 <div id="close-button" onclick="removeImage()" style="{{$group->banner_pic !== null ? 'block' : 'none'}}">&times;</div>
                                 @if ($group->banner_pic !== null)

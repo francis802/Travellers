@@ -362,8 +362,21 @@ function sendAjaxRequest(method, url, data, handler) {
       let new_notifs = parseInt(notifs) + 1;
       notif_bubble.textContent = new_notifs;
     });
+}
+  function recoverPassword() {
+    const email = document.querySelector("#recoverEmail").value;
+    if (email == "") {
+      alert("Empty email. Please try again.")
+      return;
+    }
+    document.querySelector("#recoverAttemp").value = email;
+    sendAjaxRequest('post', '/sendEmail', {email: email}, recoverPasswordHandler);
+
   }
 
+  function recoverPasswordHandler() {
+    console.log("Mail sent");
+  }
 
 addEventListeners();
 

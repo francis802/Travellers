@@ -1,0 +1,74 @@
+.recover-password-page {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#bar-middle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.recover-password-sidebar {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Adjust as needed */
+}
+
+/* Rest of your existing styles remain unchanged */
+
+
+.group-div-title {
+    color: #333;
+    text-align: center;
+}
+
+.sidebar-recover,
+.sidebar-revoer-password {
+    margin-top: 20px;
+}
+
+input.input-text-field {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+button.sidebar-button-2 {
+    width: 100%;
+    padding: 10px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button.sidebar-button-2:hover {
+    background-color: #2980b9;
+}
+
+.error {
+    color: #e74c3c;
+    font-size: 14px;
+}
+
+/* Responsive Design */
+@media only screen and (max-width: 600px) {
+    .recover-password-sidebar {
+        width: 80%;
+    }
+}

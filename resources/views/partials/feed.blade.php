@@ -5,7 +5,7 @@
 <section id="feed">
     @yield('topbar')
     <section id="user-bar">
-        <a href="{{ url('/user/'.Auth::user()->id) }}" class="profile-info">
+        <a href="{{ url('/user/'.Auth::user()->id) }}" class="profile-info home-view">
             <div id="profile-picture">
                 @if (Auth::user()->profile_photo !== null)
                     <img src="{{ url(Auth::user()->profile_photo) }}" alt="Profile Picture">
@@ -14,7 +14,7 @@
                 @endif
             </div>
             @if (Auth::check())
-                <h2 id="user-username">&#64;{{ Auth::user()->username }}</h2>
+                <h2 id="user-username" class="home-view">&#64;{{ Auth::user()->username }}</h2>
             @endif
         </a>
         <input id="search-input" type="text" placeholder="Search..." onkeydown="searchOnEnter(event)"> 
@@ -56,9 +56,12 @@
     
     <section id="fy-posts">
         <ul id="user-post-list">
-            @foreach($publicPosts->sortByDesc('date') as $post)
+            @foreach($fyPosts->sortByDesc('date') as $post)
                 @include('partials.post')
             @endforeach
+            @if ($fyPosts->count() == 0)
+                <h4> No posts here. Join some groups! </h4>
+            @endif
         </ul>
     </section>
 
@@ -67,6 +70,9 @@
             @foreach($followingPosts->sortByDesc('date') as $post)
                 @include('partials.post')
             @endforeach
+            @if ($followingPosts->count() == 0)
+                <h4> No posts here. Follow more people! </h4>
+            @endif
         </ul>
     </section>
     

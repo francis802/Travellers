@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Comment;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\Response;
 
 class CommentPolicy
@@ -13,7 +14,7 @@ class CommentPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->id == Auth::user()->id && !$user->isBanned();
     }
 
     /**
@@ -21,7 +22,7 @@ class CommentPolicy
      */
     public function view(User $user, Comment $comment): bool
     {
-        //
+        return $user->id == Auth::user()->id && !$user->isBanned();
     }
 
     /**
@@ -29,7 +30,7 @@ class CommentPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return $user->id == Auth::user()->id && !$user->isBanned();
     }
 
     /**
@@ -37,7 +38,7 @@ class CommentPolicy
      */
     public function update(User $user, Comment $comment): bool
     {
-        return $comment->author->id == $user->id;
+        return $comment->author_id == $user->id;
     }
 
     /**
@@ -45,7 +46,8 @@ class CommentPolicy
      */
     public function delete(User $user, Comment $comment): bool
     {
-        return $comment->author->id == $user->id || $user->isAdmin();
+        // Allow the author or an admin to delete the comment
+        return $comment->author_id == $user->id || $user->isAdmin();
     }
 
     /**
@@ -53,7 +55,8 @@ class CommentPolicy
      */
     public function restore(User $user, Comment $comment): bool
     {
-        //
+        // Allow restoring comments (if implemented in the future)
+        return false;
     }
 
     /**
@@ -61,6 +64,7 @@ class CommentPolicy
      */
     public function forceDelete(User $user, Comment $comment): bool
     {
-        //
+        // Allow permanently deleting comments (if implemented in the future)
+        return false;
     }
 }

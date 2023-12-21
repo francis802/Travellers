@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -64,6 +65,15 @@ class Post extends Model
         ->orderBy('post.date', 'desc');
         
       }
+
+    public static function fyPosts() {
+        return Post::select('post.*')
+        ->join('groups', 'post.group_id', '=', 'groups.id')
+        ->join('members', 'groups.id', '=', 'members.group_id')
+        ->where('members.user_id', '=', Auth::user()->id)
+        ->orderBy('post.date', 'desc');
+    }
+    
 
     public function tags()
     {
