@@ -49,12 +49,12 @@
     text-decoration: underline;
 }
 
-#feed{
+#feed, #results{
     flex: 1;
     overflow-y: auto;
 }
 
-#fy-posts, #following-posts{
+#fy-posts, #following-posts, #posts{
     display: flex;
     justify-content: center;
     padding: 1em;

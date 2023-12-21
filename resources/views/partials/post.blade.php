@@ -1,4 +1,4 @@
-
+@include('partials.postPopups', ['post'=>$post, 'sharedUsers' => $sharedUsers])
 
 <div class="post-view card mb-3" id="post-id-{{$post->id}}">
     <div class="card-header post-header">
@@ -26,7 +26,7 @@
                 @endif
                 @if ($post->author->id == Auth::user()->id || Auth::user()->isAdmin())
                     <li>
-                        <div class="post-delete dropdown-item" data-id="{{$post->id}}">
+                        <div class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete-post-popup-{{$post->id}}">
                             <i class="bi bi-trash3"></i>
                             Delete
                         </div>
@@ -40,7 +40,7 @@
         @if(url()->current() == url('/post/'.$post->id))
             <div class="post-content">
                 @if ($post->media !== null)
-                    <img src="../images/post/post-{{$post->id}}.jpg"  alt="{{ $post->text }}" class="card-img-top">
+                    <img src="{{url($post->media)}}"  alt="{{ $post->text }}" class="card-img-top">
                 @endif
                 <div class="post-body-text">
                     <p class="post-description">{{ $post->text }}</p>
@@ -71,7 +71,7 @@
                     {{ count($post->comments) }}
                     </h5>
                 </button>
-                <button class="share-post">
+                <button class="share-post" data-bs-toggle="modal" data-bs-target="#share-post-popup-{{$post->id}}">
                     <h5>
                     <i class="fa-regular fa-share-from-square fa-2x" style="color: #000000;"></i>
                     </h5>

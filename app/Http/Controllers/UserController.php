@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Message;
 
 class UserController extends Controller
 {
@@ -22,7 +23,16 @@ class UserController extends Controller
         $following = $user->getFollowing()->get();
         $posts = $user->ownPosts()->get();
         $groups = $user->myGroups()->get();
-        return view('pages.profile', ['user' => $user, 'followers' => $followers, 'following' => $following, 'posts' => $posts, 'groups' => $groups]);
+        $messengers = Message::recentMessengers();
+        $sharedUsers = User::whereIn('id', array_keys($messengers))->get();
+        $sharedUsers = $sharedUsers->reverse();
+        $allUsers = User::all();
+        foreach ($allUsers as $userTemp) {
+            if (!isset($recentMessagers[$userTemp->id])) {
+                $sharedUsers = $sharedUsers->merge([$userTemp->id => $userTemp]);
+            }
+        }
+        return view('pages.profile', ['user' => $user, 'followers' => $followers, 'following' => $following, 'posts' => $posts, 'groups' => $groups, 'sharedUsers' => $sharedUsers]);
     }
 
     public function edit()

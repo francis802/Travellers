@@ -4,7 +4,7 @@
 <section id="feed">
     @yield('topbar')
     @if(session('success'))
-    <div class="alert alert-success" role="alert">
+    <div class="alert alert-success" role="alert" id="success-alert">
     {{session('success')}}
     </div>
     @endif

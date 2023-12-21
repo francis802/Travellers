@@ -10,15 +10,20 @@ use App\Models\User;
 use App\Models\Post;
 use App\Models\Member;
 use App\Models\Owner;
+use App\Models\Admin;
+use App\Models\Country;
 
 class GroupController extends Controller
 {
 
     public function create(){
-        return view('pages.createGroup');
+        $parents = Group::getParentGroups()->get();
+        return view('pages.createGroup', ['parents' => $parents]);
     }
 
     public function store(Request $request){
+
+        DB::beginTransaction();
         $group = new Group();
         $group->description = $request->text;
         $group->save();
@@ -28,6 +33,11 @@ class GroupController extends Controller
             'group_id' => $group->id,
         ]);
 
+        $country = new Country();
+        $country->name = $request->country_title;
+        $country->city_id = $request->group_id;
+        $country->save();
+
         if (!isset($contentFound) && $_FILES["image"]["error"]) {
             $group->banner_pic = null;
         }
@@ -36,8 +46,25 @@ class GroupController extends Controller
             $group->banner_pic = "images/group/group-".$group->id.".".pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION);
         }
 
+        $group->country_id = $country->id;
+        $parentGroup = Group::where('country_id', '=', $request->group_id)->first();
+        $group->subgroup_id = $parentGroup->id;
+
         $group->save();
-        return redirect('group/'.$group->id)->with('success', 'Post successfully created');
+
+        $admins = Admin::all();
+        foreach($admins as $admin){
+            DB::table('group_creation_notification')->insert([
+                'time' => now(),
+                'group_id' => $group->id,
+                'notified_id' => $admin->id,
+                'sender_id' => Auth::user()->id
+            ]);
+        }
+
+        DB::commit();
+        
+        return redirect('group/'.$group->id)->with('success', 'Post created! Wait for approval of an admin...');
     }
 
     public function delete(Request $request){
@@ -45,7 +72,8 @@ class GroupController extends Controller
         /*$this->authorize('delete', Auth::user(), $group);*/
       
         ImageController::delete($group->id, 'group');
-        $group->delete(); 
+        $country = Country::find($group->country_id);
+        $country->delete(); 
         return redirect('home')->with('success', 'Group successfully deleted');
 
     }
