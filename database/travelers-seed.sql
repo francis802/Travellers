@@ -51,7 +51,6 @@ DROP FUNCTION IF EXISTS verify_priv_follow_request CASCADE;
 DROP FUNCTION IF EXISTS follow_request_notification CASCADE;
 DROP FUNCTION IF EXISTS follow_accept_notification CASCADE;
 DROP FUNCTION IF EXISTS group_join_notification CASCADE;
-/*DROP FUNCTION IF EXISTS group_leave_notification CASCADE;*/
 DROP FUNCTION IF EXISTS group_ban_notification CASCADE;
 DROP FUNCTION IF EXISTS group_owner_notification CASCADE;
 DROP FUNCTION IF EXISTS new_message_notification CASCADE;
@@ -550,23 +549,6 @@ AFTER INSERT ON members
 FOR EACH ROW
 EXECUTE FUNCTION group_join_notification();
 
-/* !!!!!!!!!!!!!!!!!!!!!!TRANSACTION!!!!!!!!!!!!!!!!!!!!!!!!!!!
--- TRIGGER NOTIFICATION 5 (Should we notify the user who left or the owner?)
-CREATE FUNCTION group_leave_notification() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    INSERT INTO group_notification (time, notified_id, group_id, notification_type)
-    VALUES (CURRENT_TIMESTAMP, OLD.user_id, OLD.group_id, 'group_leave');
-    RETURN NEW;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER group_leave_notification
-BEFORE DELETE ON members
-FOR EACH ROW
-EXECUTE FUNCTION group_leave_notification();
-*/
 
 -- TRIGGER NOTIFICATION 6
 CREATE FUNCTION group_ban_notification() RETURNS TRIGGER AS

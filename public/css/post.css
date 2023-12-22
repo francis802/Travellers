@@ -96,6 +96,10 @@ a.post-edit{
     margin-right: 1em;
 }
 
+button.comment-post:hover{
+    cursor: default;
+}
+
 #edit-delete-post{
     display: flex;
     flex-direction: row;
