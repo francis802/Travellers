@@ -49,10 +49,10 @@
                 <div class="modal-body">
                         @csrf
                         <label for="newQuestion">Question</label>
-                        <input type="text" id="newQuestion" name="newQuestion" class="form-control" required>
+                        <input type="text" id="newQuestion" name="question" class="form-control" required>
 
                         <label for="newAnswer">Answer</label>
-                        <textarea id="newAnswer" name="newAnswer" class="form-control" rows="4" required></textarea>
+                        <textarea id="newAnswer" name="answer" class="form-control" rows="4" required></textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

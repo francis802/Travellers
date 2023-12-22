@@ -32,8 +32,8 @@ class FAQController extends Controller
     public function store(Request $request)
     {
         $faq = new FAQ();
-        $faq->question = $request->input('newQuestion');
-        $faq->answer = $request->input('newAnswer');
+        $faq->question = $request->input('question');
+        $faq->answer = $request->input('answer');
         $faq->last_edited = date('Y-m-d H:i:s');
         if ($request->help_id) {
             $help = Help::findOrFail($request->help_id);

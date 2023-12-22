@@ -22,7 +22,7 @@
             <th scope="row">
                 <a href="{{ url('/user/'. $help->user->id) }}" class="profile-info">
                     <div id="profile-picture-sml">
-                        @if (Auth::user()->profile_photo !== null)
+                        @if ($help->user->profile_photo !== null)
                             <img src="{{ url($help->user->profile_photo) }}" alt="Profile Picture">
                         @else
                         <img src="{{ url('man.jpg') }}" alt="Profile Picture">
