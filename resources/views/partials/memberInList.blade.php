@@ -14,7 +14,11 @@
                 <li id="notification-list" data-id="{{$group->id}}" data-user-id="{{$member->user()->id}}" class="list-group-item list-group-item-light">
                     <a href="{{ url('/user/'.$member->user()->id) }}">
                         <div class="notification-info">
+                            @if($member->user()->profile_photo == null)
+                            <img class="img-notification img-user" src="{{ url('man.jpg') }}">
+                            @else
                             <img class="img-notification img-user" src="{{ url($member->user()->profile_photo) }}">
+                            @endif
                             <p class="notification-text">{{$member->user()->name}}</p>
                         </div>
                     </a>

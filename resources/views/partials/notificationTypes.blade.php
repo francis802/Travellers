@@ -42,7 +42,11 @@
                             <section class="follow-request-container" id="follow-request-id-{{$followRequestUser->id}}">
                                 <a href="{{ url('/user/'.$followRequestUser->id) }}" class="profile-info">
                                     <div class="notification-info">
+                                        @if($followRequestUser->profile_photo == null)
+                                        <img class="img-notification img-user" src="{{ url('man.jpg') }}">
+                                        @else
                                         <img class="img-notification img-user" src="{{ url($followRequestUser->profile_photo) }}">
+                                        @endif
                                         <p class="notification-text">&#64;{{ $followRequestUser->username }} wants to follow you!</h2>
                                     </div>    
                                 </a>
@@ -69,7 +73,11 @@
                         <a class="link-notification" href="{{url('/post/'.$notification->post->id)}}" >
                             <li id="notification-list" class="list-group-item list-group-item-light">
                                 <div class="notification-info">
+                                    @if($notification->senderUser->profile_photo == null)
+                                    <img class="img-notification img-user" src="{{ url('man.jpg') }}">
+                                    @else
                                     <img class="img-notification img-user" src="{{ url($notification->senderUser->profile_photo) }}">
+                                    @endif
                                     <p class="notification-text">{{$notification->senderUser->username}}
                                     @if($notification->notification_type == 'new_like')
                                         liked your post
@@ -88,7 +96,11 @@
                         <a class="link-notification" href="{{url('/post/'.$notification->comment->post->id)}}" >
                             <li id="notification-list" class="list-group-item list-group-item-light">
                                 <div class="notification-info">
+                                    @if($notification->senderUser->profile_photo == null)
+                                    <img class="img-notification img-user" src="{{ url('man.jpg') }}">
+                                    @else
                                     <img class="img-notification img-user" src="{{ url($notification->senderUser->profile_photo) }}">
+                                    @endif
                                     <p class="notification-text">{{$notification->senderUser->username}}
                                     @if($notification->notification_type == 'mention_comment')
                                         mentioned you in a comment
@@ -111,7 +123,11 @@
                             <a class="link-notification" href="{{url('/user/'.$notification->senderUser->id)}}">
                                 <li id="notification-list" class="list-group-item list-group-item-light">
                                     <div class="notification-info">
+                                        @if($notification->senderUser->profile_photo == null)
+                                        <img class="img-notification img-user" src="{{ url('man.jpg') }}">
+                                        @else
                                         <img class="img-notification img-user" src="{{ url($notification->senderUser->profile_photo) }}">
+                                        @endif
                                         <p class="notification-text">{{$notification->senderUser->username}} accept you</p>
                                     </div>
                                 </li>

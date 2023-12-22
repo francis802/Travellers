@@ -13,7 +13,11 @@
         <h3>Groups Proposal's</h3>
             @foreach ($groups as $group)
                 <div class="card mb-3" id="country-{{$group->id}}">
+                    @if($group->banner_pic == null)
+                    <img src="{{url('defaultBanner.png')}}" class="card-img-top banner-pic" alt="...">
+                    @else
                 <img src="{{url($group->banner_pic)}}" class="card-img-top banner-pic" alt="{{$group->country->name}} Banner">
+                    @endif
                 <div class="card-body">
                     <h5 class="card-title">{{$group->country->name}}</h5>
                     <h7 class="card-title">From: {{$group->parentGroup->country->name}}</h7>

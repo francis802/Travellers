@@ -32,7 +32,11 @@
                     @foreach($userResults as $user)
                         <a href="{{ url('/user/'.$user->id) }}" class="profile-info">
                             <div id="profile-picture">
-                                <img src="../man.jpg" alt="Profile Picture">
+                                @if($user->profile_photo == null)
+                                <img src="{{url('man.jpg')}}" alt="Profile Picture">
+                                @else
+                                <img src="{{url($user->profile_photo)}}" alt="Profile Picture">
+                                @endif
                             </div>
                             @if (Auth::check())
                                 <h2 id="user-username">&#64;{{ $user->username }}</h2>

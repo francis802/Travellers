@@ -17,7 +17,11 @@
                 <a class="link-notification" href="{{url('/messages/user/'.$userId)}}" >
                     <li id="notification-list" class="list-group-item list-group-item-light">
                         <div class="notification-info">
+                            @if($users->find($userId)->profile_photo == null)
+                            <img class="img-notification img-user" src="{{ 'man.jpg' }}">
+                            @else
                             <img class="img-notification img-user" src="{{ url($users->find($userId)->profile_photo) }}">
+                            @endif
                             <p class="notification-text">{{$users->find($userId)->username}}
                             {{$userMessages[0]->content}}
                             </p>

@@ -19,7 +19,11 @@
                         <a href="{{ url('/group/'.$group->id) }}">
                             <div class="col">
                                 <div class="card">
+                                @if($group->banner_pic == null)
+                                <img src="{{ url('defaultBanner.png') }}" class="card-img-top" alt="...">
+                                @else
                                 <img src="{{ url($group->banner_pic) }}" class="card-img-top" alt="...">
+                                @endif
                                 <div class="card-body">
                                     <h5 class="card-title">{{ $group->country->name }}</h5>
                                     <p class="card-text">{{ $group->description }}</p>

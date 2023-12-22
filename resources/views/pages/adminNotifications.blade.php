@@ -21,7 +21,12 @@
                                                 <a class="link-notification" href="{{url('/admin/unban-requests')}}">
                                                         <li id="notification-list" class="list-group-item list-group-item-light">
                                                                 <div class="notification-info">
+                                                                        @if($notification->senderUser->profile_photo == null)
+                                                                        <img class="img-notification img-user" src="{{ url('man.jpg') }}">
+                                                                        @else
                                                                         <img class="img-notification img-user" src="{{ url($notification->senderUser->profile_photo) }}">
+                                                                        @endif
+                                                                        
                                                                         <p class="notification-text">{{$notification->senderUser->username}} wants be unban</p>
                                                                 </div>
                                                                 <div class="request-buttons">
@@ -33,7 +38,11 @@
                                                 <a class="link-notification" href="{{url('/admin/helps')}}">
                                                         <li id="notification-list" class="list-group-item list-group-item-light">
                                                                 <div class="notification-info">
+                                                                        @if($notification->senderUser->profile_photo == null)
+                                                                        <img class="img-notification img-user" src="{{ url('man.jpg') }}">
+                                                                        @else
                                                                         <img class="img-notification img-user" src="{{ url($notification->senderUser->profile_photo) }}">
+                                                                        @endif
                                                                         <p class="notification-text">{{$notification->senderUser->username}} send a help request</p>
                                                                 </div>
                                                                 <div class="request-buttons">
@@ -45,7 +54,11 @@
                                                 <a class="link-notification" href="{{url('/admin/reports')}}">
                                                         <li id="notification-list" class="list-group-item list-group-item-light">
                                                                 <div class="notification-info">
+                                                                        @if($notification->senderUser->profile_photo == null)
+                                                                        <img class="img-notification img-user" src="{{ url('man.jpg') }}">
+                                                                        @else
                                                                         <img class="img-notification img-user" src="{{ url($notification->senderUser->profile_photo) }}">
+                                                                        @endif
                                                                         <p class="notification-text">{{$notification->senderUser->username}} send a report</p>
                                                                 </div>
                                                                 <div class="request-buttons">
@@ -57,7 +70,11 @@
                                                 <a class="link-notification" href="{{url('/admin/groups')}}">
                                                         <li id="notification-list" class="list-group-item list-group-item-light">
                                                                 <div class="notification-info">
+                                                                @if($notification->senderUser->profile_photo == null)
+                                                                        <img class="img-notification img-user" src="{{ url('man.jpg') }}">
+                                                                        @else
                                                                         <img class="img-notification img-user" src="{{ url($notification->senderUser->profile_photo) }}">
+                                                                        @endif
                                                                         <p class="notification-text">{{$notification->senderUser->username}} propose a group</p>
                                                                 </div>
                                                                 <div class="request-buttons">

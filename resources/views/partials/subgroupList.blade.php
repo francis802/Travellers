@@ -19,7 +19,7 @@
                                 @if($subgroup->banner_pic != null)
                                     <img src="{{ url($subgroup->banner_pic) }}" class="card-img-top">
                                 @else
-                                    <img src="{{ url('../defaultBanner.png') }}" class="card-img-top">
+                                    <img src="{{ url('defaultBanner.png') }}" class="card-img-top">
                                 @endif
                                 <div class="card-body">
                                     <h5 class="card-title">{{$subgroup->country->name}}</h5>

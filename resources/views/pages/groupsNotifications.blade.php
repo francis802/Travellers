@@ -20,7 +20,11 @@
                                     <li id="notification-list" class="list-group-item list-group-item-light">
                                         <div class="notification-info">
                                             @if($notification->senderUser != null)
+                                                @if($notification->senderUser->profile_photo == null)
+                                                <img class="img-notification img-user" src="{{ url('man.jpg') }}">
+                                                @else
                                                 <img class="img-notification img-user" src="{{ url($notification->senderUser->profile_photo) }}">
+                                                @endif
                                             @endif
                                             <p class="notification-text">
                                                 @if($notification->senderUser != null)

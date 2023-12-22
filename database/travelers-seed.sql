@@ -872,8 +872,8 @@ VALUES
     ('giorno.giovanna', 'Giorno Giovanna', 11, 'giorno.giovanna@gmail.com', '$2y$10$EpgSBve6Nc.Q.PepTjNp8uJUEyZQjnVfmIlLDHR9LGDZC8/VHWPl.', null, true),
     ('gabriel.garcia', 'Gabriel Garcia', 12, 'gabriel.garcia@gmail.com', '$2y$10$/zHdv.sEpPASgf6nXgObI.c.dleL0jqzAEVANmzB.GjFvjvPQ5kYO', null, false),
     ('jacky.chan', 'Jacky Chan', 13, 'jacky.chan@gmail.com', '$2y$10$8dw4v6YscmyD6MG4Jf92BeOpi299ULr/Z57FCjhH6GrCWwhPb8Y7a', null, true),
-    ('anastasia.steele', 'Anastasia Steele', 14, 'anastasia.steele@gmail.com', '$2y$10$xRQgfBx4DIkNk.Y6R4qOPuACJ8MTOm7I1VTPkF9K5Rh85tMRa7x0.', null, false);
-    
+    ('anastasia.steele', 'Anastasia Steele', 14, 'anastasia.steele@gmail.com', '$2y$10$xRQgfBx4DIkNk.Y6R4qOPuACJ8MTOm7I1VTPkF9K5Rh85tMRa7x0.', null, false),
+    ('sara.sampaio', 'Sara Sampaio', 1, 'sara.sampaio@gmail.com', '$2y$10$53jvyZTBMRAkoN/KdkA1s.n.QZ.zTXK6406l5ZmGUSslsEH07WkuS', null, false);
 
 INSERT INTO admin (user_id)
 VALUES
@@ -1041,7 +1041,12 @@ VALUES
     (13, 29),
     (14, 30),
     (15, 31),
-    (16, 32);
+    (16, 32),
+    (17, 1),
+    (17, 2),
+    (17, 3),
+    (17, 4),
+    (17, 5);
 
 INSERT INTO banned_member (user_id, group_id)
 VALUES
@@ -1059,7 +1064,12 @@ VALUES
     ('2023-08-01 10:00:00', 'Pyramids of Giza with @antonio.romao03', 'images/post/post-6.jpg', 2, 2),
     ('2017-11-24 12:02:50', 'Freedom!!!', 'images/post/post-7.jpg', 3, 3),
     ('2015-03-31 16:12:11', 'hola to @lupin', 'images/post/post-8.jpg', 3, 3),
-    ('2020-05-06 12:04:34', 'WOW', 'images/post/post-9.jpg', 4, 4);
+    ('2020-05-06 12:04:34', 'WOW', 'images/post/post-9.jpg', 4, 4),
+    (CURRENT_TIMESTAMP, 'Weekend at the beach', 'images/post/post-10.jpg', 17, 1),
+    (CURRENT_TIMESTAMP, 'Azores @francisco.campos03', 'images/post/post-11.jpg', 17, 1),
+    (CURRENT_TIMESTAMP, 'Madeira @jane-doe2346', 'images/post/post-12.jpg', 17, 1),
+    (CURRENT_TIMESTAMP, 'Douro @antonio.romao03', 'images/post/post-13.jpg', 17, 1),
+    (CURRENT_TIMESTAMP, 'Oporto at night @henrique.pinheiro03', 'images/post/post-14.jpg', 17, 1);
 
 INSERT INTO like_post (user_id, post_id)
 VALUES
