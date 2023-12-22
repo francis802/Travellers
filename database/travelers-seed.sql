@@ -938,9 +938,9 @@ INSERT INTO groups (country_id, description, banner_pic, approved, subgroup_id)
 VALUES
     (1, 'Welcome to the land of pastel de nata! SIUUUU', 'images/group/group-1.jpg', true, null),
     (2, 'Welcome to the land of the fredom (or at leat cowboys)', 'images/group/group-2.jpg', true, null),
-    (3, 'This is the holy land of Hinduism. We love cows', 'https://picsum.photos/1000', true, null),
-    (4, 'Carnaval, cachaça, and good beaches! What more could you ask for?', 'https://picsum.photos/1000', true, null),
-    (5, 'This is the land of the rising sun. We love anime', 'https://picsum.photos/1000', true, null),
+    (3, 'This is the holy land of Hinduism. We love cows', 'images/group/group-3.jpg', true, null),
+    (4, 'Carnaval, cachaça, and good beaches! What more could you ask for?', 'images/group/group-4.jpg', true, null),
+    (5, 'This is the land of the rising sun. We love anime', 'images/group/group-5.jpg', true, null),
     (6, 'This is the land of the pyramids. We love cats', 'https://picsum.photos/1000', true, null),
     (7, 'This is the land of K-pop. We love kimchi', 'https://picsum.photos/1000', true, null),
     (8, 'This is the land of the queen. We love tea', 'https://picsum.photos/1000', true, null),
