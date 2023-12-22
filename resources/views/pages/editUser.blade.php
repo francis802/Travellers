@@ -2,6 +2,10 @@
 @include('partials.bar')
 @include('partials.topbar')
 
+@section('title')
+    Edit User | Travellers
+@endsection
+
 @section('content')
     @yield('bar')
     <section id="feed">

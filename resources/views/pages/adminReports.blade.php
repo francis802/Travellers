@@ -2,7 +2,9 @@
 @include('partials.adminbar')
 @include('partials.topbar')
 
-
+@section('title')
+    Report Management | Travellers
+@endsection
 
 @section('content')
     @yield('adminbar')

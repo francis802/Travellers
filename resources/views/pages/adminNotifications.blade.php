@@ -2,7 +2,9 @@
 @include('partials.adminbar')
 @include('partials.topbar')
 
-
+@section('title')
+    Admin Notifications | Travellers
+@endsection
 
 @section('content')
         @yield('adminbar')

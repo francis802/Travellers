@@ -1,7 +1,9 @@
 @extends('layouts.app')
 @include('partials.bar')
 
-
+@section('title')
+    Groups | Travellers
+@endsection
 
 
 @section('content')

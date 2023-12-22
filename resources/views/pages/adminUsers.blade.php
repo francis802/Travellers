@@ -2,7 +2,9 @@
 @include('partials.adminbar')
 @include('partials.adminUsers')
 
-
+@section('title')
+    User Management | Travellers
+@endsection
 
 @section('content')
     <section class="inner-content">

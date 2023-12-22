@@ -1,8 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Home')
 @include('partials.bar')
 @include('partials.topbar')
+
+@section('title')
+    Create Group | Travellers
+@endsection
 
 @section('content')
     

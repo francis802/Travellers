@@ -1,8 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Home')
 @include('partials.bar')
 @include('partials.topbar')
+
+@section('title')
+    Messages | Travellers
+@endsection
 
 @section('content')
     
